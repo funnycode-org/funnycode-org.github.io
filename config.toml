@@ -1,0 +1,8 @@
+baseURL = "http://example.org/"
+languageCode = "en-us"
+title = "玩码部落"
+theme = "LoveIt"
+
+[params]
+  # LoveIt 主题版本
+  version = "0.2.X"
