@@ -158,4 +158,5 @@ jobs:
 
 [https://github.com/peaceiris/actions-hugo](https://github.com/peaceiris/actions-hugo)
 [https://zhuanlan.zhihu.com/p/109057290](https://zhuanlan.zhihu.com/p/109057290)
+[https://github.com/peaceiris/actions-gh-pages](https://github.com/peaceiris/actions-gh-pages)
 
