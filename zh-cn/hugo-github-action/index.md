@@ -132,6 +132,7 @@ jobs:
           deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
           external_repository: funnycode-org/funnycode-org.github.io # remote branch
           publish_dir: "./docs"
+          cname: blog.funnycode.org.cn          
           keep_files: false # remove existing files
           publish_branch: docs  # deploying branch
           commit_message: ${{ github.event.head_commit.message }}
@@ -141,6 +142,7 @@ jobs:
 > - publish_dir 指定发布的目录，`./docs` 指 `blog` 项目下的 `docs` 目录下的内容会被发布
 > - publish_branch 发布到 `funnycode-org.github.io` 项目的 `docs` 分支
 > - secrets.ACTIONS_DEPLOY_KEY 的 ACTIONS_DEPLOY_KEY 则是上面设置 Private Key 的变量名
+> - cname 必须要配置好，和下文提到的 Setting 里面配置图对应
 
 ### 2.7 funnycode-org.github.io 配置
 
