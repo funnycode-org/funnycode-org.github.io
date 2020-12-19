@@ -1,0 +1,232 @@
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><meta http-equiv=x-ua-compatible content="IE=edge, chrome=1"><title>Protocol Buffers | Language Guide(proto2) - 玩码部落</title><meta name=Description content="云原生玩码部落"><meta property="og:title"content="Protocol Buffers | Language Guide(proto2)"><meta property="og:description"content><meta property="og:type"content="article"><meta property="og:url"content="http://blog.funnycode.org.cn/zh-cn/notes/what-is-protocol-buffers/"><meta property="og:image"content="http://blog.funnycode.org.cn/logo.png"><meta property="article:published_time"content="2020-12-18T16:18:00+08:00"><meta property="article:modified_time"content="2020-12-18T16:18:00+08:00"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="http://blog.funnycode.org.cn/logo.png"><meta name=twitter:title content="Protocol Buffers | Language Guide(proto2)"><meta name=twitter:description content><meta name=application-name content="云原生玩码部落"><meta name=apple-mobile-web-app-title content="云原生玩码部落"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon"type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=http://blog.funnycode.org.cn/zh-cn/notes/what-is-protocol-buffers/><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.0/css/all.min.css><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Protocol Buffers | Language Guide(proto2)","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"http:\/\/blog.funnycode.org.cn\/zh-cn\/notes\/what-is-protocol-buffers\/"},"image":["http:\/\/blog.funnycode.org.cn\/images\/Apple-Devices-Preview.png"],"genre":"notes","wordcount":3581,"url":"http:\/\/blog.funnycode.org.cn\/zh-cn\/notes\/what-is-protocol-buffers\/","datePublished":"2020-12-18T16:18:00+08:00","dateModified":"2020-12-18T16:18:00+08:00","license":"This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher":{"@type":"Organization","name":"xxxx","logo":"http:\/\/blog.funnycode.org.cn\/images\/me\/logo.png"},"author":{"@type":"Person","name":"铁城"},"description":""}</script></head><body header-desktop=fixed header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem('theme')?localStorage.getItem('theme')==='dark':'auto'==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches:'auto'==='dark')&&document.body.setAttribute('theme','dark')</script><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/zh-cn/ title=玩码部落><span class=header-title-pre><i class="far fa-kiss-wink-heart fa-fw"></i></span><span id=id-1 class=typeit></span></a></div><div class=menu><div class=menu-inner><a class=menu-item href=/zh-cn/posts/>所有文章 </a><a class=menu-item href=/zh-cn/tags/>标签 </a><a class=menu-item href=/zh-cn/categories/>分类 </a><a class=menu-item href=/zh-cn/notes/>笔记 </a><a class=menu-item href=/zh-cn/about/>关于 </a><a class=menu-item href=https://github.com/funnycode-org title=GitHub rel="noopener noreffer"target=_blank><i class="fab fa-github fa-fw"></i></a><span class="menu-item delimiter"></span><a href=javascript:void(0); class="menu-item language"title="Select Language">简体中文<i class="fas fa-chevron-right fa-fw"></i>
+<select class=language-select id=language-select-desktop onchange="location=this.value"><option value=/zh-cn/notes/what-is-protocol-buffers/ selected>简体中文</option></select>
+</a><span class="menu-item search"id=search-desktop><input type=text placeholder="Search titles or contents..."id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle"id=search-toggle-desktop title=Search><i class="fas fa-search fa-fw"></i></a><a href=javascript:void(0); class="search-button search-clear"id=search-clear-desktop title=Clear><i class="fas fa-times-circle fa-fw"></i></a><span class="search-button search-loading"id=search-loading-desktop><i class="fas fa-spinner fa-fw fa-spin"></i></span></span><a href=javascript:void(0); class="menu-item theme-switch"title="Switch Theme"><i class="fas fa-adjust fa-fw"></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/zh-cn/ title=玩码部落><span class=header-title-pre><i class="far fa-kiss-wink-heart fa-fw"></i></span><span id=id-2 class=typeit></span></a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><div class=search-wrapper><div class="search mobile"id=search-mobile><input type=text placeholder="Search titles or contents..."id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle"id=search-toggle-mobile title=Search><i class="fas fa-search fa-fw"></i></a><a href=javascript:void(0); class="search-button search-clear"id=search-clear-mobile title=Clear><i class="fas fa-times-circle fa-fw"></i></a><span class="search-button search-loading"id=search-loading-mobile><i class="fas fa-spinner fa-fw fa-spin"></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>Cancel</a></div><a class=menu-item href=/zh-cn/posts/ title>所有文章</a><a class=menu-item href=/zh-cn/tags/ title>标签</a><a class=menu-item href=/zh-cn/categories/ title>分类</a><a class=menu-item href=/zh-cn/notes/ title>笔记</a><a class=menu-item href=/zh-cn/about/ title>关于</a><a class=menu-item href=https://github.com/funnycode-org title=GitHub rel="noopener noreffer"target=_blank><i class="fab fa-github fa-fw"></i></a><a href=javascript:void(0); class="menu-item theme-switch"title="Switch Theme">
+<i class="fas fa-adjust fa-fw"></i></a><a href=javascript:void(0); class=menu-item title="Select Language">简体中文<i class="fas fa-chevron-right fa-fw"></i>
+<select class=language-select onchange="location=this.value"><option value=/zh-cn/notes/what-is-protocol-buffers/ selected>简体中文</option></select></a></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=main><div class=container><div class="page single special"><h1 class="single-title animated pulse faster">Protocol Buffers | Language Guide(proto2)</h1><div class=content id=content><h2 id=一前言>一、前言</h2><p>跟着 Protocol Buffers 官方学习</p><blockquote><p><strong>What are protocol buffers?</strong>
+Protocol buffers are Google&rsquo;s language-neutral, platform-neutral, extensible mechanism for serializing structured data – think XML, but smaller, faster, and simpler. You define how you want your data to be structured once, then you can use special generated source code to easily write and read your structured data to and from a variety of data streams and using a variety of languages.</p></blockquote><p>Google 用来序列化结构数据，具有语言中立、平台中立和可扩展机制。比XML更小、更快、更简单。定义一次数据结构后，用特定语言的源码成功工具创建各个语言的代码。</p><h2 id=二proto2>二、proto2</h2><h3 id=21-定义消息类型>2.1 定义消息类型</h3><ul><li>定义类型</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-protobuf data-lang=protobuf><span class=kd>message</span> <span class=nc>SearchRequest</span> <span class=p>{</span><span class=err>
+</span><span class=err></span>  <span class=k>required</span> <span class=kt>string</span> <span class=n>query</span> <span class=o>=</span> <span class=mi>1</span><span class=p>;</span><span class=err>
+</span><span class=err></span>  <span class=k>optional</span> <span class=kt>int32</span> <span class=n>page_number</span> <span class=o>=</span> <span class=mi>2</span><span class=p>;</span><span class=err>
+</span><span class=err></span>  <span class=k>optional</span> <span class=kt>int32</span> <span class=n>result_per_page</span> <span class=o>=</span> <span class=mi>3</span><span class=p>;</span><span class=err>
+</span><span class=err></span><span class=p>}</span><span class=err>
+</span></code></pre></td></tr></table></div></div><ul><li><p>可分配字段编号</p><ul><li>最小数字 1，最大数字 2^29 - 1, or 536,870,911</li><li>范围为1到15的字段编号需要一个字节来编码，16到2047之间的字段号占用两个字节，应该为非常频繁出现的消息元素保留字段编号1到15</li><li>不能使用数字19000到19999（<code>FieldDescriptor::kFirstReservedNumber</code>至<code>FieldDescriptor::kLastReservedNumber</code>）</li></ul></li><li><p>指定字段规则</p><ul><li><code>required</code>: 必须存在值的字段</li><li><code>optional</code>: 可选字段，能够存在值或者为空的字段</li><li><code>repeated</code>: 数组类型，可以放空或者值. 数组值的顺序会被保护（不改变）</li></ul><blockquote><p>使用 required 要小心，从 required 改 optional 可能会导致使用者出错。有些人甚至认为它的害处大于利处。</p></blockquote></li><li><p>定义多个类型</p></li></ul><p>一个 <code>.proto</code> 文件可以定义多个类，但是会导致消息膨胀，建议把不同类型的消息定义到不同的 <code>.proto</code> 文件</p><ul><li>添加注解</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-protobuf data-lang=protobuf><span class=cm>/* SearchRequest represents a search query, with pagination options to
+</span><span class=cm> * indicate which results to include in the response. */</span><span class=err>
+</span><span class=err>
+</span><span class=err></span><span class=kd>message</span> <span class=nc>SearchRequest</span> <span class=p>{</span><span class=err>
+</span><span class=err></span>  <span class=k>required</span> <span class=kt>string</span> <span class=n>query</span> <span class=o>=</span> <span class=mi>1</span><span class=p>;</span><span class=err>
+</span><span class=err></span>  <span class=k>optional</span> <span class=kt>int32</span> <span class=n>page_number</span> <span class=o>=</span> <span class=mi>2</span><span class=p>;</span>  <span class=c1>// Which page number do we want?
+</span><span class=c1></span>  <span class=k>optional</span> <span class=kt>int32</span> <span class=n>result_per_page</span> <span class=o>=</span> <span class=mi>3</span><span class=p>;</span>  <span class=c1>// Number of results to return per page.
+</span><span class=c1></span><span class=p>}</span><span class=err>
+</span></code></pre></td></tr></table></div></div><ul><li>设置字段备用</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-protobuf data-lang=protobuf><span class=kd>message</span> <span class=nc>Foo</span> <span class=p>{</span><span class=err>
+</span><span class=err></span>  <span class=n>reserved</span> <span class=mi>2</span><span class=p>,</span> <span class=mi>15</span><span class=p>,</span> <span class=mi>9</span> <span class=k>to</span> <span class=mi>11</span><span class=p>;</span><span class=err>
+</span><span class=err></span>  <span class=n>reserved</span> <span class=s>&#34;foo&#34;</span><span class=p>,</span> <span class=s>&#34;bar&#34;</span><span class=p>;</span><span class=err>
+</span><span class=err></span><span class=p>}</span><span class=err>
+</span></code></pre></td></tr></table></div></div><p>不建议直接删除字段，容易引起异常。可以把字段设置成备用。</p><ul><li>通过 .proto 生成文件</li><li>C++，生成 .h 和 .cc 文件</li><li>Java，生成 .java 文件</li><li>Python，作为 <em>metaclass</em> 不懂嘻嘻</li><li>Go，生成 .pb.go 文件</li></ul><h3 id=22-标准值类型>2.2 标准值类型</h3><p>直接上图</p><table><thead><tr><th style=text-align:left>.proto Type</th><th style=text-align:left>Notes</th><th style=text-align:left>C++ Type</th><th style=text-align:left>Java Type</th><th style=text-align:left>Python Type[2]</th><th style=text-align:left>Go Type</th></tr></thead><tbody><tr><td style=text-align:left>double</td><td style=text-align:left></td><td style=text-align:left>double</td><td style=text-align:left>double</td><td style=text-align:left>float</td><td style=text-align:left>*float64</td></tr><tr><td style=text-align:left>float</td><td style=text-align:left></td><td style=text-align:left>float</td><td style=text-align:left>float</td><td style=text-align:left>float</td><td style=text-align:left>*float32</td></tr><tr><td style=text-align:left>int32</td><td style=text-align:left>Uses variable-length encoding. Inefficient for encoding negative numbers – if your field is likely to have negative values, use sint32 instead.</td><td style=text-align:left>int32</td><td style=text-align:left>int</td><td style=text-align:left>int</td><td style=text-align:left>*int32</td></tr><tr><td style=text-align:left>int64</td><td style=text-align:left>Uses variable-length encoding. Inefficient for encoding negative numbers – if your field is likely to have negative values, use sint64 instead.</td><td style=text-align:left>int64</td><td style=text-align:left>long</td><td style=text-align:left>int/long[3]</td><td style=text-align:left>*int64</td></tr><tr><td style=text-align:left>uint32</td><td style=text-align:left>Uses variable-length encoding.</td><td style=text-align:left>uint32</td><td style=text-align:left>int[1]</td><td style=text-align:left>int/long[3]</td><td style=text-align:left>*uint32</td></tr><tr><td style=text-align:left>uint64</td><td style=text-align:left>Uses variable-length encoding.</td><td style=text-align:left>uint64</td><td style=text-align:left>long[1]</td><td style=text-align:left>int/long[3]</td><td style=text-align:left>*uint64</td></tr><tr><td style=text-align:left>sint32</td><td style=text-align:left>Uses variable-length encoding. Signed int value. These more efficiently encode negative numbers than regular int32s.</td><td style=text-align:left>int32</td><td style=text-align:left>int</td><td style=text-align:left>int</td><td style=text-align:left>*int32</td></tr><tr><td style=text-align:left>sint64</td><td style=text-align:left>Uses variable-length encoding. Signed int value. These more efficiently encode negative numbers than regular int64s.</td><td style=text-align:left>int64</td><td style=text-align:left>long</td><td style=text-align:left>int/long[3]</td><td style=text-align:left>*int64</td></tr><tr><td style=text-align:left>fixed32</td><td style=text-align:left>Always four bytes. More efficient than uint32 if values are often greater than 228.</td><td style=text-align:left>uint32</td><td style=text-align:left>int[1]</td><td style=text-align:left>int/long[3]</td><td style=text-align:left>*uint32</td></tr><tr><td style=text-align:left>fixed64</td><td style=text-align:left>Always eight bytes. More efficient than uint64 if values are often greater than 256.</td><td style=text-align:left>uint64</td><td style=text-align:left>long[1]</td><td style=text-align:left>int/long[3]</td><td style=text-align:left>*uint64</td></tr><tr><td style=text-align:left>sfixed32</td><td style=text-align:left>Always four bytes.</td><td style=text-align:left>int32</td><td style=text-align:left>int</td><td style=text-align:left>int</td><td style=text-align:left>*int32</td></tr><tr><td style=text-align:left>sfixed64</td><td style=text-align:left>Always eight bytes.</td><td style=text-align:left>int64</td><td style=text-align:left>long</td><td style=text-align:left>int/long[3]</td><td style=text-align:left>*int64</td></tr><tr><td style=text-align:left>bool</td><td style=text-align:left></td><td style=text-align:left>bool</td><td style=text-align:left>boolean</td><td style=text-align:left>bool</td><td style=text-align:left>*bool</td></tr><tr><td style=text-align:left>string</td><td style=text-align:left>A string must always contain UTF-8 encoded or 7-bit ASCII text.</td><td style=text-align:left>string</td><td style=text-align:left>String</td><td style=text-align:left>unicode (Python 2) or str (Python 3)</td><td style=text-align:left>*string</td></tr><tr><td style=text-align:left>bytes</td><td style=text-align:left>May contain any arbitrary sequence of bytes.</td><td style=text-align:left>string</td><td style=text-align:left>ByteString</td><td style=text-align:left>bytes</td><td style=text-align:left>[]byte</td></tr></tbody></table><h3 id=23-可选字段的默认值>2.3 可选字段的默认值</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-protobuf data-lang=protobuf><span class=k>optional</span> <span class=kt>int32</span> <span class=n>result_per_page</span> <span class=o>=</span> <span class=mi>3</span> <span class=p>[</span><span class=k>default</span> <span class=o>=</span> <span class=mi>10</span><span class=p>];</span><span class=err>
+</span></code></pre></td></tr></table></div></div><p>对于字符串，默认值为空字符串。对于字节，默认值为空字节字符串。对于布尔值，默认值为false。对于数字类型，默认值为零。对于枚举，默认值为枚举类型定义中列出的第一个值。</p><h3 id=24-枚举>2.4 枚举</h3><ul><li>标准用法</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-protobuf data-lang=protobuf><span class=kd>message</span> <span class=nc>SearchRequest</span> <span class=p>{</span><span class=err>
+</span><span class=err></span>  <span class=k>required</span> <span class=kt>string</span> <span class=n>query</span> <span class=o>=</span> <span class=mi>1</span><span class=p>;</span><span class=err>
+</span><span class=err></span>  <span class=k>optional</span> <span class=kt>int32</span> <span class=n>page_number</span> <span class=o>=</span> <span class=mi>2</span><span class=p>;</span><span class=err>
+</span><span class=err></span>  <span class=k>optional</span> <span class=kt>int32</span> <span class=n>result_per_page</span> <span class=o>=</span> <span class=mi>3</span> <span class=p>[</span><span class=k>default</span> <span class=o>=</span> <span class=mi>10</span><span class=p>];</span><span class=err>
+</span><span class=err></span>  <span class=kd>enum</span> <span class=n>Corpus</span> <span class=p>{</span><span class=err>
+</span><span class=err></span>    <span class=n>UNIVERSAL</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span><span class=err>
+</span><span class=err></span>    <span class=n>WEB</span> <span class=o>=</span> <span class=mi>1</span><span class=p>;</span><span class=err>
+</span><span class=err></span>    <span class=n>IMAGES</span> <span class=o>=</span> <span class=mi>2</span><span class=p>;</span><span class=err>
+</span><span class=err></span>    <span class=n>LOCAL</span> <span class=o>=</span> <span class=mi>3</span><span class=p>;</span><span class=err>
+</span><span class=err></span>    <span class=n>NEWS</span> <span class=o>=</span> <span class=mi>4</span><span class=p>;</span><span class=err>
+</span><span class=err></span>    <span class=n>PRODUCTS</span> <span class=o>=</span> <span class=mi>5</span><span class=p>;</span><span class=err>
+</span><span class=err></span>    <span class=n>VIDEO</span> <span class=o>=</span> <span class=mi>6</span><span class=p>;</span><span class=err>
+</span><span class=err></span>  <span class=p>}</span><span class=err>
+</span><span class=err></span>  <span class=k>optional</span> <span class=n>Corpus</span> <span class=n>corpus</span> <span class=o>=</span> <span class=mi>4</span> <span class=p>[</span><span class=k>default</span> <span class=o>=</span> <span class=n>UNIVERSAL</span><span class=p>];</span><span class=err>
+</span><span class=err></span><span class=p>}</span><span class=err>
+</span></code></pre></td></tr></table></div></div><p>给枚举取别名，加上 <code>option allow_alias = true</code></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-protobuf data-lang=protobuf><span class=kd>enum</span> <span class=n>EnumAllowingAlias</span> <span class=p>{</span><span class=err>
+</span><span class=err></span>  <span class=k>option</span> <span class=n>allow_alias</span> <span class=o>=</span> <span class=kc>true</span><span class=p>;</span><span class=err>
+</span><span class=err></span>  <span class=n>UNKNOWN</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span><span class=err>
+</span><span class=err></span>  <span class=n>STARTED</span> <span class=o>=</span> <span class=mi>1</span><span class=p>;</span><span class=err>
+</span><span class=err></span>  <span class=n>RUNNING</span> <span class=o>=</span> <span class=mi>1</span><span class=p>;</span><span class=err>
+</span><span class=err></span><span class=p>}</span><span class=err>
+</span><span class=err></span><span class=kd>enum</span> <span class=n>EnumNotAllowingAlias</span> <span class=p>{</span><span class=err>
+</span><span class=err></span>  <span class=n>UNKNOWN</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span><span class=err>
+</span><span class=err></span>  <span class=n>STARTED</span> <span class=o>=</span> <span class=mi>1</span><span class=p>;</span><span class=err>
+</span><span class=err></span>  <span class=c1>// RUNNING = 1;  // Uncommenting this line will cause a compile error inside Google and a warning message outside.
+</span><span class=c1></span><span class=p>}</span><span class=err>
+</span><span class=err>
+</span></code></pre></td></tr></table></div></div><ul><li>保留值</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-protobuf data-lang=protobuf><span class=kd>enum</span> <span class=n>Foo</span> <span class=p>{</span><span class=err>
+</span><span class=err></span>  <span class=n>reserved</span> <span class=mi>2</span><span class=p>,</span> <span class=mi>15</span><span class=p>,</span> <span class=mi>9</span> <span class=k>to</span> <span class=mi>11</span><span class=p>,</span> <span class=mi>40</span> <span class=k>to</span> <span class=k>max</span><span class=p>;</span><span class=err>
+</span><span class=err></span>  <span class=n>reserved</span> <span class=s>&#34;FOO&#34;</span><span class=p>,</span> <span class=s>&#34;BAR&#34;</span><span class=p>;</span><span class=err>
+</span><span class=err></span><span class=p>}</span><span class=err>
+</span></code></pre></td></tr></table></div></div><p>不能在同<code>reserved</code>一条语句中混合使用字段名和数字值</p><h3 id=25-使用其它消息类型>2.5 使用其它消息类型</h3><ul><li>同一个文件</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-protobuf data-lang=protobuf><span class=kd>message</span> <span class=nc>SearchResponse</span> <span class=p>{</span><span class=err>
+</span><span class=err></span>  <span class=k>repeated</span> <span class=n>Result</span> <span class=n>result</span> <span class=o>=</span> <span class=mi>1</span><span class=p>;</span><span class=err>
+</span><span class=err></span><span class=p>}</span><span class=err>
+</span><span class=err>
+</span><span class=err></span><span class=kd>message</span> <span class=nc>Result</span> <span class=p>{</span><span class=err>
+</span><span class=err></span>  <span class=k>required</span> <span class=kt>string</span> <span class=n>url</span> <span class=o>=</span> <span class=mi>1</span><span class=p>;</span><span class=err>
+</span><span class=err></span>  <span class=k>optional</span> <span class=kt>string</span> <span class=n>title</span> <span class=o>=</span> <span class=mi>2</span><span class=p>;</span><span class=err>
+</span><span class=err></span>  <span class=k>repeated</span> <span class=kt>string</span> <span class=n>snippets</span> <span class=o>=</span> <span class=mi>3</span><span class=p>;</span><span class=err>
+</span><span class=err></span><span class=p>}</span><span class=err>
+</span></code></pre></td></tr></table></div></div><ul><li>不是同一个文件</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-protobuf data-lang=protobuf><span class=k>import</span> <span class=s>&#34;myproject/other_protos.proto&#34;</span><span class=p>;</span><span class=err>
+</span></code></pre></td></tr></table></div></div><ul><li>文件转移</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-protobuf data-lang=protobuf><span class=c1>// new.proto
+</span><span class=c1>// All definitions are moved here
+</span></code></pre></td></tr></table></div></div><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-protobuf data-lang=protobuf><span class=c1>// old.proto
+</span><span class=c1>// This is the proto that all clients are importing.
+</span><span class=c1></span><span class=k>import</span> <span class=n>public</span> <span class=s>&#34;new.proto&#34;</span><span class=p>;</span><span class=err>
+</span><span class=err></span><span class=k>import</span> <span class=s>&#34;other.proto&#34;</span><span class=p>;</span><span class=err>
+</span></code></pre></td></tr></table></div></div><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-protobuf data-lang=protobuf><span class=c1>// client.proto
+</span><span class=c1></span><span class=k>import</span> <span class=s>&#34;old.proto&#34;</span><span class=p>;</span><span class=err>
+</span><span class=err></span><span class=c1>// You use definitions from old.proto and new.proto, but not other.proto
+</span></code></pre></td></tr></table></div></div><h3 id=26-嵌套类型>2.6 嵌套类型</h3><ul><li>标准例子</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-protobuf data-lang=protobuf><span class=kd>message</span> <span class=nc>SearchResponse</span> <span class=p>{</span><span class=err>
+</span><span class=err></span>  <span class=kd>message</span> <span class=nc>Result</span> <span class=p>{</span><span class=err>
+</span><span class=err></span>    <span class=k>required</span> <span class=kt>string</span> <span class=n>url</span> <span class=o>=</span> <span class=mi>1</span><span class=p>;</span><span class=err>
+</span><span class=err></span>    <span class=k>optional</span> <span class=kt>string</span> <span class=n>title</span> <span class=o>=</span> <span class=mi>2</span><span class=p>;</span><span class=err>
+</span><span class=err></span>    <span class=k>repeated</span> <span class=kt>string</span> <span class=n>snippets</span> <span class=o>=</span> <span class=mi>3</span><span class=p>;</span><span class=err>
+</span><span class=err></span>  <span class=p>}</span><span class=err>
+</span><span class=err></span>  <span class=k>repeated</span> <span class=n>Result</span> <span class=n>result</span> <span class=o>=</span> <span class=mi>1</span><span class=p>;</span><span class=err>
+</span><span class=err></span><span class=p>}</span><span class=err>
+</span></code></pre></td></tr></table></div></div><ul><li>其它类型嵌套</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-protobuf data-lang=protobuf><span class=kd>message</span> <span class=nc>SomeOtherMessage</span> <span class=p>{</span><span class=err>
+</span><span class=err></span>  <span class=k>optional</span> <span class=n>SearchResponse.Result</span> <span class=n>result</span> <span class=o>=</span> <span class=mi>1</span><span class=p>;</span><span class=err>
+</span><span class=err></span><span class=p>}</span><span class=err>
+</span></code></pre></td></tr></table></div></div><ul><li>你可以多层嵌套</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-protobuf data-lang=protobuf><span class=kd>message</span> <span class=nc>Outer</span> <span class=p>{</span>       <span class=c1>// Level 0
+</span><span class=c1></span>  <span class=kd>message</span> <span class=nc>MiddleAA</span> <span class=p>{</span>  <span class=c1>// Level 1
+</span><span class=c1></span>    <span class=kd>message</span> <span class=nc>Inner</span> <span class=p>{</span>   <span class=c1>// Level 2
+</span><span class=c1></span>      <span class=k>required</span> <span class=kt>int64</span> <span class=n>ival</span> <span class=o>=</span> <span class=mi>1</span><span class=p>;</span><span class=err>
+</span><span class=err></span>      <span class=k>optional</span> <span class=kt>bool</span>  <span class=n>booly</span> <span class=o>=</span> <span class=mi>2</span><span class=p>;</span><span class=err>
+</span><span class=err></span>    <span class=p>}</span><span class=err>
+</span><span class=err></span>  <span class=p>}</span><span class=err>
+</span><span class=err></span>  <span class=kd>message</span> <span class=nc>MiddleBB</span> <span class=p>{</span>  <span class=c1>// Level 1
+</span><span class=c1></span>    <span class=kd>message</span> <span class=nc>Inner</span> <span class=p>{</span>   <span class=c1>// Level 2
+</span><span class=c1></span>      <span class=k>required</span> <span class=kt>int32</span> <span class=n>ival</span> <span class=o>=</span> <span class=mi>1</span><span class=p>;</span><span class=err>
+</span><span class=err></span>      <span class=k>optional</span> <span class=kt>bool</span>  <span class=n>booly</span> <span class=o>=</span> <span class=mi>2</span><span class=p>;</span><span class=err>
+</span><span class=err></span>    <span class=p>}</span><span class=err>
+</span><span class=err></span>  <span class=p>}</span><span class=err>
+</span><span class=err></span><span class=p>}</span><span class=err>
+</span></code></pre></td></tr></table></div></div><h3 id=27-更新消息类型>2.7 更新消息类型</h3><ul><li>不要更改任何现有字段的字段编号。</li><li>您添加的任何新字段应为<code>optional</code>或<code>repeated</code>。这意味着任何使用“旧”消息格式通过代码序列化的消息都可以被新生成的代码解析，因为它们不会丢失任何<code>required</code>元素。您应该为这些元素设置合理的<a href=https://developers.google.com/protocol-buffers/docs/overview#optional target=_blank rel="noopener noreffer">默认值</a>，以便新代码可以与旧代码生成的消息正确交互。同样，由新代码创建的消息可以由旧代码解析：旧的二进制文件在解析时只会忽略新字段。但是，未知字段不会被丢弃，并且如果消息在以后进行序列化，则未知字段也会与之一起进行序列化–因此，如果消息传递给新代码，则新字段仍然可用。</li><li>只要在更新的消息类型中不再使用该字段号，就可以删除不需要的字段。您可能想要重命名该字段，或者添加前缀“ OBSOLETE_”，或者将字段编号<a href=https://developers.google.com/protocol-buffers/docs/overview#reserved target=_blank rel="noopener noreffer">保留为</a>，以便将来的用户<code>.proto</code>不会意外地重用该编号。</li><li>只要类型和数字保持不变，就可以将不需要的字段转换为<a href=https://developers.google.com/protocol-buffers/docs/overview#extensions target=_blank rel="noopener noreffer">扩展名</a>，反之亦然。</li><li><code>int32</code>，<code>uint32</code>，<code>int64</code>，<code>uint64</code>，和<code>bool</code>都是兼容的-这意味着你可以在现场从这些类型到另一种改变不破坏forwards-或向后兼容。如果从对应的类型不适合的导线中解析出一个数字，则将获得与在C ++中将数字强制转换为该类型一样的效果（例如，如果将64位数字读取为int32，它将被截断为32位）。</li><li><code>sint32</code>并且<code>sint64</code>彼此兼容，但与其他整数类型<em>不</em>兼容。</li><li><code>string</code>并且<code>bytes</code>只要字节是有效的UTF-8即可兼容。</li><li><code>bytes</code>如果字节包含消息的编码版本，则嵌入式消息与之兼容。</li><li><code>fixed32</code>与兼容<code>sfixed32</code>，并<code>fixed64</code>用<code>sfixed64</code>。</li><li>对于<code>string</code>，<code>bytes</code>和消息字段，<code>optional</code>与兼容<code>repeated</code>。给定重复字段的序列化数据作为输入，如果期望该字段<code>optional</code>是原始类型字段，则期望该字段的客户端将采用最后一个输入值；如果是消息类型字段，则将合并所有输入元素。请注意，这对于数字类型（包括布尔值和枚举）通常<strong>并不</strong>安全。重复的数字类型字段可以以<a href=https://developers.google.com/protocol-buffers/docs/encoding#packed target=_blank rel="noopener noreffer">打包</a>格式序列化，当需要一个<code>optional</code>字段时，将无法正确解析该格式。</li><li>只要您记住从未通过网络发送默认值，通常就可以更改默认值。因此，如果程序收到未设置特定字段的消息，则该程序将看到该程序协议版本中定义的默认值。它不会看到在发送者的代码中定义的默认值。</li><li><code>enum</code>与兼容<code>int32</code>，<code>uint32</code>，<code>int64</code>，和<code>uint64</code>电线格式条款（请注意，如果他们不适合的值将被截断），但是要知道，客户端代码可以区别对待反序列化的消息时。值得注意的是，<code>enum</code>当对消息进行反序列化时，无法识别的值将被丢弃，这会使字段的<code>has..</code>访问器返回false，并且其getter返回<code>enum</code>定义中列出的第一个值；如果指定了默认值，则返回默认值。对于重复的枚举字段，所有无法识别的值将从列表中删除。但是，整数字段将始终保留其值。因此，在将整数升级为a时，<code>enum</code>在接收在线上的枚举枚举值方面需要非常小心。</li><li>在当前的Java和C ++实现中，当<code>enum</code>去除了无法识别的值时，它们会与其他未知字段一起存储。请注意，如果将此数据序列化然后由识别这些值的客户端重新解析，则可能导致奇怪的行为。对于可选字段，即使在反序列化原始消息后写入了新值，识别该值的客户端仍会读取旧值。在重复字段的情况下，旧值将出现在任何已识别的值和新添加的值之后，这意味着将不保留顺序。</li><li>将单个<code>optional</code>值更改为<strong>新</strong> 值的成员<code>oneof</code>是安全且二进制兼容的。如果您确定没有代码一次设置多个<code>optional</code>字段，那么将多个字段移动到新字段中<code>oneof</code>可能是安全的。将任何字段移到现有字段中<code>oneof</code>都是不安全的。</li><li>在<code>map&lt;K, V></code>和对应的<code>repeated</code>消息字段之间更改字段是二进制兼容的（有关消息布局和其他限制，请参见下面的<a href=https://developers.google.com/protocol-buffers/docs/overview#maps target=_blank rel="noopener noreffer">Maps</a>）。但是，更改的安全性取决于应用程序：在反序列化和重新序列化消息时，使用<code>repeated</code>字段定义的客户端将产生语义上相同的结果；但是，使用<code>map</code>字段定义的客户端可以对条目进行重新排序，并删除具有重复键的条目。</li></ul><h3 id=28-扩展名>2.8 扩展名</h3><ul><li>标准用法</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-protobuf data-lang=protobuf><span class=kd>message</span> <span class=nc>Foo</span> <span class=p>{</span><span class=err>
+</span><span class=err></span>  <span class=c1>// ...
+</span><span class=c1></span>  <span class=k>extensions</span> <span class=mi>100</span> <span class=k>to</span> <span class=mi>199</span><span class=p>;</span><span class=err>
+</span><span class=err></span><span class=p>}</span><span class=err>
+</span></code></pre></td></tr></table></div></div><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-protobuf data-lang=protobuf><span class=kd>extend</span> <span class=nc>Foo</span> <span class=p>{</span><span class=err>
+</span><span class=err></span>  <span class=k>optional</span> <span class=kt>int32</span> <span class=n>bar</span> <span class=o>=</span> <span class=mi>126</span><span class=p>;</span><span class=err>
+</span><span class=err></span><span class=p>}</span><span class=err>
+</span></code></pre></td></tr></table></div></div><p>实际例子待补充</p><ul><li>嵌套扩展</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-protobuf data-lang=protobuf><span class=kd>message</span> <span class=nc>Baz</span> <span class=p>{</span><span class=err>
+</span><span class=err></span>  <span class=kd>extend</span> <span class=nc>Foo</span> <span class=p>{</span><span class=err>
+</span><span class=err></span>    <span class=k>optional</span> <span class=kt>int32</span> <span class=n>bar</span> <span class=o>=</span> <span class=mi>126</span><span class=p>;</span><span class=err>
+</span><span class=err></span>  <span class=p>}</span><span class=err>
+</span><span class=err></span>  <span class=o>...</span><span class=err>
+</span><span class=err></span><span class=p>}</span><span class=err>
+</span></code></pre></td></tr></table></div></div><p>实际例子待补充</p><h3 id=29-一个>2.9 一个</h3><ul><li>标准使用</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-proto data-lang=proto><span class=kd>message</span> <span class=nc>SampleMessage</span> <span class=p>{</span><span class=err>
+</span><span class=err></span>  <span class=k>oneof</span> <span class=n>test_oneof</span> <span class=p>{</span><span class=err>
+</span><span class=err></span>     <span class=kt>string</span> <span class=n>name</span> <span class=o>=</span> <span class=mi>4</span><span class=p>;</span><span class=err>
+</span><span class=err></span>     <span class=n>SubMessage</span> <span class=n>sub_message</span> <span class=o>=</span> <span class=mi>9</span><span class=p>;</span><span class=err>
+</span><span class=err></span>  <span class=p>}</span><span class=err>
+</span><span class=err></span><span class=p>}</span><span class=err>
+</span></code></pre></td></tr></table></div></div><ul><li>oneof特性<ul><li>设置oneof字段将自动清除oneof的所有其他成员。因此，如果您设置了多个字段，则只有您设置的<em>最后一个</em>字段仍具有值</li><li>如果解析器在线路上遇到同一个对象的多个成员，则在解析的消息中仅使用最后看到的成员。</li><li>其中之一不支持扩展。</li><li>一个不能是<code>repeated</code>。</li><li>反射API适用于其中一个字段。</li><li>如果将oneof字段设置为默认值（例如将int32 oneof字段设置为0），则将设置该oneof字段的“大小写”，并且该值将在线路上序列化。</li></ul></li><li>向后兼容问题</li></ul><p>添加或删除字段之一时请多加注意。如果检查oneof的值返回<code>None</code>/ <code>NOT_SET</code>，则可能意味着尚未设置oneof或已将其设置为不同版本的oneof中的字段。由于无法知道导线上的未知字段是否是oneof的成员，因此无法分辨出差异。</p><h3 id=210-maps>2.10 Maps</h3><h2 id=三参考>三、参考</h2><p><a href=https://developers.google.com/protocol-buffers/docs/overview target=_blank rel="noopener noreffer">https://developers.google.com/protocol-buffers/docs/overview</a></p></div><div id=comments><div id=gitalk class=comment></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://github.com/gitalk/gitalk></a>Gitalk</a>.</noscript></div></div></div></main><footer class=footer><div class=footer-container><div class=footer-line>Powered by <a href=https://gohugo.io/ target=_blank rel="noopener noreffer"title="Hugo 0.76.0">Hugo</a> | Theme - <a href=https://github.com/dillonzq/LoveIt target=_blank rel="noopener noreffer"title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i>LoveIt</a></div><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2019 - 2020</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=/zh-cn/ target=_blank>xxxx</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer"href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title="Back to Top"><i class="fas fa-arrow-up fa-fw"></i></a><a href=# id=view-comments class=fixed-button title="View Comments"><i class="fas fa-comment fa-fw"></i></a></div><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.min.css><script type=text/javascript src=https://cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/smooth-scroll@16.1.3/dist/smooth-scroll.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/autocomplete.js@0.37.1/dist/autocomplete.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/algoliasearch@4.2.0/dist/algoliasearch-lite.umd.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/lazysizes@5.2.2/lazysizes.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/sharer.js@0.4.0/sharer.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/typeit@7.0.4/dist/typeit.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:10},comment:{gitalk:{admin:["funnycode-org"],clientID:"7ebb4aff12c6b5dc4aac",clientSecret:"936a5d4f413da26ed5ae8b590de6c259515e007c",id:"2020-12-18T16:18:00+08:00",owner:"funnycode-org",repo:"funnycode-org.github.io",title:"Protocol Buffers | Language Guide(proto2)"}},data:{"id-1":"云原生玩码部落","id-2":"云原生玩码部落"},search:{algoliaAppID:"PASDMWALPK",algoliaIndex:"index.zh-cn",algoliaSearchKey:"b42948e51daaa93df92381c8e2ac0f93",highlightTag:"em",maxResultLength:10,noResultsFound:"No results found",snippetLength:50,type:"algolia"},typeit:{cursorChar:"|",cursorSpeed:1e3,data:{"id-1":["id-1"],"id-2":["id-2"]},duration:-1,speed:100}}</script><script type=text/javascript src=/js/theme.min.js></script></body></html>
