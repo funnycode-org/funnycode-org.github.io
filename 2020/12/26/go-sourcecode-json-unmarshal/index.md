@@ -109,6 +109,111 @@ go的代码在这里:
 			}
 ```
 `v.NumMethod() == 0`表示必须是个空接口。
+## 4.不要把数组当做反序列化的字段类型
+### 4.1 虽然说一般来说我们都是用切片，但是也还是拎出来讲一讲下，可能会导致少反序列化些数组值。
+假如我有这么个结构体：
+```go
+type User struct {
+	Name string
+	Age  [1]int
+}
+```
+而我的json字符串长这样:
+```bash
+	{
+		"Name": "zhangSan",
+ 		"Age": [20,21]
+	}
+```
+[反序列化代码](https://play.studygolang.com/p/vgTwZSDjMMr)的结果如下:
+```bash
+{zhangSan [20]}
+```
+可以看到只序列化了数组的长度个数，其他都被抛弃了，而且没有任何错误提示。
+go的源码在这里:
+```go
+		if i < v.Len() {
+			// Decode into element.
+			if err := d.value(v.Index(i)); err != nil {
+				return err
+			}
+		} else {
+			// Ran out of fixed array: skip.
+			if err := d.value(reflect.Value{}); err != nil {
+				return err
+			}
+		}
+```
+`i`表示json字符串里面的数组的长度，因为 `i`大于 `v.Len()`（数组的长度)的时候，就表示结构体的数组太短了，在第8行简单的忽略了。
+### 4.2 当数组被初始化过非0值，反序列化会被置为0
+结构体如下：
+```go
+type User struct {
+	Name string
+	Age  [2]int
+}
+```
+[反序列化代码](https://play.studygolang.com/p/Rztzzfx0QqB)如下：
+```go
+	var data = []byte (`
+	{
+		"Name": "zhangSan",
+ 		"Age": [20]
+	}
+ 	`)
+	var san = User{
+		Age: [2]int{1, 2},
+	}
+	err := json.Unmarshal(data, &san)
+	if err != nil {
+		fmt.Println("error:", err)
+	} else {
+		fmt.Println(san)
+	}
+```
+在第8行被初始化之后，反序列化之后结果就是为0值了，结果如下:
+```bash
+{zhangSan [20 0]}
+```
+go得源码在这里:
+```go
+	if i < v.Len() {
+		if v.Kind() == reflect.Array {
+			// Array. Zero the rest.
+			z := reflect.Zero(v.Type().Elem())
+			for ; i < v.Len(); i++ {
+				v.Index(i).Set(z)
+			}
+		} else {
+			v.SetLen(i)
+		}
+	}
+```
+`i`表示的是json字符串的数组的长度，当 `i`小于`v.Len()`(数组的长度)的时候，会把元素设置为`reflect.Zero(v.Type().Elem())`。
+## 5.map的key不是int或者string，怎么操作？
+一招解决：实现接口`encoding.TextUnmarshaler`。这个我就不举列子了。
+go的源码在这：
+```go
+	switch v.Kind() {
+	case reflect.Map:
+		// Map key must either have string kind, have an integer kind,
+		// or be an encoding.TextUnmarshaler.
+		switch t.Key().Kind() {
+		case reflect.String,
+			reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64,
+			reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Uintptr:
+		default:
+			if !reflect.PtrTo(t.Key()).Implements(textUnmarshalerType) {
+				d.saveError(&UnmarshalTypeError{Value: "object", Type: t, Offset: int64(d.off)})
+				d.skip()
+				return nil
+			}
+		}
+		if v.IsNil() {
+			v.Set(reflect.MakeMap(t))
+		}
+```
+当时`map`类型的时候，key不是`string`或者integer,那么如果实现了`textUnmarshalerType`也是可以的。
 # 三、另外一种装逼的反序列方式
 你可知除了`json.Unmarshal()`这种方式，还有[另外一种反序列](https://play.studygolang.com/p/mWfjh3yqsS0)的编码方式:
 ```go
@@ -226,5 +331,9 @@ error: json: unknown field "Head"
 		d.saveError(fmt.Errorf("json: unknown field %q", key))
 	}
 ```
-# 三、参考
-
+# 四、写到最后
+上面总结了反序列化的注意一点，由于我的水平有限，并且我也是根据源码倒推过来的，可能还有更深层次的技巧或坑我还没有发现。如果你在工作过程中遇到序列化或者反序列化的问题，欢迎和我交流。可以加我微信，或者微信公众号，我会长期输出原创文章。
+- 我的微信：
+![我的微信](./my_wecht.jpeg)
+- 我的微信公众号:
+![云原生玩码部落](https://img-blog.csdnimg.cn/20201213215616541.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTA5MjczNDA=,size_16,color_FFFFFF,t_70)
