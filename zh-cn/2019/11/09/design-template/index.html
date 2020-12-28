@@ -1,0 +1,1303 @@
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><meta http-equiv=x-ua-compatible content="IE=edge, chrome=1"><title>闲聊设计模式 | 模板方法模式 - 云原生玩码部落</title><meta name=Description content="本文介绍设计模式之模板方法模式"><meta property="og:title"content="闲聊设计模式 | 模板方法模式"><meta property="og:description"content="本文介绍设计模式之模板方法模式"><meta property="og:type"content="article"><meta property="og:url"content="http://blog.funnycode.org.cn/zh-cn/2019/11/09/design-template/"><meta property="og:image"content="http://blog.funnycode.org.cn/logo.png"><meta property="article:published_time"content="2019-11-09T19:00:33+08:00"><meta property="article:modified_time"content="2020-03-09T16:25:11+08:00"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="http://blog.funnycode.org.cn/logo.png"><meta name=twitter:title content="闲聊设计模式 | 模板方法模式"><meta name=twitter:description content="本文介绍设计模式之模板方法模式"><meta name=application-name content="云原生玩码部落"><meta name=apple-mobile-web-app-title content="云原生玩码部落"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon"type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=http://blog.funnycode.org.cn/zh-cn/2019/11/09/design-template/><link rel=next href=http://blog.funnycode.org.cn/zh-cn/2020/06/11/hugo-github-action/><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.0/css/all.min.css><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"闲聊设计模式 | 模板方法模式","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"http:\/\/blog.funnycode.org.cn\/zh-cn\/2019\/11\/09\/design-template\/"},"image":["http:\/\/blog.funnycode.org.cn\/images\/Apple-Devices-Preview.png"],"genre":"posts","keywords":"java, golang, 模板方法模式","wordcount":5074,"url":"http:\/\/blog.funnycode.org.cn\/zh-cn\/2019\/11\/09\/design-template\/","datePublished":"2019-11-09T19:00:33+08:00","dateModified":"2020-03-09T16:25:11+08:00","license":"This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher":{"@type":"Organization","name":"xxxx","logo":"http:\/\/blog.funnycode.org.cn\/images\/me\/logo.png"},"author":{"@type":"Person","name":"铁城"},"description":"本文介绍设计模式之模板方法模式"}</script></head><body header-desktop=fixed header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem('theme')?localStorage.getItem('theme')==='dark':'auto'==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches:'auto'==='dark')&&document.body.setAttribute('theme','dark')</script><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/zh-cn/ title=云原生玩码部落><span class=header-title-pre><i class="far fa-kiss-wink-heart fa-fw"></i></span><span id=id-1 class=typeit></span></a></div><div class=menu><div class=menu-inner><a class=menu-item href=/zh-cn/posts/>所有文章 </a><a class=menu-item href=/zh-cn/tags/>标签 </a><a class=menu-item href=/zh-cn/categories/>分类 </a><a class=menu-item href=/zh-cn/notes/>笔记 </a><a class=menu-item href=/zh-cn/about/>关于 </a><a class=menu-item href=https://github.com/funnycode-org title=GitHub rel="noopener noreffer"target=_blank><i class="fab fa-github fa-fw"></i></a><span class="menu-item delimiter"></span><a href=javascript:void(0); class="menu-item language"title="Select Language">简体中文<i class="fas fa-chevron-right fa-fw"></i>
+<select class=language-select id=language-select-desktop onchange="location=this.value"><option value=/zh-cn/2019/11/09/design-template/ selected>简体中文</option></select>
+</a><span class="menu-item search"id=search-desktop><input type=text placeholder="Search titles or contents..."id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle"id=search-toggle-desktop title=Search><i class="fas fa-search fa-fw"></i></a><a href=javascript:void(0); class="search-button search-clear"id=search-clear-desktop title=Clear><i class="fas fa-times-circle fa-fw"></i></a><span class="search-button search-loading"id=search-loading-desktop><i class="fas fa-spinner fa-fw fa-spin"></i></span></span><a href=javascript:void(0); class="menu-item theme-switch"title="Switch Theme"><i class="fas fa-adjust fa-fw"></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/zh-cn/ title=云原生玩码部落><span class=header-title-pre><i class="far fa-kiss-wink-heart fa-fw"></i></span><span id=id-2 class=typeit></span></a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><div class=search-wrapper><div class="search mobile"id=search-mobile><input type=text placeholder="Search titles or contents..."id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle"id=search-toggle-mobile title=Search><i class="fas fa-search fa-fw"></i></a><a href=javascript:void(0); class="search-button search-clear"id=search-clear-mobile title=Clear><i class="fas fa-times-circle fa-fw"></i></a><span class="search-button search-loading"id=search-loading-mobile><i class="fas fa-spinner fa-fw fa-spin"></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>Cancel</a></div><a class=menu-item href=/zh-cn/posts/ title>所有文章</a><a class=menu-item href=/zh-cn/tags/ title>标签</a><a class=menu-item href=/zh-cn/categories/ title>分类</a><a class=menu-item href=/zh-cn/notes/ title>笔记</a><a class=menu-item href=/zh-cn/about/ title>关于</a><a class=menu-item href=https://github.com/funnycode-org title=GitHub rel="noopener noreffer"target=_blank><i class="fab fa-github fa-fw"></i></a><a href=javascript:void(0); class="menu-item theme-switch"title="Switch Theme">
+<i class="fas fa-adjust fa-fw"></i></a><a href=javascript:void(0); class=menu-item title="Select Language">简体中文<i class="fas fa-chevron-right fa-fw"></i>
+<select class=language-select onchange="location=this.value"><option value=/zh-cn/2019/11/09/design-template/ selected>简体中文</option></select></a></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=main><div class=container><div class=toc id=toc-auto><h2 class=toc-title>Contents</h2><div class=toc-content id=toc-content-auto></div></div><article class="page single"><h1 class="single-title animated flipInX">闲聊设计模式 | 模板方法模式</h1><div class=post-meta><div class=post-meta-line><span class=post-author><a href=/zh-cn/ title=Author rel=author class=author><i class="fas fa-user-circle fa-fw"></i>铁城</a></span>&nbsp;<span class=post-category>included in <a href=/zh-cn/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/><i class="far fa-folder fa-fw"></i>设计模式</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2019-11-09>2019-11-09</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;5074 words&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;11 minutes&nbsp;</div></div><div class="details toc"id=toc-static kept><div class="details-summary toc-title"><span>Contents</span>
+<span><i class="details-icon fas fa-angle-right"></i></span></div><div class="details-content toc-content"id=toc-content-static><nav id=TableOfContents><ul><li><a href=#一前言>一、前言</a></li><li><a href=#二简单实例>二、简单实例</a><ul><li><a href=#21-java版本>2.1 Java版本</a><ul><li><a href=#211-定义接口>2.1.1 定义接口</a></li><li><a href=#212-定义抽象方法>2.1.2 定义抽象方法</a></li><li><a href=#213-定义实现类>2.1.3 定义实现类</a></li><li><a href=#214-运行例子>2.1.4 运行例子</a></li></ul></li><li><a href=#22-golang-版本>2.2 Golang 版本</a><ul><li><a href=#221-定义接口>2.2.1 定义接口</a></li><li><a href=#222-定义抽象类>2.2.2 定义抽象类</a></li><li><a href=#223-定义实现类>2.2.3 定义实现类</a></li><li><a href=#224-定义默认实现方法>2.2.4 定义默认实现方法</a></li><li><a href=#225-运行例子>2.2.5 运行例子</a></li></ul></li><li><a href=#23-golang版本2>2.3 Golang版本2</a><ul><li><a href=#231-定义接口>2.3.1 定义接口</a></li><li><a href=#232-定义抽象类>2.3.2 定义抽象类</a></li><li><a href=#233-定义实现类>2.3.3 定义实现类</a></li><li><a href=#234-定义模板方法>2.3.4 定义模板方法</a></li><li><a href=#235-运行例子>2.3.5 运行例子</a></li></ul></li><li><a href=#24例子说明>2.4、例子说明</a></li></ul></li><li><a href=#三开源框架使用场景>三、开源框架使用场景</a><ul><li><a href=#31-jdk-abstractlist>3.1 JDK AbstractList</a></li><li><a href=#31-spring-中的-事务管理器>3.1 spring 中的 事务管理器</a></li></ul></li><li><a href=#四优势和劣势>四、优势和劣势</a><ul><li><a href=#41-优势>4.1 优势</a></li><li><a href=#42-劣势>4.2 劣势</a></li></ul></li><li><a href=#五参考>五、参考</a></li></ul></nav></div></div><div class=content id=content><h2 id=一前言>一、前言</h2><p><a href=https://zh.wikipedia.org/wiki/%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95 target=_blank rel="noopener noreffer">Template Pattern 模板方法</a> 来自 Wiki 百科的介绍：</p><blockquote><p><strong>模板方法模型</strong>是一种行为设计模型。<strong>模板方法</strong>是一个定义在父类别的方法，在<strong>模板方法</strong>中会呼叫多个定义在父类别的其他方法，而这些方法有可能只是抽象方法并没有实作，<strong>模板方法</strong>仅决定这些抽象方法的执行顺序，这些抽象方法的实作由子类别负责，并且子类别不允许覆写模板方法。</p></blockquote><p>模板方法是属于设计模式的<em>行为型模式</em></p><p>模板方法模式按照我的白话文理解：</p><p>首先定一个“抽象类”，它有一个模板方法A，定义可能需要子类实现的方法B，C，D&mldr;，然后在A方法里面编排好了B，C，D等的位置，当实现类调用A的时候，会调用各自实现的B，C，D方法（某些方法有默认实现，子类可以不实现），从而在一样的大流程里面进行不一样的操作。</p><h2 id=二简单实例>二、简单实例</h2><p><strong>故事背景</strong></p><p>阳光明媚的一天，玩码部落来了一群腿长一米八的MM，它们来自台湾，杭州及北京，她们将介绍各自家乡是如何准备丰富的晚餐的。</p><h3 id=21-java版本>2.1 Java版本</h3><h4 id=211-定义接口>2.1.1 定义接口</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kd>interface</span> <span class=nc>Dinner</span> <span class=o>{</span>
+
+    <span class=cm>/**
+</span><span class=cm>     * 晚餐
+</span><span class=cm>     */</span>
+    <span class=kt>void</span> <span class=nf>doDinner</span><span class=o>();</span>
+
+<span class=o>}</span>
+</code></pre></td></tr></table></div></div><p>定义一个接口，就一个无参的 <code>void</code> 方法。</p><h4 id=212-定义抽象方法>2.1.2 定义抽象方法</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kd>abstract</span> <span class=kd>class</span> <span class=nc>AbstractDinner</span> <span class=kd>implements</span> <span class=n>Dinner</span> <span class=o>{</span>
+
+    <span class=kd>protected</span> <span class=n>String</span> <span class=n>name</span><span class=o>;</span>
+
+    <span class=kd>public</span> <span class=nf>AbstractDinner</span><span class=o>(</span><span class=n>String</span> <span class=n>name</span><span class=o>)</span> <span class=o>{</span>
+        <span class=k>this</span><span class=o>.</span><span class=na>name</span> <span class=o>=</span> <span class=n>name</span><span class=o>;</span>
+    <span class=o>}</span>
+
+    <span class=kd>private</span> <span class=kt>void</span> <span class=nf>eat</span><span class=o>()</span> <span class=o>{</span>
+        <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>printf</span><span class=o>(</span><span class=s>&#34;%sMM说：开吃喽&#34;</span><span class=o>,</span> <span class=n>name</span><span class=o>).</span><span class=na>println</span><span class=o>();</span>
+    <span class=o>}</span>
+
+    <span class=kd>protected</span> <span class=kt>boolean</span> <span class=nf>foodEnough</span><span class=o>()</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=kc>true</span><span class=o>;</span>
+    <span class=o>}</span>
+
+    <span class=kd>protected</span> <span class=kt>void</span> <span class=nf>doShopping</span><span class=o>()</span> <span class=o>{</span>
+        <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;门口小贩买菜&#34;</span><span class=o>);</span>
+    <span class=o>}</span>
+
+    <span class=kd>protected</span> <span class=kd>abstract</span> <span class=kt>void</span> <span class=nf>beforeCooking</span><span class=o>();</span>
+
+    <span class=kd>protected</span> <span class=kd>abstract</span> <span class=n>String</span> <span class=nf>doCooking</span><span class=o>();</span>
+
+    <span class=kd>protected</span> <span class=kd>abstract</span> <span class=kt>void</span> <span class=nf>afterCooking</span><span class=o>();</span>
+
+    <span class=nd>@Override</span>
+    <span class=kd>public</span> <span class=kt>void</span> <span class=nf>doDinner</span><span class=o>()</span> <span class=o>{</span>
+        <span class=k>if</span> <span class=o>(!</span><span class=n>foodEnough</span><span class=o>())</span> <span class=o>{</span>
+            <span class=n>doShopping</span><span class=o>();</span>
+        <span class=o>}</span>
+
+        <span class=n>beforeCooking</span><span class=o>();</span>
+        <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=n>doCooking</span><span class=o>());</span>
+        <span class=n>afterCooking</span><span class=o>();</span>
+
+        <span class=n>eat</span><span class=o>();</span>
+    <span class=o>}</span>
+
+<span class=o>}</span>
+</code></pre></td></tr></table></div></div><p>定义 <code>AbstractDinner</code> 实现接口，它自身有五个方法，默认实现的 <code>foodEnough</code> 和 <code>doShopping</code>，以及抽象方法 <code>beforeCooking</code>、<code>doCooking</code> 和 <code>afterCooking</code>。</p><p><code>doDinner</code> 编排了这些方法的流程或者说定义了各阶段的步骤。</p><h4 id=213-定义实现类>2.1.3 定义实现类</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span><span class=lnt>71
+</span><span class=lnt>72
+</span><span class=lnt>73
+</span><span class=lnt>74
+</span><span class=lnt>75
+</span><span class=lnt>76
+</span><span class=lnt>77
+</span><span class=lnt>78
+</span><span class=lnt>79
+</span><span class=lnt>80
+</span><span class=lnt>81
+</span><span class=lnt>82
+</span><span class=lnt>83
+</span><span class=lnt>84
+</span><span class=lnt>85
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kd>class</span> <span class=nc>BeijingDinner</span> <span class=kd>extends</span> <span class=n>AbstractDinner</span> <span class=o>{</span>
+
+    <span class=kd>public</span> <span class=nf>BeijingDinner</span><span class=o>(</span><span class=n>String</span> <span class=n>name</span><span class=o>)</span> <span class=o>{</span>
+        <span class=kd>super</span><span class=o>(</span><span class=n>name</span><span class=o>);</span>
+    <span class=o>}</span>
+
+    <span class=nd>@Override</span>
+    <span class=kd>protected</span> <span class=kt>void</span> <span class=nf>beforeCooking</span><span class=o>()</span> <span class=o>{</span>
+        <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>printf</span><span class=o>(</span><span class=s>&#34;%sMM 在洗菜切菜&#34;</span><span class=o>,</span> <span class=n>name</span><span class=o>).</span><span class=na>println</span><span class=o>();</span>
+    <span class=o>}</span>
+
+    <span class=nd>@Override</span>
+    <span class=kd>protected</span> <span class=n>String</span> <span class=nf>doCooking</span><span class=o>()</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=n>name</span> <span class=o>+</span> <span class=s>&#34;MM 在做&#34;</span> <span class=o>+</span> <span class=n>name</span> <span class=o>+</span> <span class=s>&#34;菜&#34;</span><span class=o>;</span>
+    <span class=o>}</span>
+
+    <span class=nd>@Override</span>
+    <span class=kd>protected</span> <span class=kt>void</span> <span class=nf>afterCooking</span><span class=o>()</span> <span class=o>{</span>
+        <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>printf</span><span class=o>(</span><span class=s>&#34;%sMM 让你去品尝&#34;</span><span class=o>,</span> <span class=n>name</span><span class=o>).</span><span class=na>println</span><span class=o>();</span>
+    <span class=o>}</span>
+
+<span class=o>}</span>
+
+<span class=kd>public</span> <span class=kd>class</span> <span class=nc>TaiwanDinner</span> <span class=kd>extends</span> <span class=n>AbstractDinner</span> <span class=o>{</span>
+
+    <span class=kd>public</span> <span class=nf>TaiwanDinner</span><span class=o>(</span><span class=n>String</span> <span class=n>name</span><span class=o>)</span> <span class=o>{</span>
+        <span class=kd>super</span><span class=o>(</span><span class=n>name</span><span class=o>);</span>
+    <span class=o>}</span>
+
+    <span class=nd>@Override</span>
+    <span class=kd>protected</span> <span class=kt>boolean</span> <span class=nf>foodEnough</span><span class=o>()</span> <span class=o>{</span>
+        <span class=c1>// 每次都买食物
+</span><span class=c1></span>        <span class=k>return</span> <span class=kc>false</span><span class=o>;</span>
+    <span class=o>}</span>
+
+    <span class=nd>@Override</span>
+    <span class=kd>protected</span> <span class=kt>void</span> <span class=nf>doShopping</span><span class=o>()</span> <span class=o>{</span>
+        <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;生鲜超市购买，一定要买茶叶蛋&#34;</span><span class=o>);</span>
+    <span class=o>}</span>
+
+    <span class=nd>@Override</span>
+    <span class=kd>protected</span> <span class=kt>void</span> <span class=nf>beforeCooking</span><span class=o>()</span> <span class=o>{</span>
+        <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>printf</span><span class=o>(</span><span class=s>&#34;%sMM 在洗菜切菜&#34;</span><span class=o>,</span> <span class=n>name</span><span class=o>).</span><span class=na>println</span><span class=o>();</span>
+    <span class=o>}</span>
+
+    <span class=nd>@Override</span>
+    <span class=kd>protected</span> <span class=n>String</span> <span class=nf>doCooking</span><span class=o>()</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=n>name</span> <span class=o>+</span> <span class=s>&#34;MM 在做&#34;</span> <span class=o>+</span> <span class=n>name</span> <span class=o>+</span> <span class=s>&#34;菜&#34;</span><span class=o>;</span>
+    <span class=o>}</span>
+
+    <span class=nd>@Override</span>
+    <span class=kd>protected</span> <span class=kt>void</span> <span class=nf>afterCooking</span><span class=o>()</span> <span class=o>{</span>
+        <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>printf</span><span class=o>(</span><span class=s>&#34;%sMM 让你去品尝&#34;</span><span class=o>,</span> <span class=n>name</span><span class=o>).</span><span class=na>println</span><span class=o>();</span>
+    <span class=o>}</span>
+
+<span class=o>}</span>
+
+<span class=kd>public</span> <span class=kd>class</span> <span class=nc>HangzhouDinner</span> <span class=kd>extends</span> <span class=n>AbstractDinner</span> <span class=o>{</span>
+
+    <span class=kd>public</span> <span class=nf>HangzhouDinner</span><span class=o>(</span><span class=n>String</span> <span class=n>name</span><span class=o>)</span> <span class=o>{</span>
+        <span class=kd>super</span><span class=o>(</span><span class=n>name</span><span class=o>);</span>
+    <span class=o>}</span>
+
+    <span class=nd>@Override</span>
+    <span class=kd>protected</span> <span class=kt>boolean</span> <span class=nf>foodEnough</span><span class=o>()</span> <span class=o>{</span>
+        <span class=c1>// 每次都买食物
+</span><span class=c1></span>        <span class=k>return</span> <span class=kc>false</span><span class=o>;</span>
+    <span class=o>}</span>
+
+    <span class=nd>@Override</span>
+    <span class=kd>protected</span> <span class=kt>void</span> <span class=nf>beforeCooking</span><span class=o>()</span> <span class=o>{</span>
+        <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>printf</span><span class=o>(</span><span class=s>&#34;%sMM 在洗菜切菜&#34;</span><span class=o>,</span> <span class=n>name</span><span class=o>).</span><span class=na>println</span><span class=o>();</span>
+    <span class=o>}</span>
+
+    <span class=nd>@Override</span>
+    <span class=kd>protected</span> <span class=n>String</span> <span class=nf>doCooking</span><span class=o>()</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=n>name</span> <span class=o>+</span> <span class=s>&#34;MM 在做&#34;</span> <span class=o>+</span> <span class=n>name</span> <span class=o>+</span> <span class=s>&#34;菜&#34;</span><span class=o>;</span>
+    <span class=o>}</span>
+
+    <span class=nd>@Override</span>
+    <span class=kd>protected</span> <span class=kt>void</span> <span class=nf>afterCooking</span><span class=o>()</span> <span class=o>{</span>
+        <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>printf</span><span class=o>(</span><span class=s>&#34;%sMM 让你去品尝&#34;</span><span class=o>,</span> <span class=n>name</span><span class=o>).</span><span class=na>println</span><span class=o>();</span>
+    <span class=o>}</span>
+
+<span class=o>}</span>
+</code></pre></td></tr></table></div></div><p>定义了三个实现类，都实现了3个抽象方法。另外 <code>TaiwanDinner</code> 重写了另外两个方法，<code>HangzhouDinner</code> 只重写了 <code>foodEnough</code>。</p><h4 id=214-运行例子>2.1.4 运行例子</h4><p>代码：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kd>class</span> <span class=nc>DinnerDemo</span> <span class=o>{</span>
+
+    <span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>main</span><span class=o>(</span><span class=n>String</span><span class=o>[]</span> <span class=n>args</span><span class=o>)</span> <span class=o>{</span>
+        <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;---准备台湾餐---&#34;</span><span class=o>);</span>
+        <span class=n>Dinner</span> <span class=n>dinner1</span> <span class=o>=</span> <span class=k>new</span> <span class=n>TaiwanDinner</span><span class=o>();</span>
+        <span class=n>dinner1</span><span class=o>.</span><span class=na>doDinner</span><span class=o>();</span>
+        <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;---准备杭州餐---&#34;</span><span class=o>);</span>
+        <span class=n>Dinner</span> <span class=n>dinner2</span> <span class=o>=</span> <span class=k>new</span> <span class=n>HangzhouDinner</span><span class=o>();</span>
+        <span class=n>dinner2</span><span class=o>.</span><span class=na>doDinner</span><span class=o>();</span>
+        <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;---准备北京餐---&#34;</span><span class=o>);</span>
+        <span class=n>Dinner</span> <span class=n>dinner3</span> <span class=o>=</span> <span class=k>new</span> <span class=n>BeijingDinner</span><span class=o>();</span>
+        <span class=n>dinner3</span><span class=o>.</span><span class=na>doDinner</span><span class=o>();</span>
+    <span class=o>}</span>
+
+<span class=o>}</span>
+</code></pre></td></tr></table></div></div><p>输出结果：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-text data-lang=text>---准备台湾餐---
+生鲜超市购买，一定要买茶叶蛋
+台湾MM 在洗菜切菜
+台湾MM 在做台湾菜
+台湾MM 让你去品尝
+台湾MM说：开吃喽
+---准备杭州餐---
+门口小贩买菜
+杭州MM 在洗菜切菜
+杭州MM 在做杭州菜
+杭州MM 让你去品尝
+杭州MM说：开吃喽
+---准备北京餐---
+北京MM 在洗菜切菜
+北京MM 在做北京菜
+北京MM 让你去品尝
+北京MM说：开吃喽
+</code></pre></td></tr></table></div></div><h3 id=22-golang-版本>2.2 Golang 版本</h3><blockquote><p>声明下：在 golang 中，由于不存在抽象类和真正的继承，所以只能通过一个基础类来充当抽象类，子类通过组合基础类来实现通用方法的继承。</p></blockquote><h4 id=221-定义接口>2.2.1 定义接口</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=kd>type</span> <span class=nx>Dinner</span> <span class=kd>interface</span> <span class=p>{</span>
+	<span class=nf>DoDinner</span><span class=p>()</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><h4 id=222-定义抽象类>2.2.2 定义抽象类</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=kd>type</span> <span class=nx>AbstractCooking</span> <span class=kd>struct</span> <span class=p>{</span>
+	<span class=nx>foodEnough</span>    <span class=kd>func</span><span class=p>()</span> <span class=kt>bool</span>
+	<span class=nx>doShopping</span>    <span class=kd>func</span><span class=p>()</span>
+	<span class=nx>beforeCooking</span> <span class=kd>func</span><span class=p>()</span>
+	<span class=nx>doCooking</span>     <span class=kd>func</span><span class=p>()</span> <span class=kt>string</span>
+	<span class=nx>afterCooking</span>  <span class=kd>func</span><span class=p>()</span>
+	<span class=nx>Name</span>          <span class=kt>string</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>d</span> <span class=o>*</span><span class=nx>AbstractCooking</span><span class=p>)</span> <span class=nf>DoDinner</span><span class=p>()</span> <span class=p>{</span>
+	<span class=k>if</span> <span class=p>!</span><span class=nx>d</span><span class=p>.</span><span class=nf>foodEnough</span><span class=p>()</span> <span class=p>{</span>
+		<span class=nx>d</span><span class=p>.</span><span class=nf>doShopping</span><span class=p>()</span>
+	<span class=p>}</span>
+	<span class=nx>d</span><span class=p>.</span><span class=nf>beforeCooking</span><span class=p>()</span>
+	<span class=nx>fmt</span><span class=p>.</span><span class=nf>Println</span><span class=p>(</span><span class=nx>d</span><span class=p>.</span><span class=nf>doCooking</span><span class=p>())</span>
+	<span class=nx>d</span><span class=p>.</span><span class=nf>afterCooking</span><span class=p>()</span>
+	<span class=nx>d</span><span class=p>.</span><span class=nf>eat</span><span class=p>()</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>d</span> <span class=o>*</span><span class=nx>AbstractCooking</span><span class=p>)</span> <span class=nf>eat</span><span class=p>()</span> <span class=p>{</span>
+	<span class=nx>fmt</span><span class=p>.</span><span class=nf>Println</span><span class=p>(</span><span class=nx>fmt</span><span class=p>.</span><span class=nf>Sprintf</span><span class=p>(</span><span class=s>&#34;%sMM说：开吃喽&#34;</span><span class=p>,</span> <span class=nx>d</span><span class=p>.</span><span class=nx>Name</span><span class=p>))</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><p>这里和 Java 不一样的地方是 go 的结构体可以拥有 func() 属性（也可以拥有接口属性）。</p><p>实现 <code>Dinner</code> 的方法 <code>DoDinner</code> , 编排了一系列的方法。</p><h4 id=223-定义实现类>2.2.3 定义实现类</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span><span class=lnt>71
+</span><span class=lnt>72
+</span><span class=lnt>73
+</span><span class=lnt>74
+</span><span class=lnt>75
+</span><span class=lnt>76
+</span><span class=lnt>77
+</span><span class=lnt>78
+</span><span class=lnt>79
+</span><span class=lnt>80
+</span><span class=lnt>81
+</span><span class=lnt>82
+</span><span class=lnt>83
+</span><span class=lnt>84
+</span><span class=lnt>85
+</span><span class=lnt>86
+</span><span class=lnt>87
+</span><span class=lnt>88
+</span><span class=lnt>89
+</span><span class=lnt>90
+</span><span class=lnt>91
+</span><span class=lnt>92
+</span><span class=lnt>93
+</span><span class=lnt>94
+</span><span class=lnt>95
+</span><span class=lnt>96
+</span><span class=lnt>97
+</span><span class=lnt>98
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=kd>type</span> <span class=nx>HZDinner</span> <span class=kd>struct</span> <span class=p>{</span>
+	<span class=nx>AbstractCooking</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=nf>NewHZDinner</span><span class=p>(</span><span class=nx>name</span> <span class=kt>string</span><span class=p>)</span> <span class=o>*</span><span class=nx>HZDinner</span> <span class=p>{</span>
+	<span class=nx>c</span> <span class=o>:=</span> <span class=nb>new</span><span class=p>(</span><span class=nx>HZDinner</span><span class=p>)</span>
+	<span class=nx>c</span><span class=p>.</span><span class=nx>Name</span> <span class=p>=</span> <span class=nx>name</span>
+	<span class=c1>// 选择实现的
+</span><span class=c1></span>	<span class=nx>c</span><span class=p>.</span><span class=nx>AbstractCooking</span><span class=p>.</span><span class=nx>foodEnough</span> <span class=p>=</span> <span class=nx>c</span><span class=p>.</span><span class=nx>foodEnough</span>
+	<span class=nx>c</span><span class=p>.</span><span class=nx>AbstractCooking</span><span class=p>.</span><span class=nx>doShopping</span> <span class=p>=</span> <span class=nx>doShopping</span>
+	<span class=c1>// 必须实现的
+</span><span class=c1></span>	<span class=nx>c</span><span class=p>.</span><span class=nx>AbstractCooking</span><span class=p>.</span><span class=nx>beforeCooking</span> <span class=p>=</span> <span class=nx>c</span><span class=p>.</span><span class=nx>beforeCooking</span>
+	<span class=nx>c</span><span class=p>.</span><span class=nx>AbstractCooking</span><span class=p>.</span><span class=nx>doCooking</span> <span class=p>=</span> <span class=nx>c</span><span class=p>.</span><span class=nx>doCooking</span>
+	<span class=nx>c</span><span class=p>.</span><span class=nx>AbstractCooking</span><span class=p>.</span><span class=nx>afterCooking</span> <span class=p>=</span> <span class=nx>c</span><span class=p>.</span><span class=nx>afterCooking</span>
+	<span class=k>return</span> <span class=nx>c</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>c</span> <span class=o>*</span><span class=nx>HZDinner</span><span class=p>)</span> <span class=nf>foodEnough</span><span class=p>()</span> <span class=kt>bool</span> <span class=p>{</span>
+	<span class=k>return</span> <span class=kc>false</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>c</span> <span class=o>*</span><span class=nx>HZDinner</span><span class=p>)</span> <span class=nf>beforeCooking</span><span class=p>()</span> <span class=p>{</span>
+	<span class=nb>println</span><span class=p>(</span><span class=nx>fmt</span><span class=p>.</span><span class=nf>Printf</span><span class=p>(</span><span class=s>&#34;%sMM 在洗菜切菜&#34;</span><span class=p>,</span> <span class=nx>c</span><span class=p>.</span><span class=nx>Name</span><span class=p>))</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>c</span> <span class=o>*</span><span class=nx>HZDinner</span><span class=p>)</span> <span class=nf>doCooking</span><span class=p>()</span> <span class=kt>string</span> <span class=p>{</span>
+	<span class=k>return</span> <span class=nx>fmt</span><span class=p>.</span><span class=nf>Sprintf</span><span class=p>(</span><span class=s>&#34;%sMM 在做%s菜&#34;</span><span class=p>,</span> <span class=nx>c</span><span class=p>.</span><span class=nx>Name</span><span class=p>,</span> <span class=nx>c</span><span class=p>.</span><span class=nx>Name</span><span class=p>)</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>c</span> <span class=o>*</span><span class=nx>HZDinner</span><span class=p>)</span> <span class=nf>afterCooking</span><span class=p>()</span> <span class=p>{</span>
+	<span class=nb>println</span><span class=p>(</span><span class=nx>fmt</span><span class=p>.</span><span class=nf>Printf</span><span class=p>(</span><span class=s>&#34;%sMM 让你去品尝&#34;</span><span class=p>,</span> <span class=nx>c</span><span class=p>.</span><span class=nx>Name</span><span class=p>))</span>
+<span class=p>}</span>
+
+<span class=kd>type</span> <span class=nx>TWDinner</span> <span class=kd>struct</span> <span class=p>{</span>
+	<span class=nx>AbstractCooking</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=nf>NewTWDinner</span><span class=p>(</span><span class=nx>name</span> <span class=kt>string</span><span class=p>)</span> <span class=o>*</span><span class=nx>TWDinner</span> <span class=p>{</span>
+	<span class=nx>c</span> <span class=o>:=</span> <span class=nb>new</span><span class=p>(</span><span class=nx>TWDinner</span><span class=p>)</span>
+	<span class=nx>c</span><span class=p>.</span><span class=nx>Name</span> <span class=p>=</span> <span class=nx>name</span>
+	<span class=c1>// 选择实现的
+</span><span class=c1></span>	<span class=nx>c</span><span class=p>.</span><span class=nx>AbstractCooking</span><span class=p>.</span><span class=nx>foodEnough</span> <span class=p>=</span> <span class=nx>c</span><span class=p>.</span><span class=nx>foodEnough</span>
+	<span class=nx>c</span><span class=p>.</span><span class=nx>AbstractCooking</span><span class=p>.</span><span class=nx>doShopping</span> <span class=p>=</span> <span class=nx>c</span><span class=p>.</span><span class=nx>doShopping</span>
+	<span class=c1>// 必须实现的
+</span><span class=c1></span>	<span class=nx>c</span><span class=p>.</span><span class=nx>AbstractCooking</span><span class=p>.</span><span class=nx>beforeCooking</span> <span class=p>=</span> <span class=nx>c</span><span class=p>.</span><span class=nx>beforeCooking</span>
+	<span class=nx>c</span><span class=p>.</span><span class=nx>AbstractCooking</span><span class=p>.</span><span class=nx>doCooking</span> <span class=p>=</span> <span class=nx>c</span><span class=p>.</span><span class=nx>doCooking</span>
+	<span class=nx>c</span><span class=p>.</span><span class=nx>AbstractCooking</span><span class=p>.</span><span class=nx>afterCooking</span> <span class=p>=</span> <span class=nx>c</span><span class=p>.</span><span class=nx>afterCooking</span>
+	<span class=k>return</span> <span class=nx>c</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>c</span> <span class=o>*</span><span class=nx>TWDinner</span><span class=p>)</span> <span class=nf>foodEnough</span><span class=p>()</span> <span class=kt>bool</span> <span class=p>{</span>
+	<span class=k>return</span> <span class=kc>false</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>c</span> <span class=o>*</span><span class=nx>TWDinner</span><span class=p>)</span> <span class=nf>doShopping</span><span class=p>()</span> <span class=p>{</span>
+	<span class=nx>fmt</span><span class=p>.</span><span class=nf>Println</span><span class=p>(</span><span class=s>&#34;生鲜超市购买，一定要买茶叶蛋&#34;</span><span class=p>)</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>c</span> <span class=o>*</span><span class=nx>TWDinner</span><span class=p>)</span> <span class=nf>beforeCooking</span><span class=p>()</span> <span class=p>{</span>
+	<span class=nb>println</span><span class=p>(</span><span class=nx>fmt</span><span class=p>.</span><span class=nf>Printf</span><span class=p>(</span><span class=s>&#34;%sMM 在洗菜切菜&#34;</span><span class=p>,</span> <span class=nx>c</span><span class=p>.</span><span class=nx>Name</span><span class=p>))</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>c</span> <span class=o>*</span><span class=nx>TWDinner</span><span class=p>)</span> <span class=nf>doCooking</span><span class=p>()</span> <span class=kt>string</span> <span class=p>{</span>
+	<span class=k>return</span> <span class=nx>fmt</span><span class=p>.</span><span class=nf>Sprintf</span><span class=p>(</span><span class=s>&#34;%sMM 在做%s菜&#34;</span><span class=p>,</span> <span class=nx>c</span><span class=p>.</span><span class=nx>Name</span><span class=p>,</span> <span class=nx>c</span><span class=p>.</span><span class=nx>Name</span><span class=p>)</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>c</span> <span class=o>*</span><span class=nx>TWDinner</span><span class=p>)</span> <span class=nf>afterCooking</span><span class=p>()</span> <span class=p>{</span>
+	<span class=nb>println</span><span class=p>(</span><span class=nx>fmt</span><span class=p>.</span><span class=nf>Printf</span><span class=p>(</span><span class=s>&#34;%sMM 让你去品尝&#34;</span><span class=p>,</span> <span class=nx>c</span><span class=p>.</span><span class=nx>Name</span><span class=p>))</span>
+<span class=p>}</span>
+
+<span class=kd>type</span> <span class=nx>BJDinner</span> <span class=kd>struct</span> <span class=p>{</span>
+	<span class=nx>AbstractCooking</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=nf>NewBJDinner</span><span class=p>(</span><span class=nx>name</span> <span class=kt>string</span><span class=p>)</span> <span class=o>*</span><span class=nx>BJDinner</span> <span class=p>{</span>
+	<span class=nx>c</span> <span class=o>:=</span> <span class=nb>new</span><span class=p>(</span><span class=nx>BJDinner</span><span class=p>)</span>
+	<span class=nx>c</span><span class=p>.</span><span class=nx>Name</span> <span class=p>=</span> <span class=nx>name</span>
+	<span class=c1>// 选择实现的
+</span><span class=c1></span>	<span class=nx>c</span><span class=p>.</span><span class=nx>AbstractCooking</span><span class=p>.</span><span class=nx>foodEnough</span> <span class=p>=</span> <span class=nx>foodEnough</span>
+	<span class=nx>c</span><span class=p>.</span><span class=nx>AbstractCooking</span><span class=p>.</span><span class=nx>doShopping</span> <span class=p>=</span> <span class=nx>doShopping</span>
+	<span class=c1>// 必须实现的
+</span><span class=c1></span>	<span class=nx>c</span><span class=p>.</span><span class=nx>AbstractCooking</span><span class=p>.</span><span class=nx>beforeCooking</span> <span class=p>=</span> <span class=nx>c</span><span class=p>.</span><span class=nx>beforeCooking</span>
+	<span class=nx>c</span><span class=p>.</span><span class=nx>AbstractCooking</span><span class=p>.</span><span class=nx>doCooking</span> <span class=p>=</span> <span class=nx>c</span><span class=p>.</span><span class=nx>doCooking</span>
+	<span class=nx>c</span><span class=p>.</span><span class=nx>AbstractCooking</span><span class=p>.</span><span class=nx>afterCooking</span> <span class=p>=</span> <span class=nx>c</span><span class=p>.</span><span class=nx>afterCooking</span>
+	<span class=k>return</span> <span class=nx>c</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>c</span> <span class=o>*</span><span class=nx>BJDinner</span><span class=p>)</span> <span class=nf>beforeCooking</span><span class=p>()</span> <span class=p>{</span>
+	<span class=nb>println</span><span class=p>(</span><span class=nx>fmt</span><span class=p>.</span><span class=nf>Printf</span><span class=p>(</span><span class=s>&#34;%sMM 在洗菜切菜&#34;</span><span class=p>,</span> <span class=nx>c</span><span class=p>.</span><span class=nx>Name</span><span class=p>))</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>c</span> <span class=o>*</span><span class=nx>BJDinner</span><span class=p>)</span> <span class=nf>doCooking</span><span class=p>()</span> <span class=kt>string</span> <span class=p>{</span>
+	<span class=k>return</span> <span class=nx>fmt</span><span class=p>.</span><span class=nf>Sprintf</span><span class=p>(</span><span class=s>&#34;%sMM 在做%s菜&#34;</span><span class=p>,</span> <span class=nx>c</span><span class=p>.</span><span class=nx>Name</span><span class=p>,</span> <span class=nx>c</span><span class=p>.</span><span class=nx>Name</span><span class=p>)</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>c</span> <span class=o>*</span><span class=nx>BJDinner</span><span class=p>)</span> <span class=nf>afterCooking</span><span class=p>()</span> <span class=p>{</span>
+	<span class=nb>println</span><span class=p>(</span><span class=nx>fmt</span><span class=p>.</span><span class=nf>Printf</span><span class=p>(</span><span class=s>&#34;%sMM 让你去品尝&#34;</span><span class=p>,</span> <span class=nx>c</span><span class=p>.</span><span class=nx>Name</span><span class=p>))</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><h4 id=224-定义默认实现方法>2.2.4 定义默认实现方法</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=kd>func</span> <span class=nf>foodEnough</span><span class=p>()</span> <span class=kt>bool</span> <span class=p>{</span>
+	<span class=k>return</span> <span class=kc>true</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=nf>doShopping</span><span class=p>()</span> <span class=p>{</span>
+	<span class=nx>fmt</span><span class=p>.</span><span class=nf>Println</span><span class=p>(</span><span class=s>&#34;门口小贩买菜&#34;</span><span class=p>)</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><p>为什么有独立的默认方法，因为 struct 里面定义了 <code>foodEnough() bool</code> 和 <code>doShopping()</code> 两个方法，go 里面是不能重名的，因此不能再写属于 <code>AbstractCooking</code> 的方法。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=kd>func</span> <span class=p>(</span><span class=nx>d</span> <span class=o>*</span><span class=nx>AbstractCooking</span><span class=p>)</span> <span class=nf>foodEnough</span><span class=p>()</span> <span class=kt>bool</span> <span class=p>{</span>
+	<span class=k>return</span> <span class=kc>true</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><p>这个方法如何写了，去掉了 struct 的 <code>foodEnough() bool</code>，那么创建实现类的时候就没办法 <code>c.AbstractCooking.foodEnough = c.foodEnough</code> 进行 func() 赋值，从而 <code>d.foodEnough()</code> 会一直调用 <code>AbstractCooking</code> 下的 <code>foodEnough()</code>，实现类没办法自定义实现了。</p><h4 id=225-运行例子>2.2.5 运行例子</h4><p>代码：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=kd>func</span> <span class=nf>TestTemplate1</span><span class=p>(</span><span class=nx>t</span> <span class=o>*</span><span class=nx>testing</span><span class=p>.</span><span class=nx>T</span><span class=p>)</span> <span class=p>{</span>
+	<span class=nx>fmt</span><span class=p>.</span><span class=nf>Println</span><span class=p>(</span><span class=s>&#34;---准备台湾餐---&#34;</span><span class=p>)</span>
+	<span class=nx>d1</span> <span class=o>:=</span> <span class=nf>NewTWDinner</span><span class=p>(</span><span class=s>&#34;台湾&#34;</span><span class=p>)</span>
+	<span class=nx>d1</span><span class=p>.</span><span class=nf>DoDinner</span><span class=p>()</span>
+	<span class=nx>fmt</span><span class=p>.</span><span class=nf>Println</span><span class=p>(</span><span class=s>&#34;---准备杭州餐---&#34;</span><span class=p>)</span>
+	<span class=nx>d2</span> <span class=o>:=</span> <span class=nf>NewHZDinner</span><span class=p>(</span><span class=s>&#34;杭州&#34;</span><span class=p>)</span>
+	<span class=nx>d2</span><span class=p>.</span><span class=nf>DoDinner</span><span class=p>()</span>
+	<span class=nx>fmt</span><span class=p>.</span><span class=nf>Println</span><span class=p>(</span><span class=s>&#34;---准备北京餐---&#34;</span><span class=p>)</span>
+	<span class=nx>d3</span> <span class=o>:=</span> <span class=nf>NewBJDinner</span><span class=p>(</span><span class=s>&#34;北京&#34;</span><span class=p>)</span>
+	<span class=nx>d3</span><span class=p>.</span><span class=nf>DoDinner</span><span class=p>()</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><p>输出结果：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-text data-lang=text>---准备台湾餐---
+生鲜超市购买，一定要买茶叶蛋
+台湾MM 在洗菜切菜
+台湾MM 在做台湾菜
+台湾MM 让你去品尝
+台湾MM说：开吃喽
+---准备杭州餐---
+门口小贩买菜
+杭州MM 在洗菜切菜
+杭州MM 在做杭州菜
+杭州MM 让你去品尝
+杭州MM说：开吃喽
+---准备北京餐---
+北京MM 在洗菜切菜
+北京MM 在做北京菜
+北京MM 让你去品尝
+北京MM说：开吃喽
+</code></pre></td></tr></table></div></div><h3 id=23-golang版本2>2.3 Golang版本2</h3><blockquote><p>上面例子是在 struct 中定义，相当于是抽象方法的意思，而这版本把那部分方法都定义到了接口。</p></blockquote><h4 id=231-定义接口>2.3.1 定义接口</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=kd>type</span> <span class=nx>Dinner2</span> <span class=kd>interface</span> <span class=p>{</span>
+	<span class=nf>foodEnough</span><span class=p>()</span> <span class=kt>bool</span>
+	<span class=nf>doShopping</span><span class=p>()</span>
+	<span class=nf>beforeCooking</span><span class=p>()</span>
+	<span class=nf>doCooking</span><span class=p>()</span> <span class=kt>string</span>
+	<span class=nf>afterCooking</span><span class=p>()</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><h4 id=232-定义抽象类>2.3.2 定义抽象类</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=kd>type</span> <span class=nx>AbstractDinner</span> <span class=kd>struct</span> <span class=p>{</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>AbstractDinner</span><span class=p>)</span> <span class=nf>foodEnough</span><span class=p>()</span> <span class=kt>bool</span> <span class=p>{</span>
+	<span class=k>return</span> <span class=kc>true</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>AbstractDinner</span><span class=p>)</span> <span class=nf>doShopping</span><span class=p>()</span> <span class=p>{</span>
+	<span class=nx>fmt</span><span class=p>.</span><span class=nf>Println</span><span class=p>(</span><span class=s>&#34;门口小贩买菜&#34;</span><span class=p>)</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>AbstractDinner</span><span class=p>)</span> <span class=nf>beforeCooking</span><span class=p>()</span> <span class=p>{</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>AbstractDinner</span><span class=p>)</span> <span class=nf>doCooking</span><span class=p>()</span> <span class=kt>string</span> <span class=p>{</span>
+	<span class=k>return</span> <span class=s>&#34;&#34;</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>AbstractDinner</span><span class=p>)</span> <span class=nf>afterCooking</span><span class=p>()</span> <span class=p>{</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><p>实现 <code>Dinner2</code> 接口，和下面等价</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=kd>type</span> <span class=nx>AbstractDinner</span> <span class=kd>struct</span> <span class=p>{</span>
+	<span class=nx>Dinner2</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>AbstractDinner</span><span class=p>)</span> <span class=nf>foodEnough</span><span class=p>()</span> <span class=kt>bool</span> <span class=p>{</span>
+	<span class=k>return</span> <span class=kc>true</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>AbstractDinner</span><span class=p>)</span> <span class=nf>doShopping</span><span class=p>()</span> <span class=p>{</span>
+	<span class=nx>fmt</span><span class=p>.</span><span class=nf>Println</span><span class=p>(</span><span class=s>&#34;门口小贩买菜&#34;</span><span class=p>)</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><h4 id=233-定义实现类>2.3.3 定义实现类</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span><span class=lnt>71
+</span><span class=lnt>72
+</span><span class=lnt>73
+</span><span class=lnt>74
+</span><span class=lnt>75
+</span><span class=lnt>76
+</span><span class=lnt>77
+</span><span class=lnt>78
+</span><span class=lnt>79
+</span><span class=lnt>80
+</span><span class=lnt>81
+</span><span class=lnt>82
+</span><span class=lnt>83
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=kd>type</span> <span class=nx>HangzhouDinner</span> <span class=kd>struct</span> <span class=p>{</span>
+	<span class=nx>AbstractDinner</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=nf>NewHangzhouDinner</span><span class=p>(</span><span class=nx>name</span> <span class=kt>string</span><span class=p>)</span> <span class=nx>Dinner2</span> <span class=p>{</span>
+	<span class=k>return</span> <span class=o>&amp;</span><span class=nx>HangzhouDinner</span><span class=p>{</span>
+		<span class=nx>AbstractDinner</span><span class=p>{</span>
+			<span class=nx>Name</span><span class=p>:</span> <span class=nx>name</span><span class=p>,</span>
+		<span class=p>},</span>
+	<span class=p>}</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>d</span> <span class=o>*</span><span class=nx>HangzhouDinner</span><span class=p>)</span> <span class=nf>foodEnough</span><span class=p>()</span> <span class=kt>bool</span> <span class=p>{</span>
+	<span class=k>return</span> <span class=kc>false</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>d</span> <span class=o>*</span><span class=nx>HangzhouDinner</span><span class=p>)</span> <span class=nf>beforeCooking</span><span class=p>()</span> <span class=p>{</span>
+	<span class=nx>fmt</span><span class=p>.</span><span class=nf>Println</span><span class=p>(</span><span class=nx>fmt</span><span class=p>.</span><span class=nf>Sprintf</span><span class=p>(</span><span class=s>&#34;%sMM 在洗菜切菜&#34;</span><span class=p>,</span> <span class=nx>d</span><span class=p>.</span><span class=nx>Name</span><span class=p>))</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>d</span> <span class=o>*</span><span class=nx>HangzhouDinner</span><span class=p>)</span> <span class=nf>doCooking</span><span class=p>()</span> <span class=kt>string</span> <span class=p>{</span>
+	<span class=k>return</span> <span class=nx>fmt</span><span class=p>.</span><span class=nf>Sprintf</span><span class=p>(</span><span class=s>&#34;%sMM 在做%s菜&#34;</span><span class=p>,</span> <span class=nx>d</span><span class=p>.</span><span class=nx>Name</span><span class=p>,</span> <span class=nx>d</span><span class=p>.</span><span class=nx>Name</span><span class=p>)</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>d</span> <span class=o>*</span><span class=nx>HangzhouDinner</span><span class=p>)</span> <span class=nf>afterCooking</span><span class=p>()</span> <span class=p>{</span>
+	<span class=nx>fmt</span><span class=p>.</span><span class=nf>Println</span><span class=p>(</span><span class=nx>fmt</span><span class=p>.</span><span class=nf>Sprintf</span><span class=p>(</span><span class=s>&#34;%sMM 让你去品尝&#34;</span><span class=p>,</span> <span class=nx>d</span><span class=p>.</span><span class=nx>Name</span><span class=p>))</span>
+<span class=p>}</span>
+
+<span class=kd>type</span> <span class=nx>BeijingDinner</span> <span class=kd>struct</span> <span class=p>{</span>
+	<span class=nx>AbstractDinner</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=nf>NewBeijingDinner</span><span class=p>(</span><span class=nx>name</span> <span class=kt>string</span><span class=p>)</span> <span class=nx>Dinner2</span> <span class=p>{</span>
+	<span class=k>return</span> <span class=o>&amp;</span><span class=nx>BeijingDinner</span><span class=p>{</span>
+		<span class=nx>AbstractDinner</span><span class=p>{</span>
+			<span class=nx>Name</span><span class=p>:</span> <span class=nx>name</span><span class=p>,</span>
+		<span class=p>},</span>
+	<span class=p>}</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>d</span> <span class=o>*</span><span class=nx>BeijingDinner</span><span class=p>)</span> <span class=nf>beforeCooking</span><span class=p>()</span> <span class=p>{</span>
+	<span class=nx>fmt</span><span class=p>.</span><span class=nf>Println</span><span class=p>(</span><span class=nx>fmt</span><span class=p>.</span><span class=nf>Sprintf</span><span class=p>(</span><span class=s>&#34;%sMM 在洗菜切菜&#34;</span><span class=p>,</span> <span class=nx>d</span><span class=p>.</span><span class=nx>Name</span><span class=p>))</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>d</span> <span class=o>*</span><span class=nx>BeijingDinner</span><span class=p>)</span> <span class=nf>doCooking</span><span class=p>()</span> <span class=kt>string</span> <span class=p>{</span>
+	<span class=k>return</span> <span class=nx>fmt</span><span class=p>.</span><span class=nf>Sprintf</span><span class=p>(</span><span class=s>&#34;%sMM 在做%s菜&#34;</span><span class=p>,</span> <span class=nx>d</span><span class=p>.</span><span class=nx>Name</span><span class=p>,</span> <span class=nx>d</span><span class=p>.</span><span class=nx>Name</span><span class=p>)</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>d</span> <span class=o>*</span><span class=nx>BeijingDinner</span><span class=p>)</span> <span class=nf>afterCooking</span><span class=p>()</span> <span class=p>{</span>
+	<span class=nx>fmt</span><span class=p>.</span><span class=nf>Println</span><span class=p>(</span><span class=nx>fmt</span><span class=p>.</span><span class=nf>Sprintf</span><span class=p>(</span><span class=s>&#34;%sMM 让你去品尝&#34;</span><span class=p>,</span> <span class=nx>d</span><span class=p>.</span><span class=nx>Name</span><span class=p>))</span>
+<span class=p>}</span>
+
+<span class=kd>type</span> <span class=nx>TaiwanDinner</span> <span class=kd>struct</span> <span class=p>{</span>
+	<span class=nx>AbstractDinner</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=nf>NewTaiwanDinner</span><span class=p>(</span><span class=nx>name</span> <span class=kt>string</span><span class=p>)</span> <span class=nx>Dinner2</span> <span class=p>{</span>
+	<span class=k>return</span> <span class=o>&amp;</span><span class=nx>TaiwanDinner</span><span class=p>{</span>
+		<span class=nx>AbstractDinner</span><span class=p>{</span>
+			<span class=nx>Name</span><span class=p>:</span> <span class=nx>name</span><span class=p>,</span>
+		<span class=p>},</span>
+	<span class=p>}</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>d</span> <span class=o>*</span><span class=nx>TaiwanDinner</span><span class=p>)</span> <span class=nf>foodEnough</span><span class=p>()</span> <span class=kt>bool</span> <span class=p>{</span>
+	<span class=k>return</span> <span class=kc>false</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>d</span> <span class=o>*</span><span class=nx>TaiwanDinner</span><span class=p>)</span> <span class=nf>doShopping</span><span class=p>()</span> <span class=p>{</span>
+	<span class=nx>fmt</span><span class=p>.</span><span class=nf>Println</span><span class=p>(</span><span class=s>&#34;生鲜超市购买，一定要买茶叶蛋&#34;</span><span class=p>)</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>d</span> <span class=o>*</span><span class=nx>TaiwanDinner</span><span class=p>)</span> <span class=nf>beforeCooking</span><span class=p>()</span> <span class=p>{</span>
+	<span class=nx>fmt</span><span class=p>.</span><span class=nf>Println</span><span class=p>(</span><span class=nx>fmt</span><span class=p>.</span><span class=nf>Sprintf</span><span class=p>(</span><span class=s>&#34;%sMM 在洗菜切菜&#34;</span><span class=p>,</span> <span class=nx>d</span><span class=p>.</span><span class=nx>Name</span><span class=p>))</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>d</span> <span class=o>*</span><span class=nx>TaiwanDinner</span><span class=p>)</span> <span class=nf>doCooking</span><span class=p>()</span> <span class=kt>string</span> <span class=p>{</span>
+	<span class=k>return</span> <span class=nx>fmt</span><span class=p>.</span><span class=nf>Sprintf</span><span class=p>(</span><span class=s>&#34;%sMM 在做%s菜&#34;</span><span class=p>,</span> <span class=nx>d</span><span class=p>.</span><span class=nx>Name</span><span class=p>,</span> <span class=nx>d</span><span class=p>.</span><span class=nx>Name</span><span class=p>)</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>d</span> <span class=o>*</span><span class=nx>TaiwanDinner</span><span class=p>)</span> <span class=nf>afterCooking</span><span class=p>()</span> <span class=p>{</span>
+	<span class=nx>fmt</span><span class=p>.</span><span class=nf>Println</span><span class=p>(</span><span class=nx>fmt</span><span class=p>.</span><span class=nf>Sprintf</span><span class=p>(</span><span class=s>&#34;%sMM 让你去品尝&#34;</span><span class=p>,</span> <span class=nx>d</span><span class=p>.</span><span class=nx>Name</span><span class=p>))</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><h4 id=234-定义模板方法>2.3.4 定义模板方法</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=kd>func</span> <span class=nf>DoDinner</span><span class=p>(</span><span class=nx>d</span> <span class=nx>Dinner2</span><span class=p>)</span> <span class=p>{</span>
+	<span class=k>if</span> <span class=p>!</span><span class=nx>d</span><span class=p>.</span><span class=nf>foodEnough</span><span class=p>()</span> <span class=p>{</span>
+		<span class=nx>d</span><span class=p>.</span><span class=nf>doShopping</span><span class=p>()</span>
+	<span class=p>}</span>
+
+	<span class=nx>d</span><span class=p>.</span><span class=nf>beforeCooking</span><span class=p>()</span>
+	<span class=nx>fmt</span><span class=p>.</span><span class=nf>Println</span><span class=p>(</span><span class=nx>d</span><span class=p>.</span><span class=nf>doCooking</span><span class=p>())</span>
+	<span class=nx>d</span><span class=p>.</span><span class=nf>afterCooking</span><span class=p>()</span>
+  <span class=nx>d</span><span class=p>.</span><span class=nf>eat</span><span class=p>()</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>ad</span> <span class=nx>AbstractDinner</span><span class=p>)</span> <span class=nf>eat</span><span class=p>()</span> <span class=p>{</span>
+	<span class=nx>fmt</span><span class=p>.</span><span class=nf>Println</span><span class=p>(</span><span class=nx>fmt</span><span class=p>.</span><span class=nf>Sprintf</span><span class=p>(</span><span class=s>&#34;%sMM说：开吃喽&#34;</span><span class=p>,</span> <span class=nx>ad</span><span class=p>.</span><span class=nx>Name</span><span class=p>))</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><p>如果想把抽象方法放到结构体上，也可以如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=kd>type</span> <span class=nx>Dinner2</span> <span class=kd>interface</span> <span class=p>{</span>
+	<span class=o>...</span>
+	<span class=nf>DoDinner</span><span class=p>(</span><span class=nx>d</span> <span class=nx>Dinner2</span><span class=p>)</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>ad</span> <span class=nx>AbstractDinner</span><span class=p>)</span> <span class=nf>DoDinner</span><span class=p>(</span><span class=nx>d</span> <span class=nx>Dinner2</span><span class=p>)</span> <span class=p>{</span>
+	<span class=k>if</span> <span class=p>!</span><span class=nx>d</span><span class=p>.</span><span class=nf>foodEnough</span><span class=p>()</span> <span class=p>{</span>
+		<span class=nx>d</span><span class=p>.</span><span class=nf>doShopping</span><span class=p>()</span>
+	<span class=p>}</span>
+
+	<span class=nx>d</span><span class=p>.</span><span class=nf>beforeCooking</span><span class=p>()</span>
+	<span class=nx>fmt</span><span class=p>.</span><span class=nf>Println</span><span class=p>(</span><span class=nx>d</span><span class=p>.</span><span class=nf>doCooking</span><span class=p>())</span>
+	<span class=nx>d</span><span class=p>.</span><span class=nf>afterCooking</span><span class=p>()</span>
+	<span class=nx>ad</span><span class=p>.</span><span class=nf>eat</span><span class=p>()</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>ad</span> <span class=nx>AbstractDinner</span><span class=p>)</span> <span class=nf>eat</span><span class=p>()</span> <span class=p>{</span>
+	<span class=nx>fmt</span><span class=p>.</span><span class=nf>Println</span><span class=p>(</span><span class=nx>fmt</span><span class=p>.</span><span class=nf>Sprintf</span><span class=p>(</span><span class=s>&#34;%sMM说：开吃喽&#34;</span><span class=p>,</span> <span class=nx>ad</span><span class=p>.</span><span class=nx>Name</span><span class=p>))</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><p>到时候调用的话就 DoDinner 改成 <code>d1 := NewTaiwanDinner("台湾") d1.DoDinner(d1)</code>。</p><h4 id=235-运行例子>2.3.5 运行例子</h4><p>代码：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=kd>func</span> <span class=nf>TestTemplate2</span><span class=p>(</span><span class=nx>t</span> <span class=o>*</span><span class=nx>testing</span><span class=p>.</span><span class=nx>T</span><span class=p>)</span> <span class=p>{</span>
+	<span class=nx>fmt</span><span class=p>.</span><span class=nf>Println</span><span class=p>(</span><span class=s>&#34;---准备台湾餐---&#34;</span><span class=p>)</span>
+	<span class=nx>d1</span> <span class=o>:=</span> <span class=nf>NewTaiwanDinner</span><span class=p>(</span><span class=s>&#34;台湾&#34;</span><span class=p>)</span>
+	<span class=nf>DoDinner</span><span class=p>(</span><span class=nx>d1</span><span class=p>)</span>
+	<span class=nx>fmt</span><span class=p>.</span><span class=nf>Println</span><span class=p>(</span><span class=s>&#34;---准备杭州餐---&#34;</span><span class=p>)</span>
+	<span class=nx>d2</span> <span class=o>:=</span> <span class=nf>NewHangzhouDinner</span><span class=p>(</span><span class=s>&#34;杭州&#34;</span><span class=p>)</span>
+	<span class=nf>DoDinner</span><span class=p>(</span><span class=nx>d2</span><span class=p>)</span>
+	<span class=nx>fmt</span><span class=p>.</span><span class=nf>Println</span><span class=p>(</span><span class=s>&#34;---准备北京餐---&#34;</span><span class=p>)</span>
+	<span class=nx>d3</span> <span class=o>:=</span> <span class=nf>NewTaiwanDinner</span><span class=p>(</span><span class=s>&#34;北京&#34;</span><span class=p>)</span>
+	<span class=nf>DoDinner</span><span class=p>(</span><span class=nx>d3</span><span class=p>)</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><p>输出结果：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-text data-lang=text>---准备台湾餐---
+生鲜超市购买，一定要买茶叶蛋
+台湾MM 在洗菜切菜
+台湾MM 在做台湾菜
+台湾MM 让你去品尝
+台湾MM说：开吃喽
+---准备杭州餐---
+门口小贩买菜
+杭州MM 在洗菜切菜
+杭州MM 在做杭州菜
+杭州MM 让你去品尝
+杭州MM说：开吃喽
+---准备北京餐---
+生鲜超市购买，一定要买茶叶蛋
+北京MM 在洗菜切菜
+北京MM 在做北京菜
+北京MM 让你去品尝
+北京MM说：开吃喽
+</code></pre></td></tr></table></div></div><h3 id=24例子说明>2.4、例子说明</h3><h2 id=三开源框架使用场景>三、开源框架使用场景</h2><blockquote><p>列举某几个框架，供大家参考</p></blockquote><h3 id=31-jdk-abstractlist>3.1 JDK AbstractList</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kd>abstract</span> <span class=kd>class</span> <span class=nc>AbstractList</span><span class=o>&lt;</span><span class=n>E</span><span class=o>&gt;</span> <span class=kd>extends</span> <span class=n>AbstractCollection</span><span class=o>&lt;</span><span class=n>E</span><span class=o>&gt;</span> <span class=kd>implements</span> <span class=n>List</span><span class=o>&lt;</span><span class=n>E</span><span class=o>&gt;</span> <span class=o>{</span>
+  	<span class=o>...</span>
+    <span class=kd>public</span> <span class=kt>void</span> <span class=nf>add</span><span class=o>(</span><span class=kt>int</span> <span class=n>index</span><span class=o>,</span> <span class=n>E</span> <span class=n>element</span><span class=o>)</span> <span class=o>{</span>
+        <span class=k>throw</span> <span class=k>new</span> <span class=n>UnsupportedOperationException</span><span class=o>();</span>
+    <span class=o>}</span>  
+    
+  	<span class=o>...</span>
+    <span class=kd>public</span> <span class=kt>boolean</span> <span class=nf>addAll</span><span class=o>(</span><span class=kt>int</span> <span class=n>index</span><span class=o>,</span> <span class=n>Collection</span><span class=o>&lt;?</span> <span class=kd>extends</span> <span class=n>E</span><span class=o>&gt;</span> <span class=n>c</span><span class=o>)</span> <span class=o>{</span>
+        <span class=n>rangeCheckForAdd</span><span class=o>(</span><span class=n>index</span><span class=o>);</span>
+        <span class=kt>boolean</span> <span class=n>modified</span> <span class=o>=</span> <span class=kc>false</span><span class=o>;</span>
+        <span class=k>for</span> <span class=o>(</span><span class=n>E</span> <span class=n>e</span> <span class=o>:</span> <span class=n>c</span><span class=o>)</span> <span class=o>{</span>
+            <span class=n>add</span><span class=o>(</span><span class=n>index</span><span class=o>++,</span> <span class=n>e</span><span class=o>);</span>
+            <span class=n>modified</span> <span class=o>=</span> <span class=kc>true</span><span class=o>;</span>
+        <span class=o>}</span>
+        <span class=k>return</span> <span class=n>modified</span><span class=o>;</span>
+    <span class=o>}</span>  
+  	<span class=o>...</span>
+<span class=o>}</span>
+</code></pre></td></tr></table></div></div><p>实现类实现 add 的逻辑，如：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kd>class</span> <span class=nc>ArrayList</span><span class=o>&lt;</span><span class=n>E</span><span class=o>&gt;</span> <span class=kd>extends</span> <span class=n>AbstractList</span><span class=o>&lt;</span><span class=n>E</span><span class=o>&gt;</span>
+        <span class=kd>implements</span> <span class=n>List</span><span class=o>&lt;</span><span class=n>E</span><span class=o>&gt;,</span> <span class=n>RandomAccess</span><span class=o>,</span> <span class=n>Cloneable</span><span class=o>,</span> <span class=n>java</span><span class=o>.</span><span class=na>io</span><span class=o>.</span><span class=na>Serializable</span>
+<span class=o>{</span>
+  	<span class=c1>// ...
+</span><span class=c1></span>    <span class=kd>public</span> <span class=kt>void</span> <span class=nf>add</span><span class=o>(</span><span class=kt>int</span> <span class=n>index</span><span class=o>,</span> <span class=n>E</span> <span class=n>element</span><span class=o>)</span> <span class=o>{</span>
+        <span class=n>rangeCheckForAdd</span><span class=o>(</span><span class=n>index</span><span class=o>);</span>
+
+        <span class=n>ensureCapacityInternal</span><span class=o>(</span><span class=n>size</span> <span class=o>+</span> <span class=n>1</span><span class=o>);</span>  <span class=c1>// Increments modCount!!
+</span><span class=c1></span>        <span class=n>System</span><span class=o>.</span><span class=na>arraycopy</span><span class=o>(</span><span class=n>elementData</span><span class=o>,</span> <span class=n>index</span><span class=o>,</span> <span class=n>elementData</span><span class=o>,</span> <span class=n>index</span> <span class=o>+</span> <span class=n>1</span><span class=o>,</span>
+                         <span class=n>size</span> <span class=o>-</span> <span class=n>index</span><span class=o>);</span>
+        <span class=n>elementData</span><span class=o>[</span><span class=n>index</span><span class=o>]</span> <span class=o>=</span> <span class=n>element</span><span class=o>;</span>
+        <span class=n>size</span><span class=o>++;</span>
+    <span class=o>}</span>
+  	<span class=c1>// ...
+</span><span class=c1></span><span class=o>}</span>        
+
+</code></pre></td></tr></table></div></div><h3 id=31-spring-中的-事务管理器>3.1 spring 中的 事务管理器</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kd>abstract</span> <span class=kd>class</span> <span class=nc>AbstractPlatformTransactionManager</span> <span class=kd>implements</span> <span class=n>PlatformTransactionManager</span><span class=o>,</span> <span class=n>Serializable</span> <span class=o>{</span>
+ 
+  <span class=c1>// ...
+</span><span class=c1></span>	<span class=kd>public</span> <span class=kd>final</span> <span class=n>TransactionStatus</span> <span class=nf>getTransaction</span><span class=o>(</span><span class=n>TransactionDefinition</span> <span class=n>definition</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>TransactionException</span> <span class=o>{</span>
+		<span class=n>Object</span> <span class=n>transaction</span> <span class=o>=</span> <span class=n>doGetTransaction</span><span class=o>();</span>
+
+		<span class=c1>// Cache debug flag to avoid repeated checks.
+</span><span class=c1></span>		<span class=kt>boolean</span> <span class=n>debugEnabled</span> <span class=o>=</span> <span class=n>logger</span><span class=o>.</span><span class=na>isDebugEnabled</span><span class=o>();</span>
+
+		<span class=k>if</span> <span class=o>(</span><span class=n>definition</span> <span class=o>==</span> <span class=kc>null</span><span class=o>)</span> <span class=o>{</span>
+			<span class=c1>// Use defaults if no transaction definition given.
+</span><span class=c1></span>			<span class=n>definition</span> <span class=o>=</span> <span class=k>new</span> <span class=n>DefaultTransactionDefinition</span><span class=o>();</span>
+		<span class=o>}</span>
+
+		<span class=k>if</span> <span class=o>(</span><span class=n>isExistingTransaction</span><span class=o>(</span><span class=n>transaction</span><span class=o>))</span> <span class=o>{</span>
+			<span class=c1>// Existing transaction found -&gt; check propagation behavior to find out how to behave.
+</span><span class=c1></span>			<span class=k>return</span> <span class=n>handleExistingTransaction</span><span class=o>(</span><span class=n>definition</span><span class=o>,</span> <span class=n>transaction</span><span class=o>,</span> <span class=n>debugEnabled</span><span class=o>);</span>
+		<span class=o>}</span>
+
+		<span class=c1>// Check definition settings for new transaction.
+</span><span class=c1></span>		<span class=k>if</span> <span class=o>(</span><span class=n>definition</span><span class=o>.</span><span class=na>getTimeout</span><span class=o>()</span> <span class=o>&lt;</span> <span class=n>TransactionDefinition</span><span class=o>.</span><span class=na>TIMEOUT_DEFAULT</span><span class=o>)</span> <span class=o>{</span>
+			<span class=k>throw</span> <span class=k>new</span> <span class=n>InvalidTimeoutException</span><span class=o>(</span><span class=s>&#34;Invalid transaction timeout&#34;</span><span class=o>,</span> <span class=n>definition</span><span class=o>.</span><span class=na>getTimeout</span><span class=o>());</span>
+		<span class=o>}</span>
+
+		<span class=c1>// No existing transaction found -&gt; check propagation behavior to find out how to proceed.
+</span><span class=c1></span>		<span class=k>if</span> <span class=o>(</span><span class=n>definition</span><span class=o>.</span><span class=na>getPropagationBehavior</span><span class=o>()</span> <span class=o>==</span> <span class=n>TransactionDefinition</span><span class=o>.</span><span class=na>PROPAGATION_MANDATORY</span><span class=o>)</span> <span class=o>{</span>
+			<span class=k>throw</span> <span class=k>new</span> <span class=n>IllegalTransactionStateException</span><span class=o>(</span>
+					<span class=s>&#34;No existing transaction found for transaction marked with propagation &#39;mandatory&#39;&#34;</span><span class=o>);</span>
+		<span class=o>}</span>
+		<span class=k>else</span> <span class=k>if</span> <span class=o>(</span><span class=n>definition</span><span class=o>.</span><span class=na>getPropagationBehavior</span><span class=o>()</span> <span class=o>==</span> <span class=n>TransactionDefinition</span><span class=o>.</span><span class=na>PROPAGATION_REQUIRED</span> <span class=o>||</span>
+				<span class=n>definition</span><span class=o>.</span><span class=na>getPropagationBehavior</span><span class=o>()</span> <span class=o>==</span> <span class=n>TransactionDefinition</span><span class=o>.</span><span class=na>PROPAGATION_REQUIRES_NEW</span> <span class=o>||</span>
+				<span class=n>definition</span><span class=o>.</span><span class=na>getPropagationBehavior</span><span class=o>()</span> <span class=o>==</span> <span class=n>TransactionDefinition</span><span class=o>.</span><span class=na>PROPAGATION_NESTED</span><span class=o>)</span> <span class=o>{</span>
+			<span class=n>SuspendedResourcesHolder</span> <span class=n>suspendedResources</span> <span class=o>=</span> <span class=n>suspend</span><span class=o>(</span><span class=kc>null</span><span class=o>);</span>
+			<span class=k>if</span> <span class=o>(</span><span class=n>debugEnabled</span><span class=o>)</span> <span class=o>{</span>
+				<span class=n>logger</span><span class=o>.</span><span class=na>debug</span><span class=o>(</span><span class=s>&#34;Creating new transaction with name [&#34;</span> <span class=o>+</span> <span class=n>definition</span><span class=o>.</span><span class=na>getName</span><span class=o>()</span> <span class=o>+</span> <span class=s>&#34;]: &#34;</span> <span class=o>+</span> <span class=n>definition</span><span class=o>);</span>
+			<span class=o>}</span>
+			<span class=k>try</span> <span class=o>{</span>
+				<span class=kt>boolean</span> <span class=n>newSynchronization</span> <span class=o>=</span> <span class=o>(</span><span class=n>getTransactionSynchronization</span><span class=o>()</span> <span class=o>!=</span> <span class=n>SYNCHRONIZATION_NEVER</span><span class=o>);</span>
+				<span class=n>DefaultTransactionStatus</span> <span class=n>status</span> <span class=o>=</span> <span class=n>newTransactionStatus</span><span class=o>(</span>
+						<span class=n>definition</span><span class=o>,</span> <span class=n>transaction</span><span class=o>,</span> <span class=kc>true</span><span class=o>,</span> <span class=n>newSynchronization</span><span class=o>,</span> <span class=n>debugEnabled</span><span class=o>,</span> <span class=n>suspendedResources</span><span class=o>);</span>
+				<span class=n>doBegin</span><span class=o>(</span><span class=n>transaction</span><span class=o>,</span> <span class=n>definition</span><span class=o>);</span>
+				<span class=n>prepareSynchronization</span><span class=o>(</span><span class=n>status</span><span class=o>,</span> <span class=n>definition</span><span class=o>);</span>
+				<span class=k>return</span> <span class=n>status</span><span class=o>;</span>
+			<span class=o>}</span>
+			<span class=k>catch</span> <span class=o>(</span><span class=n>RuntimeException</span> <span class=n>ex</span><span class=o>)</span> <span class=o>{</span>
+				<span class=n>resume</span><span class=o>(</span><span class=kc>null</span><span class=o>,</span> <span class=n>suspendedResources</span><span class=o>);</span>
+				<span class=k>throw</span> <span class=n>ex</span><span class=o>;</span>
+			<span class=o>}</span>
+			<span class=k>catch</span> <span class=o>(</span><span class=n>Error</span> <span class=n>err</span><span class=o>)</span> <span class=o>{</span>
+				<span class=n>resume</span><span class=o>(</span><span class=kc>null</span><span class=o>,</span> <span class=n>suspendedResources</span><span class=o>);</span>
+				<span class=k>throw</span> <span class=n>err</span><span class=o>;</span>
+			<span class=o>}</span>
+		<span class=o>}</span>
+		<span class=k>else</span> <span class=o>{</span>
+			<span class=c1>// Create &#34;empty&#34; transaction: no actual transaction, but potentially synchronization.
+</span><span class=c1></span>			<span class=k>if</span> <span class=o>(</span><span class=n>definition</span><span class=o>.</span><span class=na>getIsolationLevel</span><span class=o>()</span> <span class=o>!=</span> <span class=n>TransactionDefinition</span><span class=o>.</span><span class=na>ISOLATION_DEFAULT</span> <span class=o>&amp;&amp;</span> <span class=n>logger</span><span class=o>.</span><span class=na>isWarnEnabled</span><span class=o>())</span> <span class=o>{</span>
+				<span class=n>logger</span><span class=o>.</span><span class=na>warn</span><span class=o>(</span><span class=s>&#34;Custom isolation level specified but no actual transaction initiated; &#34;</span> <span class=o>+</span>
+						<span class=s>&#34;isolation level will effectively be ignored: &#34;</span> <span class=o>+</span> <span class=n>definition</span><span class=o>);</span>
+			<span class=o>}</span>
+			<span class=kt>boolean</span> <span class=n>newSynchronization</span> <span class=o>=</span> <span class=o>(</span><span class=n>getTransactionSynchronization</span><span class=o>()</span> <span class=o>==</span> <span class=n>SYNCHRONIZATION_ALWAYS</span><span class=o>);</span>
+			<span class=k>return</span> <span class=n>prepareTransactionStatus</span><span class=o>(</span><span class=n>definition</span><span class=o>,</span> <span class=kc>null</span><span class=o>,</span> <span class=kc>true</span><span class=o>,</span> <span class=n>newSynchronization</span><span class=o>,</span> <span class=n>debugEnabled</span><span class=o>,</span> <span class=kc>null</span><span class=o>);</span>
+		<span class=o>}</span>
+	<span class=o>}</span>
+  <span class=c1>// ...
+</span><span class=c1></span>    
+	<span class=kd>protected</span> <span class=kd>abstract</span> <span class=kt>void</span> <span class=nf>doBegin</span><span class=o>(</span><span class=n>Object</span> <span class=n>transaction</span><span class=o>,</span> <span class=n>TransactionDefinition</span> <span class=n>definition</span><span class=o>)</span>
+			<span class=kd>throws</span> <span class=n>TransactionException</span><span class=o>;</span>    
+  
+  <span class=o>...</span>
+<span class=o>}</span>
+</code></pre></td></tr></table></div></div><p>这里只拿 <code>getTransaction</code> 和 <code>doBegin</code> 举例，非常标准的写法 <code>getTransaction</code> 还用了 final 描述，表示子类不允许改变。</p><p>当我自定义事务管理器的时候，比如每次事务开启创建一个 traceId，效果如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kd>class</span> <span class=nc>GongDaoDataSourceTransactionManager</span> <span class=kd>extends</span> <span class=n>DataSourceTransactionManager</span> <span class=kd>implements</span>
+    <span class=n>ResourceTransactionManager</span><span class=o>,</span> <span class=n>InitializingBean</span><span class=o>,</span> <span class=n>EnvironmentAware</span> <span class=o>{</span>
+  
+  	<span class=c1>// ...
+</span><span class=c1></span>    <span class=kd>protected</span> <span class=kt>void</span> <span class=nf>doBegin</span><span class=o>(</span><span class=n>Object</span> <span class=n>transaction</span><span class=o>,</span> <span class=n>TransactionDefinition</span> <span class=n>definition</span><span class=o>)</span> <span class=o>{</span>
+        <span class=n>String</span> <span class=n>currentXid</span><span class=o>;</span>
+        <span class=k>if</span> <span class=o>(</span><span class=n>XIDContext</span><span class=o>.</span><span class=na>getCurrent</span><span class=o>()</span> <span class=o>!=</span> <span class=kc>null</span> <span class=o>&amp;&amp;</span> <span class=kc>null</span> <span class=o>!=</span> <span class=n>XIDContext</span><span class=o>.</span><span class=na>getCurrent</span><span class=o>().</span><span class=na>getId</span><span class=o>())</span> <span class=o>{</span>
+            <span class=n>currentXid</span> <span class=o>=</span> <span class=n>xidGenerator</span><span class=o>.</span><span class=na>getXID</span><span class=o>();</span>
+            <span class=n>XIDContext</span><span class=o>.</span><span class=na>childCurrent</span><span class=o>(</span><span class=k>new</span> <span class=n>TransactionContent</span><span class=o>(</span><span class=n>currentXid</span><span class=o>,</span> <span class=n>definition</span><span class=o>.</span><span class=na>getName</span><span class=o>()));</span>
+        <span class=o>}</span> <span class=k>else</span> <span class=o>{</span>
+            <span class=n>currentXid</span> <span class=o>=</span> <span class=n>xidGenerator</span><span class=o>.</span><span class=na>getXID</span><span class=o>();</span>
+            <span class=n>XIDContext</span><span class=o>.</span><span class=na>setXid</span><span class=o>(</span><span class=k>new</span> <span class=n>TransactionContent</span><span class=o>(</span><span class=n>currentXid</span><span class=o>,</span> <span class=n>definition</span><span class=o>.</span><span class=na>getName</span><span class=o>()));</span>
+        <span class=o>}</span>
+
+        <span class=k>if</span> <span class=o>(</span><span class=kc>null</span> <span class=o>==</span> <span class=n>HyjalTransactionFileAppender</span><span class=o>.</span><span class=na>contextHolder</span><span class=o>.</span><span class=na>get</span><span class=o>())</span> <span class=o>{</span>
+            <span class=n>String</span> <span class=n>logFileName</span> <span class=o>=</span> <span class=n>HyjalTransactionFileAppender</span><span class=o>.</span><span class=na>makeLogFileName</span><span class=o>(</span><span class=k>new</span> <span class=n>Date</span><span class=o>(),</span>
+                <span class=n>HyjalTransactionFileAppender</span><span class=o>.</span><span class=na>logId</span><span class=o>.</span><span class=na>get</span><span class=o>());</span>
+            <span class=n>HyjalTransactionFileAppender</span><span class=o>.</span><span class=na>contextHolder</span><span class=o>.</span><span class=na>set</span><span class=o>(</span><span class=n>logFileName</span><span class=o>);</span>
+        <span class=o>}</span>
+
+        <span class=k>try</span> <span class=o>{</span>
+            <span class=k>if</span> <span class=o>(</span><span class=kc>null</span> <span class=o>==</span> <span class=n>XIDContext</span><span class=o>.</span><span class=na>getCurrentXid</span><span class=o>())</span> <span class=o>{</span>
+                <span class=n>XIDContext</span><span class=o>.</span><span class=na>setXid</span><span class=o>(</span><span class=n>xidGenerator</span><span class=o>.</span><span class=na>getXID</span><span class=o>());</span>
+            <span class=o>}</span>
+            <span class=kd>super</span><span class=o>.</span><span class=na>doBegin</span><span class=o>(</span><span class=n>transaction</span><span class=o>,</span> <span class=n>definition</span><span class=o>);</span>
+        <span class=o>}</span> <span class=k>finally</span> <span class=o>{</span>
+            <span class=k>if</span> <span class=o>(</span><span class=n>logger</span><span class=o>.</span><span class=na>isDebugEnabled</span><span class=o>())</span> <span class=o>{</span>
+                <span class=n>logger</span><span class=o>.</span><span class=na>debug</span><span class=o>(</span><span class=s>&#34;do begin Xid : {}&#34;</span><span class=o>,</span> <span class=n>currentXid</span><span class=o>);</span>
+                <span class=n>HyjalTransactionLogger</span><span class=o>.</span><span class=na>log</span><span class=o>(</span><span class=s>&#34;do begin Xid : {}, obj : {}&#34;</span><span class=o>,</span> <span class=n>currentXid</span><span class=o>,</span> <span class=n>definition</span><span class=o>.</span><span class=na>getName</span><span class=o>());</span>
+            <span class=o>}</span>
+        <span class=o>}</span>
+    <span class=o>}</span>
+  	<span class=c1>// ...
+</span><span class=c1></span><span class=o>}</span>  
+</code></pre></td></tr></table></div></div><blockquote><p>欢迎各位补充更多的例子和场景</p></blockquote><h2 id=四优势和劣势>四、优势和劣势</h2><h3 id=41-优势>4.1 优势</h3><ul><li>对扩展开放，对修改关闭，符合“开闭原则”<ul><li>定义标准算法，子类可自定义扩展，把变性和不变性分离</li><li>子类的扩展不会导致标准算法结构</li></ul></li><li>能够提高代码复用，公共部分易维护</li></ul><h3 id=42-劣势>4.2 劣势</h3><ul><li>每一个实现类都需要定义自己的行为，如果复杂业务实现类会膨胀的比较多</li></ul><h2 id=五参考>五、参考</h2><p><a href=https://www.tutorialspoint.com/design_pattern/template_pattern.htm target=_blank rel="noopener noreffer">https://www.tutorialspoint.com/design_pattern/template_pattern.htm</a></p><p><a href=https://zh.wikipedia.org/wiki/%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95 target=_blank rel="noopener noreffer">https://zh.wikipedia.org/wiki/%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95</a></p></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>Updated on 2020-03-09</span></div><div class=post-info-license></div></div><div class=post-info-line><div class=post-info-md><span><a class=link-to-markdown href=/zh-cn/2019/11/09/design-template/index.md target=_blank>Read Markdown</a></span></div><div class=post-info-share><span><a href=javascript:void(0); title="Share on Twitter"data-sharer=twitter data-url=http://blog.funnycode.org.cn/zh-cn/2019/11/09/design-template/ data-title="闲聊设计模式 | 模板方法模式"data-hashtags=java,golang,模板方法模式><i class="fab fa-twitter fa-fw"></i></a><a href=javascript:void(0); title="Share on Facebook"data-sharer=facebook data-url=http://blog.funnycode.org.cn/zh-cn/2019/11/09/design-template/ data-hashtag=java><i class="fab fa-facebook-square fa-fw"></i></a><a href=javascript:void(0); title="Share on Hacker News"data-sharer=hackernews data-url=http://blog.funnycode.org.cn/zh-cn/2019/11/09/design-template/ data-title="闲聊设计模式 | 模板方法模式"><i class="fab fa-hacker-news fa-fw"></i></a><a href=javascript:void(0); title="Share on Line"data-sharer=line data-url=http://blog.funnycode.org.cn/zh-cn/2019/11/09/design-template/ data-title="闲聊设计模式 | 模板方法模式"><i data-svg-src=https://cdn.jsdelivr.net/npm/simple-icons@2.14.0/icons/line.svg></i></a><a href=javascript:void(0); title="Share on 微博"data-sharer=weibo data-url=http://blog.funnycode.org.cn/zh-cn/2019/11/09/design-template/ data-title="闲聊设计模式 | 模板方法模式"><i class="fab fa-weibo fa-fw"></i></a></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/zh-cn/tags/java/>java</a>,&nbsp;<a href=/zh-cn/tags/golang/>golang</a>,&nbsp;<a href=/zh-cn/tags/%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F/>模板方法模式</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>Back</a></span>&nbsp;|&nbsp;<span><a href=/zh-cn/>Home</a></span></section></div><div class=post-nav><a href=/zh-cn/2020/06/11/hugo-github-action/ class=next rel=next title="Hugo 白话文 | GitHub Action 自动部署">Hugo 白话文 | GitHub Action 自动部署<i class="fas fa-angle-right fa-fw"></i></a></div></div><div id=comments><div id=gitalk class=comment></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://github.com/gitalk/gitalk></a>Gitalk</a>.</noscript></div></article></div></main><footer class=footer><div class=footer-container><div class=footer-line>Powered by <a href=https://gohugo.io/ target=_blank rel="noopener noreffer"title="Hugo 0.76.0">Hugo</a> | Theme - <a href=https://github.com/dillonzq/LoveIt target=_blank rel="noopener noreffer"title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i>LoveIt</a></div><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2019 - 2020</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=/zh-cn/ target=_blank>xxxx</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer"href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title="Back to Top"><i class="fas fa-arrow-up fa-fw"></i></a><a href=# id=view-comments class=fixed-button title="View Comments"><i class="fas fa-comment fa-fw"></i></a></div><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.min.css><script type=text/javascript src=https://cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/smooth-scroll@16.1.3/dist/smooth-scroll.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/autocomplete.js@0.37.1/dist/autocomplete.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/algoliasearch@4.2.0/dist/algoliasearch-lite.umd.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/lazysizes@5.2.2/lazysizes.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/sharer.js@0.4.0/sharer.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/typeit@7.0.4/dist/typeit.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:10},comment:{gitalk:{admin:[["cityiron","zhangshen023"]],clientID:"7ebb4aff12c6b5dc4aac",clientSecret:"fdb607f0e7f810a9e2084a2cbed3800f5657dab7",id:"2019-11-09T19:00:33+08:00",owner:"funnycode-org",repo:"funnycode-org.github.io",title:"闲聊设计模式 | 模板方法模式"}},data:{"id-1":"云原生玩码部落","id-2":"云原生玩码部落"},search:{algoliaAppID:"PASDMWALPK",algoliaIndex:"index.zh-cn",algoliaSearchKey:"b42948e51daaa93df92381c8e2ac0f93",highlightTag:"em",maxResultLength:10,noResultsFound:"No results found",snippetLength:50,type:"algolia"},typeit:{cursorChar:"|",cursorSpeed:1e3,data:{"id-1":["id-1"],"id-2":["id-2"]},duration:-1,speed:100}}</script><script type=text/javascript src=/js/theme.min.js></script></body></html>
