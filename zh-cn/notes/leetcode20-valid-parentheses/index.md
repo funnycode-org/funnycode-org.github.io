@@ -5,9 +5,38 @@
 
 ## 一、题目
 
-- 题目地址 
+- 题目说明
 
-[https://leetcode-cn.com/problems/valid-parentheses/](https://leetcode-cn.com/problems/valid-parentheses/)
+给定一个只包括 '('，')'，'{'，'}'，'['，']' 的字符串，判断字符串是否有效。
+
+有效字符串需满足：
+
+左括号必须用相同类型的右括号闭合。
+左括号必须以正确的顺序闭合。
+注意空字符串可被认为是有效字符串。
+
+示例 1:
+
+输入: "()"
+输出: true
+示例 2:
+
+输入: "()[]{}"
+输出: true
+示例 3:
+
+输入: "(]"
+输出: false
+示例 4:
+
+输入: "([)]"
+输出: false
+示例 5:
+
+输入: "{[]}"
+输出: true
+
+[leetcode地址](https://leetcode-cn.com/problems/valid-parentheses/)
 
 - 题目知识点介绍
 
@@ -24,6 +53,8 @@
 
   - 数组实现，称为顺序栈
   - 链表实现，称为链式栈
+
+[手动实现一个栈](https://github.com/cityiron/algorithms/blob/main/leetcode/util/stack.go)
 
 ## 二、题解
 
@@ -115,3 +146,14 @@ func isValid(s string) bool {
 > 执行用时：8 ms, 在所有 Go 提交中击败了7.18%的用户
 >
 > 内存消耗：7.1 MB, 在所有 Go 提交中击败了5.07%的用户
+
+### 2.3 小结
+
+- 强烈建议使用栈来实现
+- 栈的逻辑是：如果是左边括号就入栈，如果遇到右边括号就去查询栈顶元素，如果是与之匹配的左边括号的话就取出元素，否则就不匹配返回，执行到最后查看栈是否为空，空的话就是匹配的
+- 记得对边界条件做处理，比如字符串长度是奇数的处理
+- 空字符串也是满足的
+
+[题解的链接](https://github.com/cityiron/algorithms/tree/main/leetcode/20-valid-parentheses)
+
+
