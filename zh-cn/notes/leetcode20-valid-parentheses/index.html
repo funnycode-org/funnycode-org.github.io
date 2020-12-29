@@ -1,0 +1,109 @@
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><meta http-equiv=x-ua-compatible content="IE=edge, chrome=1"><title>LeetCode20题笔记 - 云原生玩码部落</title><meta name=Description content="云原生玩码部落"><meta property="og:title"content="LeetCode20题笔记"><meta property="og:description"content><meta property="og:type"content="article"><meta property="og:url"content="http://blog.funnycode.org.cn/zh-cn/notes/leetcode20-valid-parentheses/"><meta property="og:image"content="http://blog.funnycode.org.cn/logo.png"><meta property="article:published_time"content="2020-12-23T10:05:16+08:00"><meta property="article:modified_time"content="2020-12-23T10:05:16+08:00"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="http://blog.funnycode.org.cn/logo.png"><meta name=twitter:title content="LeetCode20题笔记"><meta name=twitter:description content><meta name=application-name content="云原生玩码部落"><meta name=apple-mobile-web-app-title content="云原生玩码部落"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon"type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=http://blog.funnycode.org.cn/zh-cn/notes/leetcode20-valid-parentheses/><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.0/css/all.min.css><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"LeetCode20题笔记","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"http:\/\/blog.funnycode.org.cn\/zh-cn\/notes\/leetcode20-valid-parentheses\/"},"image":["http:\/\/blog.funnycode.org.cn\/images\/Apple-Devices-Preview.png"],"genre":"notes","wordcount":663,"url":"http:\/\/blog.funnycode.org.cn\/zh-cn\/notes\/leetcode20-valid-parentheses\/","datePublished":"2020-12-23T10:05:16+08:00","dateModified":"2020-12-23T10:05:16+08:00","license":"This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher":{"@type":"Organization","name":"xxxx","logo":"http:\/\/blog.funnycode.org.cn\/images\/me\/logo.png"},"author":{"@type":"Person","name":"xxxx"},"description":""}</script></head><body header-desktop=fixed header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem('theme')?localStorage.getItem('theme')==='dark':'auto'==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches:'auto'==='dark')&&document.body.setAttribute('theme','dark')</script><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/zh-cn/ title=云原生玩码部落><span class=header-title-pre><i class="far fa-kiss-wink-heart fa-fw"></i></span><span id=id-1 class=typeit></span></a></div><div class=menu><div class=menu-inner><a class=menu-item href=/zh-cn/posts/>所有文章 </a><a class=menu-item href=/zh-cn/tags/>标签 </a><a class=menu-item href=/zh-cn/categories/>分类 </a><a class=menu-item href=/zh-cn/notes/>笔记 </a><a class=menu-item href=/zh-cn/about/>关于 </a><a class=menu-item href=https://github.com/funnycode-org title=GitHub rel="noopener noreffer"target=_blank><i class="fab fa-github fa-fw"></i></a><span class="menu-item delimiter"></span><a href=javascript:void(0); class="menu-item language"title="Select Language">简体中文<i class="fas fa-chevron-right fa-fw"></i>
+<select class=language-select id=language-select-desktop onchange="location=this.value"><option value=/zh-cn/notes/leetcode20-valid-parentheses/ selected>简体中文</option></select>
+</a><span class="menu-item search"id=search-desktop><input type=text placeholder="Search titles or contents..."id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle"id=search-toggle-desktop title=Search><i class="fas fa-search fa-fw"></i></a><a href=javascript:void(0); class="search-button search-clear"id=search-clear-desktop title=Clear><i class="fas fa-times-circle fa-fw"></i></a><span class="search-button search-loading"id=search-loading-desktop><i class="fas fa-spinner fa-fw fa-spin"></i></span></span><a href=javascript:void(0); class="menu-item theme-switch"title="Switch Theme"><i class="fas fa-adjust fa-fw"></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/zh-cn/ title=云原生玩码部落><span class=header-title-pre><i class="far fa-kiss-wink-heart fa-fw"></i></span><span id=id-2 class=typeit></span></a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><div class=search-wrapper><div class="search mobile"id=search-mobile><input type=text placeholder="Search titles or contents..."id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle"id=search-toggle-mobile title=Search><i class="fas fa-search fa-fw"></i></a><a href=javascript:void(0); class="search-button search-clear"id=search-clear-mobile title=Clear><i class="fas fa-times-circle fa-fw"></i></a><span class="search-button search-loading"id=search-loading-mobile><i class="fas fa-spinner fa-fw fa-spin"></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>Cancel</a></div><a class=menu-item href=/zh-cn/posts/ title>所有文章</a><a class=menu-item href=/zh-cn/tags/ title>标签</a><a class=menu-item href=/zh-cn/categories/ title>分类</a><a class=menu-item href=/zh-cn/notes/ title>笔记</a><a class=menu-item href=/zh-cn/about/ title>关于</a><a class=menu-item href=https://github.com/funnycode-org title=GitHub rel="noopener noreffer"target=_blank><i class="fab fa-github fa-fw"></i></a><a href=javascript:void(0); class="menu-item theme-switch"title="Switch Theme">
+<i class="fas fa-adjust fa-fw"></i></a><a href=javascript:void(0); class=menu-item title="Select Language">简体中文<i class="fas fa-chevron-right fa-fw"></i>
+<select class=language-select onchange="location=this.value"><option value=/zh-cn/notes/leetcode20-valid-parentheses/ selected>简体中文</option></select></a></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=main><div class=container><div class="page single special"><h1 class="single-title animated pulse faster">LeetCode20题笔记</h1><h2 class=single-subtitle>有效的括号</h2><div class=content id=content><h2 id=一题目>一、题目</h2><ul><li>题目地址</li></ul><p><a href=https://leetcode-cn.com/problems/valid-parentheses/ target=_blank rel="noopener noreffer">https://leetcode-cn.com/problems/valid-parentheses/</a></p><ul><li>题目知识点介绍</li></ul><p>这道题目主要是考核<a href=https://zh.wikiredia.com/wiki/%E5%A0%86%E6%A0%88 target=_blank rel="noopener noreffer">堆栈</a>这个数据结构，它是一个先进先出、操作受限的线性表，也称为 <strong>栈</strong>。</p><p><img src=./stack.png alt=Stack style=zoom:150%></p><ul><li><p>栈的两种基本的操作</p><ul><li>入栈 push： 往栈中最顶端插入数据</li><li>出栈 pop： 从栈中删除最顶端的数据</li></ul></li><li><p>栈的实现方式</p><ul><li>数组实现，称为顺序栈</li><li>链表实现，称为链式栈</li></ul></li></ul><h2 id=二题解>二、题解</h2><h3 id=21-栈实现>2.1 栈实现</h3><p>第一个版本：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=kd>func</span> <span class=nf>isValid</span><span class=p>(</span><span class=nx>s</span> <span class=kt>string</span><span class=p>)</span> <span class=kt>bool</span> <span class=p>{</span>
+	<span class=kd>var</span> <span class=nx>stack</span> <span class=p>[]</span><span class=kt>byte</span>
+	<span class=nx>pairs</span> <span class=o>:=</span> <span class=kd>map</span><span class=p>[</span><span class=kt>byte</span><span class=p>]</span><span class=kt>byte</span><span class=p>{</span>
+		<span class=sc>&#39;)&#39;</span><span class=p>:</span> <span class=sc>&#39;(&#39;</span><span class=p>,</span>
+		<span class=sc>&#39;]&#39;</span><span class=p>:</span> <span class=sc>&#39;[&#39;</span><span class=p>,</span>
+		<span class=sc>&#39;}&#39;</span><span class=p>:</span> <span class=sc>&#39;{&#39;</span><span class=p>,</span>
+	<span class=p>}</span>
+	<span class=k>for</span> <span class=nx>i</span> <span class=o>:=</span> <span class=k>range</span> <span class=nx>s</span> <span class=p>{</span>
+		<span class=k>if</span> <span class=nx>pairs</span><span class=p>[</span><span class=nx>s</span><span class=p>[</span><span class=nx>i</span><span class=p>]]</span> <span class=p>&gt;</span> <span class=mi>0</span> <span class=p>{</span> <span class=c1>// 这里如果没匹配到，是 byte 默认值 0
+</span><span class=c1></span>			<span class=k>if</span> <span class=nb>len</span><span class=p>(</span><span class=nx>stack</span><span class=p>)</span> <span class=o>==</span> <span class=mi>0</span> <span class=o>||</span> <span class=nx>stack</span><span class=p>[</span><span class=nb>len</span><span class=p>(</span><span class=nx>stack</span><span class=p>)</span><span class=o>-</span><span class=mi>1</span><span class=p>]</span> <span class=o>!=</span> <span class=nx>pairs</span><span class=p>[</span><span class=nx>s</span><span class=p>[</span><span class=nx>i</span><span class=p>]]</span> <span class=p>{</span> <span class=c1>// 栈顶 Top() 匹配期望值
+</span><span class=c1></span>				<span class=k>return</span> <span class=kc>false</span>
+			<span class=p>}</span>
+			<span class=nx>stack</span> <span class=p>=</span> <span class=nx>stack</span><span class=p>[:</span><span class=nb>len</span><span class=p>(</span><span class=nx>stack</span><span class=p>)</span><span class=o>-</span><span class=mi>1</span><span class=p>]</span> <span class=c1>// 移除栈顶 Pop()
+</span><span class=c1></span>		<span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+			<span class=nx>stack</span> <span class=p>=</span> <span class=nb>append</span><span class=p>(</span><span class=nx>stack</span><span class=p>,</span> <span class=nx>s</span><span class=p>[</span><span class=nx>i</span><span class=p>])</span>
+		<span class=p>}</span>
+	<span class=p>}</span>
+
+	<span class=k>return</span> <span class=nb>len</span><span class=p>(</span><span class=nx>stack</span><span class=p>)</span> <span class=o>==</span> <span class=mi>0</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><ul><li><p>时间复杂度 <code>O(n)</code> n 是字符串长度</p></li><li><p>空间复杂度 <code>O(n+6)</code> 因为这个题目中就 6 种扩展，空间就和栈中存放的数据有关，也就是和字符串长度有关</p></li></ul><p>小优化：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=kd>func</span> <span class=nf>isValid</span><span class=p>(</span><span class=nx>s</span> <span class=kt>string</span><span class=p>)</span> <span class=kt>bool</span> <span class=p>{</span>
+	<span class=k>if</span> <span class=nb>len</span><span class=p>(</span><span class=nx>s</span><span class=p>)</span><span class=o>&amp;</span><span class=mi>1</span> <span class=o>==</span> <span class=mi>1</span> <span class=p>{</span>
+		<span class=k>return</span> <span class=kc>false</span>
+	<span class=p>}</span>
+	<span class=kd>var</span> <span class=nx>stack</span> <span class=p>[]</span><span class=kt>byte</span>
+	<span class=nx>pairs</span> <span class=o>:=</span> <span class=kd>map</span><span class=p>[</span><span class=kt>byte</span><span class=p>]</span><span class=kt>byte</span><span class=p>{</span>
+		<span class=sc>&#39;)&#39;</span><span class=p>:</span> <span class=sc>&#39;(&#39;</span><span class=p>,</span>
+		<span class=sc>&#39;]&#39;</span><span class=p>:</span> <span class=sc>&#39;[&#39;</span><span class=p>,</span>
+		<span class=sc>&#39;}&#39;</span><span class=p>:</span> <span class=sc>&#39;{&#39;</span><span class=p>,</span>
+	<span class=p>}</span>
+	<span class=k>for</span> <span class=nx>i</span> <span class=o>:=</span> <span class=k>range</span> <span class=nx>s</span> <span class=p>{</span>
+		<span class=k>if</span> <span class=nx>pairs</span><span class=p>[</span><span class=nx>s</span><span class=p>[</span><span class=nx>i</span><span class=p>]]</span> <span class=p>&gt;</span> <span class=mi>0</span> <span class=p>{</span> <span class=c1>// 这里如果没匹配到，是 byte 默认值 0
+</span><span class=c1></span>			<span class=k>if</span> <span class=nb>len</span><span class=p>(</span><span class=nx>stack</span><span class=p>)</span> <span class=o>==</span> <span class=mi>0</span> <span class=o>||</span> <span class=nx>stack</span><span class=p>[</span><span class=nb>len</span><span class=p>(</span><span class=nx>stack</span><span class=p>)</span><span class=o>-</span><span class=mi>1</span><span class=p>]</span> <span class=o>!=</span> <span class=nx>pairs</span><span class=p>[</span><span class=nx>s</span><span class=p>[</span><span class=nx>i</span><span class=p>]]</span> <span class=p>{</span> <span class=c1>// 栈顶 Top() 匹配期望值
+</span><span class=c1></span>				<span class=k>return</span> <span class=kc>false</span>
+			<span class=p>}</span>
+			<span class=nx>stack</span> <span class=p>=</span> <span class=nx>stack</span><span class=p>[:</span><span class=nb>len</span><span class=p>(</span><span class=nx>stack</span><span class=p>)</span><span class=o>-</span><span class=mi>1</span><span class=p>]</span> <span class=c1>// 移除栈顶 Pop()
+</span><span class=c1></span>		<span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+			<span class=nx>stack</span> <span class=p>=</span> <span class=nb>append</span><span class=p>(</span><span class=nx>stack</span><span class=p>,</span> <span class=nx>s</span><span class=p>[</span><span class=nx>i</span><span class=p>])</span>
+		<span class=p>}</span>
+	<span class=p>}</span>
+
+	<span class=k>return</span> <span class=nb>len</span><span class=p>(</span><span class=nx>stack</span><span class=p>)</span> <span class=o>==</span> <span class=mi>0</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><ul><li>如果是奇数肯定不可能是 true</li></ul><blockquote><p>执行用时：0 ms, 在所有 Go 提交中击败了100.00%的用户</p><p>内存消耗：2 MB, 在所有 Go 提交中击败了91.93%的用户</p></blockquote><p>栈的操作图：</p><p><img src=./valid-parentheses.png alt=valid-parentheses style=zoom:200%></p><h3 id=22-非栈实现>2.2 非栈实现</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=kd>func</span> <span class=nf>isValid</span><span class=p>(</span><span class=nx>s</span> <span class=kt>string</span><span class=p>)</span> <span class=kt>bool</span> <span class=p>{</span>
+   <span class=kd>var</span> <span class=nx>l</span> <span class=kt>int</span>
+   <span class=k>for</span> <span class=nx>ok</span> <span class=o>:=</span> <span class=kc>true</span><span class=p>;</span> <span class=nx>ok</span><span class=p>;</span> <span class=nx>ok</span> <span class=p>=</span> <span class=nx>l</span> <span class=o>!=</span> <span class=nb>len</span><span class=p>(</span><span class=nx>s</span><span class=p>)</span> <span class=p>{</span>
+      <span class=nx>l</span> <span class=p>=</span> <span class=nb>len</span><span class=p>(</span><span class=nx>s</span><span class=p>)</span>
+      <span class=nx>s</span> <span class=p>=</span> <span class=nx>strings</span><span class=p>.</span><span class=nf>ReplaceAll</span><span class=p>(</span><span class=nx>strings</span><span class=p>.</span><span class=nf>ReplaceAll</span><span class=p>(</span><span class=nx>strings</span><span class=p>.</span><span class=nf>ReplaceAll</span><span class=p>(</span><span class=nx>s</span><span class=p>,</span> <span class=s>&#34;()&#34;</span><span class=p>,</span> <span class=s>&#34;&#34;</span><span class=p>),</span> <span class=s>&#34;{}&#34;</span><span class=p>,</span> <span class=s>&#34;&#34;</span><span class=p>),</span> <span class=s>&#34;[]&#34;</span><span class=p>,</span> <span class=s>&#34;&#34;</span><span class=p>)</span>
+   <span class=p>}</span>
+   <span class=k>return</span> <span class=nb>len</span><span class=p>(</span><span class=nx>s</span><span class=p>)</span> <span class=o>==</span> <span class=mi>0</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><ul><li>平均时间复杂度是 $ O^2/2 $，字符串替换是 n，for 循环是 n，所以是 n 平方</li><li>虽然代码很精简，但是时间和空间复杂度的表现都不是很好</li></ul><blockquote><p>执行用时：8 ms, 在所有 Go 提交中击败了7.18%的用户</p><p>内存消耗：7.1 MB, 在所有 Go 提交中击败了5.07%的用户</p></blockquote></div><div id=comments><div id=gitalk class=comment></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://github.com/gitalk/gitalk></a>Gitalk</a>.</noscript></div></div></div></main><footer class=footer><div class=footer-container><div class=footer-line>Powered by <a href=https://gohugo.io/ target=_blank rel="noopener noreffer"title="Hugo 0.76.0">Hugo</a> | Theme - <a href=https://github.com/dillonzq/LoveIt target=_blank rel="noopener noreffer"title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i>LoveIt</a></div><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2019 - 2020</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=/zh-cn/ target=_blank>xxxx</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer"href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title="Back to Top"><i class="fas fa-arrow-up fa-fw"></i></a><a href=# id=view-comments class=fixed-button title="View Comments"><i class="fas fa-comment fa-fw"></i></a></div><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.min.css><script type=text/javascript src=https://cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/smooth-scroll@16.1.3/dist/smooth-scroll.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/autocomplete.js@0.37.1/dist/autocomplete.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/algoliasearch@4.2.0/dist/algoliasearch-lite.umd.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/lazysizes@5.2.2/lazysizes.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/sharer.js@0.4.0/sharer.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/typeit@7.0.4/dist/typeit.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:10},comment:{gitalk:{admin:["cityiron"],clientID:"7ebb4aff12c6b5dc4aac",clientSecret:"fdb607f0e7f810a9e2084a2cbed3800f5657dab7",id:"2020-12-23T10:05:16+08:00",owner:"funnycode-org",repo:"funnycode-org.github.io",title:"LeetCode20题笔记"}},data:{"id-1":"云原生玩码部落","id-2":"云原生玩码部落"},search:{algoliaAppID:"PASDMWALPK",algoliaIndex:"index.zh-cn",algoliaSearchKey:"b42948e51daaa93df92381c8e2ac0f93",highlightTag:"em",maxResultLength:10,noResultsFound:"No results found",snippetLength:50,type:"algolia"},typeit:{cursorChar:"|",cursorSpeed:1e3,data:{"id-1":["id-1"],"id-2":["id-2"]},duration:-1,speed:100}}</script><script type=text/javascript src=/js/theme.min.js></script></body></html>
