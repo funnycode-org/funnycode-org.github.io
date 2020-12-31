@@ -5,40 +5,55 @@
 
 ## 一、题目
 
-- 题目说明
+### 1.1 题目说明
 
 给定一个只包括 '('，')'，'{'，'}'，'['，']' 的字符串，判断字符串是否有效。
 
 有效字符串需满足：
 
-左括号必须用相同类型的右括号闭合。
-左括号必须以正确的顺序闭合。
+1. 左括号必须用相同类型的右括号闭合。
+2. 左括号必须以正确的顺序闭合。
+
 注意空字符串可被认为是有效字符串。
 
 示例 1:
 
+```
 输入: "()"
 输出: true
+```
+
 示例 2:
 
+```
 输入: "()[]{}"
 输出: true
+```
+
 示例 3:
 
+```
 输入: "(]"
 输出: false
+```
+
 示例 4:
 
+```
 输入: "([)]"
 输出: false
+```
+
 示例 5:
 
+```
 输入: "{[]}"
 输出: true
+```
 
 [leetcode地址](https://leetcode-cn.com/problems/valid-parentheses/)
 
-- 题目知识点介绍
+### 1.2 题目知识点介绍
 
 这道题目主要是考核[堆栈](https://zh.wikiredia.com/wiki/%E5%A0%86%E6%A0%88)这个数据结构，它是一个先进先出、操作受限的线性表，也称为 **栈**。
 
@@ -60,7 +75,7 @@
 
 ### 2.1 栈实现
 
-第一个版本：
+代码：
 
 ```go
 func isValid(s string) bool {
@@ -85,9 +100,9 @@ func isValid(s string) bool {
 }
 ```
 
-- 时间复杂度 `O(n)` n 是字符串长度
+- 时间复杂度 $ O(n) $ n 是字符串长度
 
-- 空间复杂度 `O(n+6)` 因为这个题目中就 6 种扩展，空间就和栈中存放的数据有关，也就是和字符串长度有关
+- 空间复杂度 $ O(n+6) $ 因为这个题目中就 6 种扩展，空间就和栈中存放的数据有关，也就是和字符串长度有关
 
 小优化：
 
@@ -119,6 +134,8 @@ func isValid(s string) bool {
 
 - 如果是奇数肯定不可能是 true
 
+成绩：
+
 > 执行用时：0 ms, 在所有 Go 提交中击败了100.00%的用户
 >
 > 内存消耗：2 MB, 在所有 Go 提交中击败了91.93%的用户
@@ -128,6 +145,8 @@ func isValid(s string) bool {
 <img src="./valid-parentheses.png" alt="valid-parentheses" style="zoom:200%;" />
 
 ### 2.2 非栈实现
+
+代码：
 
 ```go
 func isValid(s string) bool {
@@ -143,6 +162,8 @@ func isValid(s string) bool {
 - 平均时间复杂度是 $ O^2/2 $，字符串替换是 n，for 循环是 n，所以是 n 平方
 - 虽然代码很精简，但是时间和空间复杂度的表现都不是很好
 
+成绩：
+
 > 执行用时：8 ms, 在所有 Go 提交中击败了7.18%的用户
 >
 > 内存消耗：7.1 MB, 在所有 Go 提交中击败了5.07%的用户
@@ -154,6 +175,8 @@ func isValid(s string) bool {
 - 记得对边界条件做处理，比如字符串长度是奇数的处理
 - 空字符串也是满足的
 
-[题解的链接](https://github.com/cityiron/algorithms/tree/main/leetcode/20-valid-parentheses)
+------
+
+[本章的代码连接](https://github.com/cityiron/algorithms/tree/main/leetcode/20-valid-parentheses)
 
 
