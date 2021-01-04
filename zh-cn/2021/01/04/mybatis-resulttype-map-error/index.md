@@ -122,7 +122,7 @@ public class OutputValueDO extends SuperDO {
       把方法栈在往上移一个，就能找到`constructor`的具体获取处：
     ![值](./default_constructor.png)
     `resultType`就是我的实体类，`defaultConstructor`通过`findDefaultConstructor`获取到，这个方法就不细看了，里面逻辑就是：如果只有一个构造器，那就使用该构造器，获取寻找被标记了`AutomapConstructor`注解的构造器。由于`@Data`注解只能生成一个构造器`OutputValueDO(java.math.BigDecimal,java.math.BigDecimal,java.math.BigDecimal,java.util.Date)`，没有`id`, `gmtUpdate`,`gmtCreate`。 \
-    此时就有一个解决方案了，去掉`@Data`，自己写一个完整的构造器，包括继承的所有字段，但是这样是不太好的，从上面`for`循环代码可知，要数据库的列的顺序要和实体类的构造器的参数的顺序一致，不然还是出现问题。那就在往上个方法栈看看为什么使用了该处理逻辑，印象中的`mybatis`没这么坑。
+    此时就有一个解决方案了，去掉`@Data`，自己写一个完整的构造器，包括继承的所有字段，但是这样是不太好的，从上面`for`循环代码可知，要数据库的表的列的顺序要和实体类的构造器的参数的顺序一致，不然还是出现问题。那就在往上个方法栈看看为什么使用了该处理逻辑，印象中的`mybatis`没这么坑。
    5. ### 更优雅的解决方案
       再往上到上一个方法栈，   `createResultObject`方法就找到了正主。
       ![result](./create_result.png)
