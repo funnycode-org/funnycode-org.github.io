@@ -5,31 +5,7 @@
 
 ## 一、前言
 
-filter 模块是一个很简单的模块，主要用于过滤表和字段。
-
-**在 canal 里面的使用**
-
-- 监听的库和表
-
-```properties
-# table regex
-canal.instance.filter.regex=.*\\..*
-# table black regex
-canal.instance.filter.black.regex=canal_manager\\..*
-```
-
-监听所有的内容，然后去掉库 canal_manager
-
-- 监听的字段
-
-```properties
-# 只监听 tc_king 这个表的五个字段，其它字段都会忽略
-canal.instance.filter.field=base_test.tc_king:id/name/career/remark/way
-# 会忽略 tc_king 这个表的 id,name 字段
-canal.instance.filter.black.field=base_test.tc_king:id/name
-```
-
-> 这个场景应对某个字段可以在不同的区域是可以改的，比如有一个规则表，100条规则，从A集群的数据库同步到其它集群的数据库，其它数据库里面这100条规则的状态是自己维护的，新增后也需要手动去操作开启，那么就不需要监听这个字段了。
+filter 模块是一个比较简单的模块，主要用于过滤 binlog 过来的表和字段数据。使用 canal 的时候，可以在服务端或客户端进行配置。
 
 ## 二、内容
 
@@ -342,6 +318,120 @@ public class SeqIncludeFunction extends AbstractFunction {
 
 <img src="cf.05.jpg" alt="引用的模块" style="zoom: 200%;" />
 
+> 在 IDE 按关联关系只有 `AviaterRegexFilter` 才被使用了
+
+```java
+public class LogEventConvert extends AbstractCanalLifeCycle implements BinlogParser<LogEvent> {
+
+    private volatile AviaterRegexFilter nameFilter;                                                          // 运行时引用可能会有变化，比如规则发生变化时
+    private volatile AviaterRegexFilter nameBlackFilter;
+  
+}
+```
+
+下面是部分的使用代码：
+
+```java
+                // check name filter
+                String name = schemaName + "." + tableName;
+                if (nameFilter != null && !nameFilter.filter(name)) {
+                    if (result.getType() == EventType.RENAME) {
+                        // rename校验只要源和目标满足一个就进行操作
+                        if (nameFilter != null
+                            && !nameFilter.filter(result.getOriSchemaName() + "." + result.getOriTableName())) {
+                            return true;
+                        }
+                    } else {
+                        // 其他情况返回null
+                        return true;
+                    }
+                }
+
+                if (nameBlackFilter != null && nameBlackFilter.filter(name)) {
+                    if (result.getType() == EventType.RENAME) {
+                        // rename校验只要源和目标满足一个就进行操作
+                        if (nameBlackFilter != null
+                            && nameBlackFilter.filter(result.getOriSchemaName() + "." + result.getOriTableName())) {
+                            return true;
+                        }
+                    } else {
+                        // 其他情况返回null
+                        return true;
+                    }
+                }
+```
+
+- 库名+表名，比如：`base_test.tc_king`
+- 就是用了 `CanalEventFilter.filter`  方法
+
+### 2.4 配置说明
+
+#### 2.4.1 服务端配置
+
+**在 canal 里面的使用的例子**
+
+- 监听的库和表
+
+```properties
+# table regex
+canal.instance.filter.regex=.*\\..*
+# table black regex
+canal.instance.filter.black.regex=canal_manager\\..*
+```
+
+监听所有的内容，然后去掉库 canal_manager 下的所有表
+
+- 监听的字段
+
+```properties
+# 只监听 tc_king 这个表的五个字段，其它字段都会忽略
+canal.instance.filter.field=base_test.tc_king:id/name/career/remark/way
+# 会忽略 tc_king 这个表的 id,name 字段
+canal.instance.filter.black.field=base_test.tc_king:id/name
+```
+
+> 这个场景应对某个字段可以在不同的区域是可以改的，比如有一个规则表，100条规则，从A集群的数据库同步到其它集群的数据库，其它数据库里面这100条规则的状态是自己维护的，新增后也需要手动去操作开启，那么就不需要监听这个字段了。
+
+可以看到加了 black 的是黑名单，不加的就是白名单了。
+
+#### 2.4.2 客户端配置
+
+> 这个我第一时间想到的是：如果监听某个库有20张表，A集群只需要关心其中的5张表，B集群只关心另外的8张表，那么就需要不同的client端配置了。
+>
+> 然后现实很残酷，由于目前一个 canal instance 只允许一个 client 订阅，因此目前还达不到这种效果。
+
+```java
+    /**
+     * 客户端订阅，重复订阅时会更新对应的filter信息
+     * 
+     * <pre>
+     * 说明：
+     * a. 如果本次订阅中filter信息为空，则直接使用canal server服务端配置的filter信息
+     * b. 如果本次订阅中filter信息不为空，目前会直接替换canal server服务端配置的filter信息，以本次提交的为准
+     * 
+     * TODO: 后续可以考虑，如果本次提交的filter不为空，在执行过滤时，是对canal server filter + 本次filter的交集处理，达到只取1份binlog数据，多个客户端消费不同的表
+     * </pre>
+     * 
+     * @throws CanalClientException
+     */
+    void subscribe(String filter) throws CanalClientException;
+
+    /**
+     * 客户端订阅，不提交客户端filter，以服务端的filter为准
+     * 
+     * @throws CanalClientException
+     */
+    void subscribe() throws CanalClientException;
+```
+
+我们公司的业务场景，目前就是需要给不同的 client 同步不同的库和不同的表内容，我们在中间做了一层数据工单，后续补充。
+
 ## 三、参考
 
 [https://github.com/killme2008/aviatorscript](https://github.com/killme2008/aviatorscript)
+
+[https://www.yuque.com/boyan-avfmj/aviatorscript]https://www.yuque.com/boyan-avfmj/aviatorscript 
+
+<u>这个aviator的文档居然在语雀个人账号下的，无奈</u>
+
+

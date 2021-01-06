@@ -5,6 +5,8 @@
 
 ## 一、前言
 
+> 闲聊 canal 系列基于版本 1.1.5
+
 介绍下今天的猪脚 [canal](https://github.com/alibaba/canal/) 
 
 - 官方定位
@@ -26,7 +28,7 @@
 
 ### 2.1 MySQL 主备复制
 
-![主备复制](https://raw.githubusercontent.com/cityiron/tuchuang/master/blog/cp.01.jpeg)
+<img src="https://raw.githubusercontent.com/cityiron/tuchuang/master/blog/cp.01.jpeg" alt="主备复制" style="zoom:200%;" />
 
 从上层来看，复制分成三步：
 
@@ -36,7 +38,7 @@
 
 ### 2.2 canal 的工作原理
 
-![canal](https://raw.githubusercontent.com/cityiron/tuchuang/master/blog/cp.02.jpeg)
+<img src="https://raw.githubusercontent.com/cityiron/tuchuang/master/blog/cp.02.jpeg" alt="canal" style="zoom:150%;" />
 
 原理相对比较简单：
 
@@ -46,7 +48,7 @@
 
 ### 2.3 canal 架构
 
-![architecture](https://raw.githubusercontent.com/cityiron/tuchuang/master/blog/cp.03.jpeg)
+<img src="https://raw.githubusercontent.com/cityiron/tuchuang/master/blog/cp.03.jpeg" alt="architecture" style="zoom:150%;" />
 
 说明：
 
@@ -64,9 +66,27 @@ instance 模块：
 
 对应的源码结构
 
-![sourcecode](https://raw.githubusercontent.com/cityiron/tuchuang/master/blog/cp.04.jpg)
+<img src="https://raw.githubusercontent.com/cityiron/tuchuang/master/blog/cp.04.jpg" alt="sourcecode" style="zoom:200%;" />
 
 目录结构把每个模块都很清晰的展示出来了，肉眼直接识别（顾名思义）。
+
+简单描述下每个模块的功能：
+
+- **common模块：**主要是提供了一些公共的工具类和接口。
+- **connector模块：**提供 mq 交互的能力，里面有类似于 dubbo 的 @SPI 机制
+- **deployer模块：**通过该模块提供的CanalLauncher来启动canal server
+- **filter模块：**给 parse 和 sink 模块提供 filter 能力的模块
+- **client模块：**canal的客户端。核心接口为 CanalConnector
+- **client-adapter：** 内置客户端数据同步功能
+- **example模块：**提供 client 模块使用案例。
+- **protocol模块：**client和server模块之间的通信协议
+- **server模块：**canal服务器端。核心接口为CanalServer
+- **instance模块：**一个server有多个instance。每个instance都会模拟成一个mysql实例的slave。instance模块有四个核心组成部分：parser模块、sink模块、store模块，meta模块。核心接口为CanalInstance
+- **parser模块：**数据源接入，模拟slave协议和master进行交互，协议解析。parser模块依赖于dbsync、driver模块。
+- **driver模块和dbsync模块：**从这两个模块的artifactId(canal.parse.driver、canal.parse.dbsync)，就可以看出来，这两个模块实际上是parser模块的组件。事实上parser 是通过driver模块与mysql建立连接，从而获取到binlog。由于原始的binlog都是二进制流，需要解析成对应的binlog事件，这些binlog事件对象都定义在dbsync模块中，dbsync 模块来自于淘宝的tddl。
+- **sink模块：**parser和store链接器，进行数据过滤，加工，分发的工作。核心接口为CanalEventSink
+- **store模块：**数据存储。核心接口为CanalEventStore
+- **meta模块：**增量订阅&消费信息管理器，核心接口为CanalMetaManager，主要用于记录canal消费到的mysql binlog的位置，
 
 ## 三、准备 MySQL
 
@@ -412,6 +432,12 @@ canal.admin.register.cluster =
 ```properties
 canal.admin.register.auto = true
 canal.admin.register.cluster = local_cluster
+```
+
+使用ZK去存储，需要改：
+
+```properties
+canal.instance.global.spring.xml = classpath:spring/default-instance.xml
 ```
 
 ## 七、小结
