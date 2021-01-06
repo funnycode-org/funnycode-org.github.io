@@ -35,7 +35,7 @@ canal.instance.filter.black.field=base_test.tc_king:id/name
 
 ### 2.1 结构
 
-![filter目录](cf.01.jpg)
+<img src="cf.01.jpg" alt="filter目录" style="zoom:200%;" />
 
 - `CanalEventFilter` 接口，定义了一个 `filter` 方法，返回 `true | false`
 - aviater 下面是实现类
@@ -340,7 +340,7 @@ public class SeqIncludeFunction extends AbstractFunction {
 - parse 模块
 - sink 模块
 
-![引用的模块](cf.05.jpg)
+<img src="cf.05.jpg" alt="引用的模块" style="zoom: 200%;" />
 
 ## 三、参考
 
