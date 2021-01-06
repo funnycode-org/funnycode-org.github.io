@@ -1,0 +1,344 @@
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><meta http-equiv=x-ua-compatible content="IE=edge, chrome=1"><title>闲聊 canal | filter 模块 - 云原生玩码部落</title><meta name=Description content="云原生玩码部落"><meta property="og:title"content="闲聊 canal | filter 模块"><meta property="og:description"content><meta property="og:type"content="article"><meta property="og:url"content="http://blog.funnycode.org.cn/zh-cn/2021/01/03/canal-filter/"><meta property="og:image"content="http://blog.funnycode.org.cn/logo.png"><meta property="article:published_time"content="2021-01-03T15:31:11+08:00"><meta property="article:modified_time"content="2021-01-06T15:31:11+08:00"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="http://blog.funnycode.org.cn/logo.png"><meta name=twitter:title content="闲聊 canal | filter 模块"><meta name=twitter:description content><meta name=application-name content="云原生玩码部落"><meta name=apple-mobile-web-app-title content="云原生玩码部落"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon"type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=http://blog.funnycode.org.cn/zh-cn/2021/01/03/canal-filter/><link rel=prev href=http://blog.funnycode.org.cn/zh-cn/2021/01/01/canal-prepare/><link rel=next href=http://blog.funnycode.org.cn/zh-cn/2021/01/04/mybatis-resulttype-map-error/><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.0/css/all.min.css><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"闲聊 canal | filter 模块","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"http:\/\/blog.funnycode.org.cn\/zh-cn\/2021\/01\/03\/canal-filter\/"},"image":["http:\/\/blog.funnycode.org.cn\/images\/Apple-Devices-Preview.png"],"genre":"posts","wordcount":1622,"url":"http:\/\/blog.funnycode.org.cn\/zh-cn\/2021\/01\/03\/canal-filter\/","datePublished":"2021-01-03T15:31:11+08:00","dateModified":"2021-01-06T15:31:11+08:00","license":"This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher":{"@type":"Organization","name":"xxxx","logo":"http:\/\/blog.funnycode.org.cn\/images\/me\/logo.png"},"author":{"@type":"Person","name":"铁城"},"description":""}</script></head><body header-desktop=fixed header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem('theme')?localStorage.getItem('theme')==='dark':'auto'==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches:'auto'==='dark')&&document.body.setAttribute('theme','dark')</script><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/zh-cn/ title=云原生玩码部落><span class=header-title-pre><i class="far fa-kiss-wink-heart fa-fw"></i></span><span id=id-1 class=typeit></span></a></div><div class=menu><div class=menu-inner><a class=menu-item href=/zh-cn/posts/>所有文章 </a><a class=menu-item href=/zh-cn/tags/>标签 </a><a class=menu-item href=/zh-cn/categories/>分类 </a><a class=menu-item href=/zh-cn/notes/>笔记 </a><a class=menu-item href=/zh-cn/about/>关于 </a><a class=menu-item href=https://github.com/funnycode-org title=GitHub rel="noopener noreffer"target=_blank><i class="fab fa-github fa-fw"></i></a><span class="menu-item delimiter"></span><a href=javascript:void(0); class="menu-item language"title="Select Language">简体中文<i class="fas fa-chevron-right fa-fw"></i>
+<select class=language-select id=language-select-desktop onchange="location=this.value"><option value=/zh-cn/2021/01/03/canal-filter/ selected>简体中文</option></select>
+</a><span class="menu-item search"id=search-desktop><input type=text placeholder="Search titles or contents..."id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle"id=search-toggle-desktop title=Search><i class="fas fa-search fa-fw"></i></a><a href=javascript:void(0); class="search-button search-clear"id=search-clear-desktop title=Clear><i class="fas fa-times-circle fa-fw"></i></a><span class="search-button search-loading"id=search-loading-desktop><i class="fas fa-spinner fa-fw fa-spin"></i></span></span><a href=javascript:void(0); class="menu-item theme-switch"title="Switch Theme"><i class="fas fa-adjust fa-fw"></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/zh-cn/ title=云原生玩码部落><span class=header-title-pre><i class="far fa-kiss-wink-heart fa-fw"></i></span><span id=id-2 class=typeit></span></a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><div class=search-wrapper><div class="search mobile"id=search-mobile><input type=text placeholder="Search titles or contents..."id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle"id=search-toggle-mobile title=Search><i class="fas fa-search fa-fw"></i></a><a href=javascript:void(0); class="search-button search-clear"id=search-clear-mobile title=Clear><i class="fas fa-times-circle fa-fw"></i></a><span class="search-button search-loading"id=search-loading-mobile><i class="fas fa-spinner fa-fw fa-spin"></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>Cancel</a></div><a class=menu-item href=/zh-cn/posts/ title>所有文章</a><a class=menu-item href=/zh-cn/tags/ title>标签</a><a class=menu-item href=/zh-cn/categories/ title>分类</a><a class=menu-item href=/zh-cn/notes/ title>笔记</a><a class=menu-item href=/zh-cn/about/ title>关于</a><a class=menu-item href=https://github.com/funnycode-org title=GitHub rel="noopener noreffer"target=_blank><i class="fab fa-github fa-fw"></i></a><a href=javascript:void(0); class="menu-item theme-switch"title="Switch Theme">
+<i class="fas fa-adjust fa-fw"></i></a><a href=javascript:void(0); class=menu-item title="Select Language">简体中文<i class="fas fa-chevron-right fa-fw"></i>
+<select class=language-select onchange="location=this.value"><option value=/zh-cn/2021/01/03/canal-filter/ selected>简体中文</option></select></a></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=main><div class=container><div class=toc id=toc-auto><h2 class=toc-title>Contents</h2><div class=toc-content id=toc-content-auto></div></div><article class="page single"><h1 class="single-title animated flipInX">闲聊 canal | filter 模块</h1><div class=post-meta><div class=post-meta-line><span class=post-author><a href=/zh-cn/ title=Author rel=author class=author><i class="fas fa-user-circle fa-fw"></i>铁城</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-01-03>2021-01-03</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;1622 words&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;4 minutes&nbsp;</div></div><div class="details toc"id=toc-static kept><div class="details-summary toc-title"><span>Contents</span>
+<span><i class="details-icon fas fa-angle-right"></i></span></div><div class="details-content toc-content"id=toc-content-static><nav id=TableOfContents><ul><li><a href=#一前言>一、前言</a></li><li><a href=#二内容>二、内容</a><ul><li><a href=#21-结构>2.1 结构</a></li><li><a href=#22-依赖>2.2 依赖</a></li><li><a href=#23-代码分析>2.3 代码分析</a><ul><li><a href=#231-简单匹配>2.3.1 简单匹配</a></li><li><a href=#232-正则匹配>2.3.2 正则匹配</a></li><li><a href=#233-el表达式匹配>2.3.3 EL表达式匹配</a></li><li><a href=#234-自定义-function>2.3.4 自定义 Function</a></li><li><a href=#235-其它模块使用>2.3.5 其它模块使用</a></li></ul></li></ul></li><li><a href=#三参考>三、参考</a></li></ul></nav></div></div><div class=content id=content><h2 id=一前言>一、前言</h2><p>filter 模块是一个很简单的模块，主要用于过滤表和字段。</p><p><strong>在 canal 里面的使用</strong></p><ul><li>监听的库和表</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback># table regex
+canal.instance.filter.regex=.*\\..*
+# table black regex
+canal.instance.filter.black.regex=canal_manager\\..*
+</code></pre></td></tr></table></div></div><p>监听所有的内容，然后去掉库 canal_manager</p><ul><li>监听的字段</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback># 只监听 tc_king 这个表的五个字段，其它字段都会忽略
+canal.instance.filter.field=base_test.tc_king:id/name/career/remark/way
+# 会忽略 tc_king 这个表的 id,name 字段
+canal.instance.filter.black.field=base_test.tc_king:id/name
+</code></pre></td></tr></table></div></div><blockquote><p>这个场景应对某个字段可以在不同的区域是可以改的，比如有一个规则表，100条规则，从A集群的数据库同步到其它集群的数据库，其它数据库里面这100条规则的状态是自己维护的，新增后也需要手动去操作开启，那么就不需要监听这个字段了。</p></blockquote><h2 id=二内容>二、内容</h2><h3 id=21-结构>2.1 结构</h3><p><img class=lazyload src=/svg/loading.min.svg data-src=cf.01.jpg data-srcset="/zh-cn/2021/01/03/canal-filter/cf.01.jpg, cf.01.jpg 1.5x, /zh-cn/2021/01/03/canal-filter/cf.01.jpg 2x"data-sizes=auto alt=/zh-cn/2021/01/03/canal-filter/cf.01.jpg title=filter目录></p><ul><li><code>CanalEventFilter</code> 接口，定义了一个 <code>filter</code> 方法，返回 <code>true | false</code></li><li>aviater 下面是实现类<ul><li>AviaterELFilter EL表达式匹配</li><li>AviaterRegexFilter 正则匹配</li><li>AviaterSimpleFilter 简单匹配</li></ul></li></ul><h3 id=22-依赖>2.2 依赖</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-xml data-lang=xml><span class=nt>&lt;dependency&gt;</span>
+   <span class=nt>&lt;groupId&gt;</span>com.googlecode.aviator<span class=nt>&lt;/groupId&gt;</span>
+   <span class=nt>&lt;artifactId&gt;</span>aviator<span class=nt>&lt;/artifactId&gt;</span>
+<span class=nt>&lt;/dependency&gt;</span>
+</code></pre></td></tr></table></div></div><ul><li>aviator 2.2.1</li></ul><p>如果看到这个版本的发布日期，一定让人非常震惊</p><p><img class=lazyload src=/svg/loading.min.svg data-src=cf.02.jpg data-srcset="/zh-cn/2021/01/03/canal-filter/cf.02.jpg, cf.02.jpg 1.5x, /zh-cn/2021/01/03/canal-filter/cf.02.jpg 2x"data-sizes=auto alt=/zh-cn/2021/01/03/canal-filter/cf.02.jpg title=2.2.1版本></p><p>但是这个 aviator 不是没有更新，相反我发现它一直在稳定的发展，并且最近一年也发布了不少版本。</p><p><img class=lazyload src=/svg/loading.min.svg data-src=cf.03.jpg data-srcset="/zh-cn/2021/01/03/canal-filter/cf.03.jpg, cf.03.jpg 1.5x, /zh-cn/2021/01/03/canal-filter/cf.03.jpg 2x"data-sizes=auto alt=/zh-cn/2021/01/03/canal-filter/cf.03.jpg title="最新的 aviator"></p><p>可怕，canal 这么多年都没有更新过这个库了。</p><h3 id=23-代码分析>2.3 代码分析</h3><h4 id=231-简单匹配>2.3.1 简单匹配</h4><p><strong>字段</strong></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kd>class</span> <span class=nc>AviaterSimpleFilter</span> <span class=kd>implements</span> <span class=n>CanalEventFilter</span><span class=o>&lt;</span><span class=n>String</span><span class=o>&gt;</span> <span class=o>{</span>
+
+    <span class=kd>private</span> <span class=kd>static</span> <span class=kd>final</span> <span class=n>String</span> <span class=n>SPLIT</span>             <span class=o>=</span> <span class=s>&#34;,&#34;</span><span class=o>;</span>
+
+    <span class=kd>private</span> <span class=kd>static</span> <span class=kd>final</span> <span class=n>String</span> <span class=n>FILTER_EXPRESSION</span> <span class=o>=</span> <span class=s>&#34;include(list,target)&#34;</span><span class=o>;</span>
+
+    <span class=kd>private</span> <span class=kd>final</span> <span class=n>Expression</span>    <span class=n>exp</span>               <span class=o>=</span> <span class=n>AviatorEvaluator</span><span class=o>.</span><span class=na>compile</span><span class=o>(</span><span class=n>FILTER_EXPRESSION</span><span class=o>,</span> <span class=kc>true</span><span class=o>);</span>
+  
+      <span class=kd>private</span> <span class=kd>final</span> <span class=n>List</span><span class=o>&lt;</span><span class=n>String</span><span class=o>&gt;</span>  <span class=n>list</span><span class=o>;</span>
+  
+<span class=o>}</span>
+</code></pre></td></tr></table></div></div><ul><li>exp 匹配的表达式 <code>include(list,target)</code> 表示字符串 list 里面找一个字符串是否存在</li></ul><p><strong>构造方法</strong></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java>    <span class=kd>public</span> <span class=nf>AviaterSimpleFilter</span><span class=o>(</span><span class=n>String</span> <span class=n>filterExpression</span><span class=o>){</span>
+        <span class=k>if</span> <span class=o>(</span><span class=n>StringUtils</span><span class=o>.</span><span class=na>isEmpty</span><span class=o>(</span><span class=n>filterExpression</span><span class=o>))</span> <span class=o>{</span>
+            <span class=n>list</span> <span class=o>=</span> <span class=k>new</span> <span class=n>ArrayList</span><span class=o>&lt;&gt;();</span>
+        <span class=o>}</span> <span class=k>else</span> <span class=o>{</span>
+            <span class=n>String</span><span class=o>[]</span> <span class=n>ss</span> <span class=o>=</span> <span class=n>filterExpression</span><span class=o>.</span><span class=na>toLowerCase</span><span class=o>().</span><span class=na>split</span><span class=o>(</span><span class=n>SPLIT</span><span class=o>);</span>
+            <span class=n>list</span> <span class=o>=</span> <span class=n>Arrays</span><span class=o>.</span><span class=na>asList</span><span class=o>(</span><span class=n>ss</span><span class=o>);</span>
+        <span class=o>}</span>
+    <span class=o>}</span>
+</code></pre></td></tr></table></div></div><ul><li>全部转换成小写</li><li>根据<code>,</code>分隔，配置多个就 <code>s1.t1,s2.t2</code>，会变成 <code>list [s1.t1, s2.t2]</code></li></ul><p><strong>匹配方法</strong></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java>    <span class=kd>public</span> <span class=kt>boolean</span> <span class=nf>filter</span><span class=o>(</span><span class=n>String</span> <span class=n>filtered</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>CanalFilterException</span> <span class=o>{</span>
+        <span class=k>if</span> <span class=o>(</span><span class=n>list</span><span class=o>.</span><span class=na>isEmpty</span><span class=o>())</span> <span class=o>{</span>
+            <span class=k>return</span> <span class=kc>true</span><span class=o>;</span>
+        <span class=o>}</span>
+        <span class=k>if</span> <span class=o>(</span><span class=n>StringUtils</span><span class=o>.</span><span class=na>isEmpty</span><span class=o>(</span><span class=n>filtered</span><span class=o>))</span> <span class=o>{</span>
+            <span class=k>return</span> <span class=kc>true</span><span class=o>;</span>
+        <span class=o>}</span>
+        <span class=n>Map</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>Object</span><span class=o>&gt;</span> <span class=n>env</span> <span class=o>=</span> <span class=k>new</span> <span class=n>HashMap</span><span class=o>&lt;&gt;();</span>
+        <span class=n>env</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=s>&#34;list&#34;</span><span class=o>,</span> <span class=n>list</span><span class=o>);</span>
+        <span class=n>env</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=s>&#34;target&#34;</span><span class=o>,</span> <span class=n>filtered</span><span class=o>.</span><span class=na>toLowerCase</span><span class=o>());</span>
+        <span class=k>return</span> <span class=o>(</span><span class=n>Boolean</span><span class=o>)</span> <span class=n>exp</span><span class=o>.</span><span class=na>execute</span><span class=o>(</span><span class=n>env</span><span class=o>);</span>
+    <span class=o>}</span>
+</code></pre></td></tr></table></div></div><ul><li>空字符串直接是 true</li><li>会转小写去比较</li></ul><h4 id=232-正则匹配>2.3.2 正则匹配</h4><p><strong>字段</strong></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kd>class</span> <span class=nc>AviaterRegexFilter</span> <span class=kd>implements</span> <span class=n>CanalEventFilter</span><span class=o>&lt;</span><span class=n>String</span><span class=o>&gt;</span> <span class=o>{</span>
+
+    <span class=kd>private</span> <span class=kd>static</span> <span class=kd>final</span> <span class=n>String</span>             <span class=n>SPLIT</span>             <span class=o>=</span> <span class=s>&#34;,&#34;</span><span class=o>;</span>
+    <span class=kd>private</span> <span class=kd>static</span> <span class=kd>final</span> <span class=n>String</span>             <span class=n>PATTERN_SPLIT</span>     <span class=o>=</span> <span class=s>&#34;|&#34;</span><span class=o>;</span>
+    <span class=kd>private</span> <span class=kd>static</span> <span class=kd>final</span> <span class=n>String</span>             <span class=n>FILTER_EXPRESSION</span> <span class=o>=</span> <span class=s>&#34;regex(pattern,target)&#34;</span><span class=o>;</span>
+    <span class=kd>private</span> <span class=kd>static</span> <span class=kd>final</span> <span class=n>RegexFunction</span>      <span class=n>regexFunction</span>     <span class=o>=</span> <span class=k>new</span> <span class=n>RegexFunction</span><span class=o>();</span>
+    <span class=kd>private</span> <span class=kd>final</span> <span class=n>Expression</span>                <span class=n>exp</span>               <span class=o>=</span> <span class=n>AviatorEvaluator</span><span class=o>.</span><span class=na>compile</span><span class=o>(</span><span class=n>FILTER_EXPRESSION</span><span class=o>,</span> <span class=kc>true</span><span class=o>);</span>
+    <span class=kd>static</span> <span class=o>{</span>
+        <span class=n>AviatorEvaluator</span><span class=o>.</span><span class=na>addFunction</span><span class=o>(</span><span class=n>regexFunction</span><span class=o>);</span>
+    <span class=o>}</span>
+
+    <span class=kd>private</span> <span class=kd>static</span> <span class=kd>final</span> <span class=n>Comparator</span><span class=o>&lt;</span><span class=n>String</span><span class=o>&gt;</span> <span class=n>COMPARATOR</span>        <span class=o>=</span> <span class=k>new</span> <span class=n>StringComparator</span><span class=o>();</span>
+
+    <span class=kd>final</span> <span class=kd>private</span> <span class=n>String</span>                    <span class=n>pattern</span><span class=o>;</span>
+    <span class=kd>final</span> <span class=kd>private</span> <span class=kt>boolean</span>                   <span class=n>defaultEmptyValue</span><span class=o>;</span>
+  
+<span class=o>}</span>
+</code></pre></td></tr></table></div></div><ul><li>exp 匹配的表达式 <code>regex(pattern,target)</code> 表示字符串 list 里面找一个字符串是否存在</li><li>regexFunction 在静态方法设置了默认的正则函数</li><li>defaultEmptyValue 空值匹配条件</li><li>pattern 正则的表达式</li></ul><p><strong>构造方法</strong></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java>    <span class=kd>public</span> <span class=nf>AviaterRegexFilter</span><span class=o>(</span><span class=n>String</span> <span class=n>pattern</span><span class=o>){</span>
+        <span class=k>this</span><span class=o>(</span><span class=n>pattern</span><span class=o>,</span> <span class=kc>true</span><span class=o>);</span>
+    <span class=o>}</span>
+
+    <span class=kd>public</span> <span class=nf>AviaterRegexFilter</span><span class=o>(</span><span class=n>String</span> <span class=n>pattern</span><span class=o>,</span> <span class=kt>boolean</span> <span class=n>defaultEmptyValue</span><span class=o>){</span>
+        <span class=k>this</span><span class=o>.</span><span class=na>defaultEmptyValue</span> <span class=o>=</span> <span class=n>defaultEmptyValue</span><span class=o>;</span>
+        <span class=n>List</span><span class=o>&lt;</span><span class=n>String</span><span class=o>&gt;</span> <span class=n>list</span> <span class=o>=</span> <span class=kc>null</span><span class=o>;</span>
+        <span class=k>if</span> <span class=o>(</span><span class=n>StringUtils</span><span class=o>.</span><span class=na>isEmpty</span><span class=o>(</span><span class=n>pattern</span><span class=o>))</span> <span class=o>{</span>
+            <span class=n>list</span> <span class=o>=</span> <span class=k>new</span> <span class=n>ArrayList</span><span class=o>&lt;&gt;();</span>
+        <span class=o>}</span> <span class=k>else</span> <span class=o>{</span>
+            <span class=n>String</span><span class=o>[]</span> <span class=n>ss</span> <span class=o>=</span> <span class=n>StringUtils</span><span class=o>.</span><span class=na>split</span><span class=o>(</span><span class=n>pattern</span><span class=o>,</span> <span class=n>SPLIT</span><span class=o>);</span>
+            <span class=n>list</span> <span class=o>=</span> <span class=n>Arrays</span><span class=o>.</span><span class=na>asList</span><span class=o>(</span><span class=n>ss</span><span class=o>);</span>
+        <span class=o>}</span>
+
+        <span class=c1>// 对pattern按照从长到短的排序
+</span><span class=c1></span>        <span class=c1>// 因为 foo|foot 匹配 foot 会出错，原因是 foot 匹配了 foo 之后，会返回 foo，但是 foo 的长度和 foot
+</span><span class=c1></span>        <span class=c1>// 的长度不一样
+</span><span class=c1></span>        <span class=n>list</span><span class=o>.</span><span class=na>sort</span><span class=o>(</span><span class=n>COMPARATOR</span><span class=o>);</span>
+        <span class=c1>// 对pattern进行头尾完全匹配
+</span><span class=c1></span>        <span class=n>list</span> <span class=o>=</span> <span class=n>completionPattern</span><span class=o>(</span><span class=n>list</span><span class=o>);</span>
+        <span class=k>this</span><span class=o>.</span><span class=na>pattern</span> <span class=o>=</span> <span class=n>StringUtils</span><span class=o>.</span><span class=na>join</span><span class=o>(</span><span class=n>list</span><span class=o>,</span> <span class=n>PATTERN_SPLIT</span><span class=o>);</span>
+    <span class=o>}</span>
+</code></pre></td></tr></table></div></div><ul><li>默认空值匹配</li><li>会对分隔后的匹配表达式进行排序 <code>list.sort(COMPARATOR)</code> 和头尾匹配 <code>completionPattern</code>，如果传入 <code>foooo,f.*t</code> 即变成 <code>^foooo$</code> 和 <code>^f.*t$</code></li><li>每部分会通过 | 组合在一起，即 <code>^foooo$|^f.*t$</code></li></ul><p><strong>匹配方法</strong></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kt>boolean</span> <span class=nf>filter</span><span class=o>(</span><span class=n>String</span> <span class=n>filtered</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>CanalFilterException</span> <span class=o>{</span>
+    <span class=k>if</span> <span class=o>(</span><span class=n>StringUtils</span><span class=o>.</span><span class=na>isEmpty</span><span class=o>(</span><span class=n>pattern</span><span class=o>))</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=n>defaultEmptyValue</span><span class=o>;</span>
+    <span class=o>}</span>
+
+    <span class=k>if</span> <span class=o>(</span><span class=n>StringUtils</span><span class=o>.</span><span class=na>isEmpty</span><span class=o>(</span><span class=n>filtered</span><span class=o>))</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=n>defaultEmptyValue</span><span class=o>;</span>
+    <span class=o>}</span>
+
+    <span class=n>Map</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>Object</span><span class=o>&gt;</span> <span class=n>env</span> <span class=o>=</span> <span class=k>new</span> <span class=n>HashMap</span><span class=o>&lt;&gt;();</span>
+    <span class=n>env</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=s>&#34;pattern&#34;</span><span class=o>,</span> <span class=n>pattern</span><span class=o>);</span>
+    <span class=n>env</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=s>&#34;target&#34;</span><span class=o>,</span> <span class=n>filtered</span><span class=o>.</span><span class=na>toLowerCase</span><span class=o>());</span>
+    <span class=k>return</span> <span class=o>(</span><span class=n>Boolean</span><span class=o>)</span> <span class=n>exp</span><span class=o>.</span><span class=na>execute</span><span class=o>(</span><span class=n>env</span><span class=o>);</span>
+<span class=o>}</span>
+</code></pre></td></tr></table></div></div><ul><li>空字符串返回的是 defaultEmptyValue</li><li>会转小写去比较</li></ul><p><strong>执行逻辑</strong></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kd>class</span> <span class=nc>RegexFunction</span> <span class=kd>extends</span> <span class=n>AbstractFunction</span> <span class=o>{</span>
+
+    <span class=kd>public</span> <span class=n>AviatorObject</span> <span class=nf>call</span><span class=o>(</span><span class=n>Map</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>Object</span><span class=o>&gt;</span> <span class=n>env</span><span class=o>,</span> <span class=n>AviatorObject</span> <span class=n>arg1</span><span class=o>,</span> <span class=n>AviatorObject</span> <span class=n>arg2</span><span class=o>)</span> <span class=o>{</span>
+        <span class=n>String</span> <span class=n>pattern</span> <span class=o>=</span> <span class=n>FunctionUtils</span><span class=o>.</span><span class=na>getStringValue</span><span class=o>(</span><span class=n>arg1</span><span class=o>,</span> <span class=n>env</span><span class=o>);</span>
+        <span class=n>String</span> <span class=n>text</span> <span class=o>=</span> <span class=n>FunctionUtils</span><span class=o>.</span><span class=na>getStringValue</span><span class=o>(</span><span class=n>arg2</span><span class=o>,</span> <span class=n>env</span><span class=o>);</span>
+        <span class=n>Perl5Matcher</span> <span class=n>matcher</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Perl5Matcher</span><span class=o>();</span>
+        <span class=kt>boolean</span> <span class=n>isMatch</span> <span class=o>=</span> <span class=n>matcher</span><span class=o>.</span><span class=na>matches</span><span class=o>(</span><span class=n>text</span><span class=o>,</span> <span class=n>PatternUtils</span><span class=o>.</span><span class=na>getPattern</span><span class=o>(</span><span class=n>pattern</span><span class=o>));</span>
+        <span class=k>return</span> <span class=n>AviatorBoolean</span><span class=o>.</span><span class=na>valueOf</span><span class=o>(</span><span class=n>isMatch</span><span class=o>);</span>
+    <span class=o>}</span>
+
+    <span class=kd>public</span> <span class=n>String</span> <span class=nf>getName</span><span class=o>()</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=s>&#34;regex&#34;</span><span class=o>;</span>
+    <span class=o>}</span>
+
+<span class=o>}</span>
+</code></pre></td></tr></table></div></div><ul><li>name 是和 FILTER_EXPRESSION <code>regex(pattern,target)</code> 中的前面部分匹配，这样在执行的时候会调用到 call 方法</li><li>env 内容是包含 key pattern 和 target 的一个 map，这个就是在 filter 方法中设置进去的</li><li>arg1 是 pattern，arg2 是 target，和表达式一致</li></ul><h4 id=233-el表达式匹配>2.3.3 EL表达式匹配</h4><p><strong>字段</strong></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kd>class</span> <span class=nc>AviaterELFilter</span> <span class=kd>implements</span> <span class=n>CanalEventFilter</span><span class=o>&lt;</span><span class=n>CanalEntry</span><span class=o>.</span><span class=na>Entry</span><span class=o>&gt;</span> <span class=o>{</span>
+
+    <span class=kd>public</span> <span class=kd>static</span> <span class=kd>final</span> <span class=n>String</span> <span class=n>ROOT_KEY</span> <span class=o>=</span> <span class=s>&#34;entry&#34;</span><span class=o>;</span>
+    <span class=kd>private</span> <span class=n>String</span>             <span class=n>expression</span><span class=o>;</span>
+  
+<span class=o>}</span>
+</code></pre></td></tr></table></div></div><ul><li>ROOT_KEY 默认是 entry，对应类型 CanalEntry.Entry</li><li>expression 表达式，比如 <code>str(entry.entryType) == 'ROWDATA'</code></li></ul><p><strong>构造方法</strong></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java>    <span class=kd>public</span> <span class=nf>AviaterELFilter</span><span class=o>(</span><span class=n>String</span> <span class=n>expression</span><span class=o>){</span>
+        <span class=k>this</span><span class=o>.</span><span class=na>expression</span> <span class=o>=</span> <span class=n>expression</span><span class=o>;</span>
+    <span class=o>}</span>
+</code></pre></td></tr></table></div></div><p><strong>匹配方法</strong></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java>    <span class=kd>public</span> <span class=kt>boolean</span> <span class=nf>filter</span><span class=o>(</span><span class=n>CanalEntry</span><span class=o>.</span><span class=na>Entry</span> <span class=n>entry</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>CanalFilterException</span> <span class=o>{</span>
+        <span class=k>if</span> <span class=o>(</span><span class=n>StringUtils</span><span class=o>.</span><span class=na>isEmpty</span><span class=o>(</span><span class=n>expression</span><span class=o>))</span> <span class=o>{</span>
+            <span class=k>return</span> <span class=kc>true</span><span class=o>;</span>
+        <span class=o>}</span>
+
+        <span class=n>Map</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>Object</span><span class=o>&gt;</span> <span class=n>env</span> <span class=o>=</span> <span class=k>new</span> <span class=n>HashMap</span><span class=o>&lt;&gt;();</span>
+        <span class=n>env</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=n>ROOT_KEY</span><span class=o>,</span> <span class=n>entry</span><span class=o>);</span>
+        <span class=k>return</span> <span class=o>(</span><span class=n>Boolean</span><span class=o>)</span> <span class=n>AviatorEvaluator</span><span class=o>.</span><span class=na>execute</span><span class=o>(</span><span class=n>expression</span><span class=o>,</span> <span class=n>env</span><span class=o>);</span>
+    <span class=o>}</span>
+</code></pre></td></tr></table></div></div><p>会走到执行方法，缓存是 false</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java>    <span class=kd>public</span> <span class=kd>static</span> <span class=n>Object</span> <span class=nf>execute</span><span class=o>(</span><span class=n>String</span> <span class=n>expression</span><span class=o>,</span> <span class=n>Map</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>Object</span><span class=o>&gt;</span> <span class=n>env</span><span class=o>,</span> <span class=kt>boolean</span> <span class=n>cached</span><span class=o>)</span> <span class=o>{</span>
+        <span class=n>Expression</span> <span class=n>compiledExpression</span> <span class=o>=</span> <span class=n>compile</span><span class=o>(</span><span class=n>expression</span><span class=o>,</span> <span class=n>cached</span><span class=o>);</span>
+        <span class=k>if</span> <span class=o>(</span><span class=n>compiledExpression</span> <span class=o>!=</span> <span class=kc>null</span><span class=o>)</span> <span class=o>{</span>
+            <span class=k>return</span> <span class=n>compiledExpression</span><span class=o>.</span><span class=na>execute</span><span class=o>(</span><span class=n>env</span><span class=o>);</span>
+        <span class=o>}</span>
+        <span class=k>else</span> <span class=o>{</span>
+            <span class=k>throw</span> <span class=k>new</span> <span class=n>ExpressionRuntimeException</span><span class=o>(</span><span class=s>&#34;Null compiled expression for &#34;</span> <span class=o>+</span> <span class=n>expression</span><span class=o>);</span>
+        <span class=o>}</span>
+    <span class=o>}</span>
+</code></pre></td></tr></table></div></div><ul><li>compile 和 另两个例子的 AviatorEvaluator.compile() 是同一个方法</li><li>实际也是 exp.execute(env)</li></ul><p>按照测试例子的表达式就会走到 <code>str(entry.entryType) == 'ROWDATA'</code></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kd>class</span> <span class=nc>StrFunction</span> <span class=kd>extends</span> <span class=n>AbstractFunction</span> <span class=o>{</span>
+
+    <span class=nd>@Override</span>
+    <span class=kd>public</span> <span class=n>AviatorObject</span> <span class=nf>call</span><span class=o>(</span><span class=n>Map</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>Object</span><span class=o>&gt;</span> <span class=n>env</span><span class=o>,</span> <span class=n>AviatorObject</span> <span class=n>arg1</span><span class=o>)</span> <span class=o>{</span>
+        <span class=kd>final</span> <span class=n>Object</span> <span class=n>value</span> <span class=o>=</span> <span class=n>arg1</span><span class=o>.</span><span class=na>getValue</span><span class=o>(</span><span class=n>env</span><span class=o>);</span>
+        <span class=k>return</span> <span class=k>new</span> <span class=n>AviatorString</span><span class=o>(</span><span class=n>value</span> <span class=o>==</span> <span class=kc>null</span> <span class=o>?</span> <span class=s>&#34;null&#34;</span> <span class=o>:</span> <span class=n>value</span><span class=o>.</span><span class=na>toString</span><span class=o>());</span>
+    <span class=o>}</span>
+
+
+    <span class=kd>public</span> <span class=n>String</span> <span class=nf>getName</span><span class=o>()</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=s>&#34;str&#34;</span><span class=o>;</span>
+    <span class=o>}</span>
+
+<span class=o>}</span>
+</code></pre></td></tr></table></div></div><blockquote><p>有兴趣的同学可以自己断点跟进去。</p></blockquote><h4 id=234-自定义-function>2.3.4 自定义 Function</h4><p>Function 缓存在 <code>com.googlecode.aviator.AviatorEvaluator#FUNC_MAP</code> 中，然后根据表达式的名字去匹配</p><p><code>com.googlecode.aviator.AviatorEvaluator#getFunction</code></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java>    <span class=kd>public</span> <span class=kd>static</span> <span class=n>AviatorFunction</span> <span class=nf>getFunction</span><span class=o>(</span><span class=n>String</span> <span class=n>name</span><span class=o>)</span> <span class=o>{</span>
+        <span class=kd>final</span> <span class=n>AviatorFunction</span> <span class=n>function</span> <span class=o>=</span> <span class=o>(</span><span class=n>AviatorFunction</span><span class=o>)</span> <span class=n>FUNC_MAP</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>name</span><span class=o>);</span>
+        <span class=k>if</span> <span class=o>(</span><span class=n>function</span> <span class=o>==</span> <span class=kc>null</span><span class=o>)</span> <span class=o>{</span>
+            <span class=k>throw</span> <span class=k>new</span> <span class=n>ExpressionRuntimeException</span><span class=o>(</span><span class=s>&#34;Could not find function named &#39;&#34;</span> <span class=o>+</span> <span class=n>name</span> <span class=o>+</span> <span class=s>&#34;&#39;&#34;</span><span class=o>);</span>
+        <span class=o>}</span>
+        <span class=k>return</span> <span class=n>function</span><span class=o>;</span>
+    <span class=o>}</span>
+</code></pre></td></tr></table></div></div><blockquote><p>注意：里面有 ASM 字节码增强</p></blockquote><p>比如之前默认的实现中，表达式是 <code>include(list,target)</code>，对应的是</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kd>class</span> <span class=nc>SeqIncludeFunction</span> <span class=kd>extends</span> <span class=n>AbstractFunction</span> <span class=o>{</span>
+  	
+   <span class=c1>// ... 实现有兴趣的可以自行去看
+</span><span class=c1></span>  
+    <span class=kd>public</span> <span class=n>String</span> <span class=nf>getName</span><span class=o>()</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=s>&#34;include&#34;</span><span class=o>;</span>
+    <span class=o>}</span>  
+<span class=o>}</span>
+</code></pre></td></tr></table></div></div><h4 id=235-其它模块使用>2.3.5 其它模块使用</h4><ul><li>parse 模块</li><li>sink 模块</li></ul><p><img class=lazyload src=/svg/loading.min.svg data-src=cf.05.jpg data-srcset="/zh-cn/2021/01/03/canal-filter/cf.05.jpg, cf.05.jpg 1.5x, /zh-cn/2021/01/03/canal-filter/cf.05.jpg 2x"data-sizes=auto alt=/zh-cn/2021/01/03/canal-filter/cf.05.jpg title=引用的模块></p><h2 id=三参考>三、参考</h2><p><a href=https://github.com/killme2008/aviatorscript target=_blank rel="noopener noreffer">https://github.com/killme2008/aviatorscript</a></p></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>Updated on 2021-01-06</span></div><div class=post-info-license></div></div><div class=post-info-line><div class=post-info-md><span><a class=link-to-markdown href=/zh-cn/2021/01/03/canal-filter/index.md target=_blank>Read Markdown</a></span></div><div class=post-info-share><span><a href=javascript:void(0); title="Share on Twitter"data-sharer=twitter data-url=http://blog.funnycode.org.cn/zh-cn/2021/01/03/canal-filter/ data-title="闲聊 canal | filter 模块"><i class="fab fa-twitter fa-fw"></i></a><a href=javascript:void(0); title="Share on Facebook"data-sharer=facebook data-url=http://blog.funnycode.org.cn/zh-cn/2021/01/03/canal-filter/><i class="fab fa-facebook-square fa-fw"></i></a><a href=javascript:void(0); title="Share on Hacker News"data-sharer=hackernews data-url=http://blog.funnycode.org.cn/zh-cn/2021/01/03/canal-filter/ data-title="闲聊 canal | filter 模块"><i class="fab fa-hacker-news fa-fw"></i></a><a href=javascript:void(0); title="Share on Line"data-sharer=line data-url=http://blog.funnycode.org.cn/zh-cn/2021/01/03/canal-filter/ data-title="闲聊 canal | filter 模块"><i data-svg-src=https://cdn.jsdelivr.net/npm/simple-icons@2.14.0/icons/line.svg></i></a><a href=javascript:void(0); title="Share on 微博"data-sharer=weibo data-url=http://blog.funnycode.org.cn/zh-cn/2021/01/03/canal-filter/ data-title="闲聊 canal | filter 模块"><i class="fab fa-weibo fa-fw"></i></a></span></div></div></div><div class=post-info-more><section class=post-tags></section><section><span><a href=javascript:void(0); onclick=window.history.back()>Back</a></span>&nbsp;|&nbsp;<span><a href=/zh-cn/>Home</a></span></section></div><div class=post-nav><a href=/zh-cn/2021/01/01/canal-prepare/ class=prev rel=prev title="闲聊 canal | 入门篇"><i class="fas fa-angle-left fa-fw"></i>闲聊 canal | 入门篇</a>
+<a href=/zh-cn/2021/01/04/mybatis-resulttype-map-error/ class=next rel=next title=Mybatis反序列化sql查询结果异常>Mybatis反序列化sql查询结果异常<i class="fas fa-angle-right fa-fw"></i></a></div></div><div id=comments><div id=gitalk class=comment></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://github.com/gitalk/gitalk></a>Gitalk</a>.</noscript></div></article></div></main><footer class=footer><div class=footer-container><div class=footer-line>Powered by <a href=https://gohugo.io/ target=_blank rel="noopener noreffer"title="Hugo 0.76.0">Hugo</a> | Theme - <a href=https://github.com/dillonzq/LoveIt target=_blank rel="noopener noreffer"title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i>LoveIt</a></div><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2019 - 2021</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=/zh-cn/ target=_blank>xxxx</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer"href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title="Back to Top"><i class="fas fa-arrow-up fa-fw"></i></a><a href=# id=view-comments class=fixed-button title="View Comments"><i class="fas fa-comment fa-fw"></i></a></div><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.min.css><script type=text/javascript src=https://cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/smooth-scroll@16.1.3/dist/smooth-scroll.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/autocomplete.js@0.37.1/dist/autocomplete.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/algoliasearch@4.2.0/dist/algoliasearch-lite.umd.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/lazysizes@5.2.2/lazysizes.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/sharer.js@0.4.0/sharer.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/typeit@7.0.4/dist/typeit.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:10},comment:{gitalk:{admin:["cityiron"],clientID:"7ebb4aff12c6b5dc4aac",clientSecret:"fdb607f0e7f810a9e2084a2cbed3800f5657dab7",id:"2021-01-03T15:31:11+08:00",owner:"funnycode-org",repo:"funnycode-org.github.io",title:"闲聊 canal | filter 模块"}},data:{"id-1":"云原生玩码部落","id-2":"云原生玩码部落"},search:{algoliaAppID:"PASDMWALPK",algoliaIndex:"index.zh-cn",algoliaSearchKey:"b42948e51daaa93df92381c8e2ac0f93",highlightTag:"em",maxResultLength:10,noResultsFound:"No results found",snippetLength:50,type:"algolia"},typeit:{cursorChar:"|",cursorSpeed:1e3,data:{"id-1":["id-1"],"id-2":["id-2"]},duration:-1,speed:100}}</script><script type=text/javascript src=/js/theme.min.js></script></body></html>
