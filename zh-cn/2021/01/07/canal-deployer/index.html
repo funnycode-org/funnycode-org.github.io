@@ -1,0 +1,1697 @@
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><meta http-equiv=x-ua-compatible content="IE=edge, chrome=1"><title>闲聊 canal | deployer 模块 - 云原生玩码部落</title><meta name=Description content="本文介绍 canal 的 deployer 模块"><meta property="og:title"content="闲聊 canal | deployer 模块"><meta property="og:description"content="本文介绍 canal 的 deployer 模块"><meta property="og:type"content="article"><meta property="og:url"content="http://blog.funnycode.org.cn/zh-cn/2021/01/07/canal-deployer/"><meta property="og:image"content="http://blog.funnycode.org.cn/logo.png"><meta property="article:published_time"content="2021-01-07T10:14:23+08:00"><meta property="article:modified_time"content="2021-01-07T10:14:23+08:00"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="http://blog.funnycode.org.cn/logo.png"><meta name=twitter:title content="闲聊 canal | deployer 模块"><meta name=twitter:description content="本文介绍 canal 的 deployer 模块"><meta name=application-name content="云原生玩码部落"><meta name=apple-mobile-web-app-title content="云原生玩码部落"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon"type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=http://blog.funnycode.org.cn/zh-cn/2021/01/07/canal-deployer/><link rel=prev href=http://blog.funnycode.org.cn/zh-cn/2021/01/04/mybatis-resulttype-map-error/><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.0/css/all.min.css><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"闲聊 canal | deployer 模块","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"http:\/\/blog.funnycode.org.cn\/zh-cn\/2021\/01\/07\/canal-deployer\/"},"image":["http:\/\/blog.funnycode.org.cn\/images\/Apple-Devices-Preview.png"],"genre":"posts","keywords":"canal","wordcount":9345,"url":"http:\/\/blog.funnycode.org.cn\/zh-cn\/2021\/01\/07\/canal-deployer\/","datePublished":"2021-01-07T10:14:23+08:00","dateModified":"2021-01-07T10:14:23+08:00","license":"This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher":{"@type":"Organization","name":"xxxx","logo":"http:\/\/blog.funnycode.org.cn\/images\/me\/logo.png"},"author":{"@type":"Person","name":"铁城"},"description":"本文介绍 canal 的 deployer 模块"}</script></head><body header-desktop=fixed header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem('theme')?localStorage.getItem('theme')==='dark':'auto'==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches:'auto'==='dark')&&document.body.setAttribute('theme','dark')</script><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/zh-cn/ title=云原生玩码部落><span class=header-title-pre><i class="far fa-kiss-wink-heart fa-fw"></i></span><span id=id-1 class=typeit></span></a></div><div class=menu><div class=menu-inner><a class=menu-item href=/zh-cn/posts/>所有文章 </a><a class=menu-item href=/zh-cn/tags/>标签 </a><a class=menu-item href=/zh-cn/categories/>分类 </a><a class=menu-item href=/zh-cn/notes/>笔记 </a><a class=menu-item href=/zh-cn/about/>关于 </a><a class=menu-item href=https://github.com/funnycode-org title=GitHub rel="noopener noreffer"target=_blank><i class="fab fa-github fa-fw"></i></a><span class="menu-item delimiter"></span><a href=javascript:void(0); class="menu-item language"title="Select Language">简体中文<i class="fas fa-chevron-right fa-fw"></i>
+<select class=language-select id=language-select-desktop onchange="location=this.value"><option value=/zh-cn/2021/01/07/canal-deployer/ selected>简体中文</option></select>
+</a><span class="menu-item search"id=search-desktop><input type=text placeholder="Search titles or contents..."id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle"id=search-toggle-desktop title=Search><i class="fas fa-search fa-fw"></i></a><a href=javascript:void(0); class="search-button search-clear"id=search-clear-desktop title=Clear><i class="fas fa-times-circle fa-fw"></i></a><span class="search-button search-loading"id=search-loading-desktop><i class="fas fa-spinner fa-fw fa-spin"></i></span></span><a href=javascript:void(0); class="menu-item theme-switch"title="Switch Theme"><i class="fas fa-adjust fa-fw"></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/zh-cn/ title=云原生玩码部落><span class=header-title-pre><i class="far fa-kiss-wink-heart fa-fw"></i></span><span id=id-2 class=typeit></span></a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><div class=search-wrapper><div class="search mobile"id=search-mobile><input type=text placeholder="Search titles or contents..."id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle"id=search-toggle-mobile title=Search><i class="fas fa-search fa-fw"></i></a><a href=javascript:void(0); class="search-button search-clear"id=search-clear-mobile title=Clear><i class="fas fa-times-circle fa-fw"></i></a><span class="search-button search-loading"id=search-loading-mobile><i class="fas fa-spinner fa-fw fa-spin"></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>Cancel</a></div><a class=menu-item href=/zh-cn/posts/ title>所有文章</a><a class=menu-item href=/zh-cn/tags/ title>标签</a><a class=menu-item href=/zh-cn/categories/ title>分类</a><a class=menu-item href=/zh-cn/notes/ title>笔记</a><a class=menu-item href=/zh-cn/about/ title>关于</a><a class=menu-item href=https://github.com/funnycode-org title=GitHub rel="noopener noreffer"target=_blank><i class="fab fa-github fa-fw"></i></a><a href=javascript:void(0); class="menu-item theme-switch"title="Switch Theme">
+<i class="fas fa-adjust fa-fw"></i></a><a href=javascript:void(0); class=menu-item title="Select Language">简体中文<i class="fas fa-chevron-right fa-fw"></i>
+<select class=language-select onchange="location=this.value"><option value=/zh-cn/2021/01/07/canal-deployer/ selected>简体中文</option></select></a></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=main><div class=container><div class=toc id=toc-auto><h2 class=toc-title>Contents</h2><div class=toc-content id=toc-content-auto></div></div><article class="page single"><h1 class="single-title animated flipInX">闲聊 canal | deployer 模块</h1><div class=post-meta><div class=post-meta-line><span class=post-author><a href=/zh-cn/ title=Author rel=author class=author><i class="fas fa-user-circle fa-fw"></i>铁城</a></span>&nbsp;<span class=post-category>included in <a href=/zh-cn/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/><i class="far fa-folder fa-fw"></i>数据库</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-01-07>2021-01-07</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;9345 words&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;19 minutes&nbsp;</div></div><div class="details toc"id=toc-static kept><div class="details-summary toc-title"><span>Contents</span>
+<span><i class="details-icon fas fa-angle-right"></i></span></div><div class="details-content toc-content"id=toc-content-static><nav id=TableOfContents><ul><li><a href=#一前言>一、前言</a></li><li><a href=#二基本内容>二、基本内容</a><ul><li><a href=#21-结构>2.1 结构</a></li><li><a href=#22-依赖和功能>2.2 依赖和功能</a><ul><li><a href=#221-依赖>2.2.1 依赖</a></li><li><a href=#222-功能>2.2.2 功能</a></li></ul></li></ul></li><li><a href=#三代码分析>三、代码分析</a><ul><li><a href=#231-入口-canallauncher>2.3.1 入口 CanalLauncher</a><ul><li><a href=#2311-代码>2.3.1.1 代码</a></li><li><a href=#2312-分析>2.3.1.2 分析</a><ul><li><a href=#23121-指定本地配置>2.3.1.2.1 指定本地配置</a></li><li><a href=#23122-加载配置文件>2.3.1.2.2 加载配置文件</a></li><li><a href=#23123-jvm-钩子>2.3.1.2.3 JVM 钩子</a></li></ul></li></ul></li><li><a href=#232-核心-canalcontroller构造方法>2.3.2 核心 CanalController#构造方法</a><ul><li><a href=#2321-整体代码>2.3.2.1 整体代码</a></li><li><a href=#2322-全局配置代码>2.3.2.2 全局配置代码</a><ul><li><a href=#23211-代码>2.3.2.1.1 代码</a></li><li><a href=#23212-globalinstanceconfig-字段>2.3.2.1.2 globalInstanceConfig 字段</a></li><li><a href=#23213-instancegenerator-字段>2.3.2.1.3 instanceGenerator 字段</a></li><li><a href=#23214-instanceconfigs-字段>2.3.2.1.4 instanceConfigs 字段</a></li></ul></li><li><a href=#2323-准备-server>2.3.2.3 准备 Server</a><ul><li><a href=#23231-代码>2.3.2.3.1 代码</a></li><li><a href=#23232-server-概览>2.3.2.3.2 server 概览</a></li></ul></li><li><a href=#2324-借助-zookeeper>2.3.2.4 借助 Zookeeper</a><ul><li><a href=#23241-代码>2.3.2.4.1 代码</a></li></ul></li><li><a href=#2325-监听机制>2.3.2.5 监听机制</a><ul><li><a href=#23251-代码>2.3.2.5.1 代码</a></li><li><a href=#23252-serverrunningmonitors>2.3.2.5.2 ServerRunningMonitors</a></li><li><a href=#23253-canalcontroller-中创建-serverrunningmonitor>2.3.2.5.3 CanalController 中创建 ServerRunningMonitor</a></li><li><a href=#23254-serverrunningmonitorstart>2.3.2.5.4 ServerRunningMonitor#start</a></li><li><a href=#23255-serverrunningmonitor-构造方法>2.3.2.5.5 ServerRunningMonitor 构造方法</a></li></ul></li><li><a href=#2326-自动扫描机制>2.3.2.6 自动扫描机制</a><ul><li><a href=#23261-defaultaction>2.3.2.6.1 defaultAction</a></li><li><a href=#23262-instanceconfigmonitors>2.3.2.6.2 instanceConfigMonitors</a></li></ul></li></ul></li><li><a href=#232-核心-canalcontrollerstart-方法>2.3.2 核心 CanalController#start 方法</a><ul><li><a href=#2321-代码>2.3.2.1 代码</a></li></ul></li></ul></li><li><a href=#三总结>三、总结</a></li><li><a href=#四参考>四、参考</a></li></ul></nav></div></div><div class=content id=content><h2 id=一前言>一、前言</h2><p>canal 有两种使用方式：1、独立部署 2、内嵌到应用中（比如 otter 里面使用 canal）。 deployer模块主要用于独立部署canal server。</p><h2 id=二基本内容>二、基本内容</h2><h3 id=21-结构>2.1 结构</h3><p><img src=cd.01.jpg alt=目录结构 style=zoom:200%></p><ul><li><code>CanalLauncher</code> deployer 源码的切入点，是项目的启动入口。</li><li><code>CanalController</code> 真正执行逻辑的部分，核心。</li></ul><h3 id=22-依赖和功能>2.2 依赖和功能</h3><h4 id=221-依赖>2.2.1 依赖</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-xml data-lang=xml>        <span class=nt>&lt;dependency&gt;</span>
+            <span class=nt>&lt;groupId&gt;</span>com.alibaba.otter<span class=nt>&lt;/groupId&gt;</span>
+            <span class=nt>&lt;artifactId&gt;</span>canal.server<span class=nt>&lt;/artifactId&gt;</span>
+            <span class=nt>&lt;version&gt;</span>${project.version}<span class=nt>&lt;/version&gt;</span>
+        <span class=nt>&lt;/dependency&gt;</span>
+
+        <span class=c>&lt;!-- 这里指定runtime的metrics provider--&gt;</span>
+        <span class=nt>&lt;dependency&gt;</span>
+            <span class=nt>&lt;groupId&gt;</span>com.alibaba.otter<span class=nt>&lt;/groupId&gt;</span>
+            <span class=nt>&lt;artifactId&gt;</span>canal.prometheus<span class=nt>&lt;/artifactId&gt;</span>
+            <span class=nt>&lt;version&gt;</span>${project.version}<span class=nt>&lt;/version&gt;</span>
+            <span class=nt>&lt;scope&gt;</span>runtime<span class=nt>&lt;/scope&gt;</span>
+        <span class=nt>&lt;/dependency&gt;</span>
+</code></pre></td></tr></table></div></div><ul><li>就是对 server 的包装，让它能够稳定的使用</li><li>prometheus 是当下和流行的监控体系，后续对接篇幅里面展开。</li></ul><h4 id=222-功能>2.2.2 功能</h4><p>1、读取canal,properties配置文件</p><p>2、启动canal server，监听canal client的请求</p><p>3、启动canal instance，连接mysql数据库，伪装成slave，解析binlog</p><p>4、在canal的运行过程中，监听配置文件的变化</p><h2 id=三代码分析>三、代码分析</h2><h3 id=231-入口-canallauncher>2.3.1 入口 CanalLauncher</h3><h4 id=2311-代码>2.3.1.1 代码</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kd>class</span> <span class=nc>CanalLauncher</span> <span class=o>{</span>
+  
+    <span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>main</span><span class=o>(</span><span class=n>String</span><span class=o>[]</span> <span class=n>args</span><span class=o>)</span> <span class=o>{</span>
+        <span class=k>try</span> <span class=o>{</span>
+            <span class=c1>// ... -- 指定本地配置
+</span><span class=c1></span>            <span class=n>String</span> <span class=n>conf</span> <span class=o>=</span> <span class=n>System</span><span class=o>.</span><span class=na>getProperty</span><span class=o>(</span><span class=s>&#34;canal.conf&#34;</span><span class=o>,</span> <span class=s>&#34;classpath:canal.properties&#34;</span><span class=o>);</span>
+            <span class=n>Properties</span> <span class=n>properties</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Properties</span><span class=o>();</span>
+            <span class=k>if</span> <span class=o>(</span><span class=n>conf</span><span class=o>.</span><span class=na>startsWith</span><span class=o>(</span><span class=n>CLASSPATH_URL_PREFIX</span><span class=o>))</span> <span class=o>{</span>
+                <span class=n>conf</span> <span class=o>=</span> <span class=n>StringUtils</span><span class=o>.</span><span class=na>substringAfter</span><span class=o>(</span><span class=n>conf</span><span class=o>,</span> <span class=n>CLASSPATH_URL_PREFIX</span><span class=o>);</span>
+                <span class=n>properties</span><span class=o>.</span><span class=na>load</span><span class=o>(</span><span class=n>CanalLauncher</span><span class=o>.</span><span class=na>class</span><span class=o>.</span><span class=na>getClassLoader</span><span class=o>().</span><span class=na>getResourceAsStream</span><span class=o>(</span><span class=n>conf</span><span class=o>));</span>
+            <span class=o>}</span> <span class=k>else</span> <span class=o>{</span>
+                <span class=n>properties</span><span class=o>.</span><span class=na>load</span><span class=o>(</span><span class=k>new</span> <span class=n>FileInputStream</span><span class=o>(</span><span class=n>conf</span><span class=o>));</span>
+            <span class=o>}</span>
+          	<span class=c1>// -- 加载配置文件
+</span><span class=c1></span>            <span class=kd>final</span> <span class=n>CanalStarter</span> <span class=n>canalStater</span> <span class=o>=</span> <span class=k>new</span> <span class=n>CanalStarter</span><span class=o>(</span><span class=n>properties</span><span class=o>);</span>                    	
+            <span class=n>String</span> <span class=n>managerAddress</span> <span class=o>=</span> <span class=n>CanalController</span><span class=o>.</span><span class=na>getProperty</span><span class=o>(</span><span class=n>properties</span><span class=o>,</span> <span class=n>CanalConstants</span><span class=o>.</span><span class=na>CANAL_ADMIN_MANAGER</span><span class=o>);</span>
+            <span class=k>if</span> <span class=o>(</span><span class=n>StringUtils</span><span class=o>.</span><span class=na>isNotEmpty</span><span class=o>(</span><span class=n>managerAddress</span><span class=o>))</span> <span class=o>{</span>
+								<span class=c1>// ...              
+</span><span class=c1></span>            <span class=o>}</span> <span class=k>else</span> <span class=o>{</span>
+                <span class=n>canalStater</span><span class=o>.</span><span class=na>setProperties</span><span class=o>(</span><span class=n>properties</span><span class=o>);</span>              
+            <span class=o>}</span>
+          
+            <span class=n>canalStater</span><span class=o>.</span><span class=na>start</span><span class=o>();</span>
+          	<span class=c1>// -- JVM 钩子
+</span><span class=c1></span>            <span class=n>runningLatch</span><span class=o>.</span><span class=na>await</span><span class=o>();</span>
+            <span class=n>executor</span><span class=o>.</span><span class=na>shutdownNow</span><span class=o>();</span>          
+          	<span class=c1>// ...
+</span><span class=c1></span>        <span class=o>}</span>
+      <span class=c1>// ...
+</span><span class=c1></span><span class=o>}</span>
+</code></pre></td></tr></table></div></div><h4 id=2312-分析>2.3.1.2 分析</h4><h5 id=23121-指定本地配置>2.3.1.2.1 指定本地配置</h5><ul><li>配置文件 <code>canal.properties</code></li><li>可以通过 <code>anal.conf</code> 去指定自己的名称，比如指定官方提供的 <code>canal_local.properties</code></li></ul><h5 id=23122-加载配置文件>2.3.1.2.2 加载配置文件</h5><ul><li>如果是远程管理的，那么就和远程交互<ul><li>请求远端地址拉取配置，和本地配置合并</li><li>会创建一个定时的线程池拉取 admin 配置上的配置，如果变化了就停止 <code>canalStater</code>，重新设置属性后再启动。</li></ul></li><li>不是远程管理的，那么就把属性设置进去。不过这里 else 下的属性设置是不需要的，重复设置了</li></ul><p><img src=cd.02.jpg alt=设置属性 style=zoom:150%></p><h5 id=23123-jvm-钩子>2.3.1.2.3 JVM 钩子</h5><ul><li>当 JVM 关闭会停止 canal，在 <code>com.alibaba.otter.canal.deployer.CanalStarter#start</code> 的 <code>controller.stop()</code> 里面</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=n>shutdownThread</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Thread</span><span class=o>(()</span> <span class=o>-&gt;</span> <span class=o>{</span>
+    <span class=k>try</span> <span class=o>{</span>
+        <span class=n>logger</span><span class=o>.</span><span class=na>info</span><span class=o>(</span><span class=s>&#34;## stop the canal server&#34;</span><span class=o>);</span>
+        <span class=n>controller</span><span class=o>.</span><span class=na>stop</span><span class=o>();</span>
+        <span class=n>CanalLauncher</span><span class=o>.</span><span class=na>runningLatch</span><span class=o>.</span><span class=na>countDown</span><span class=o>();</span>
+    <span class=o>}</span> <span class=k>catch</span> <span class=o>(</span><span class=n>Throwable</span> <span class=n>e</span><span class=o>)</span> <span class=o>{</span>
+        <span class=n>logger</span><span class=o>.</span><span class=na>warn</span><span class=o>(</span><span class=s>&#34;##something goes wrong when stopping canal Server:&#34;</span><span class=o>,</span> <span class=n>e</span><span class=o>);</span>
+    <span class=o>}</span> <span class=k>finally</span> <span class=o>{</span>
+        <span class=n>logger</span><span class=o>.</span><span class=na>info</span><span class=o>(</span><span class=s>&#34;## canal server is down.&#34;</span><span class=o>);</span>
+    <span class=o>}</span>
+<span class=o>});</span>
+<span class=n>Runtime</span><span class=o>.</span><span class=na>getRuntime</span><span class=o>().</span><span class=na>addShutdownHook</span><span class=o>(</span><span class=n>shutdownThread</span><span class=o>);</span>
+</code></pre></td></tr></table></div></div><blockquote><p>通过 CanalStarter 启动，实际上是交给 CanalController 去控制，它是核心，CanalStarter 不再展开。</p></blockquote><h3 id=232-核心-canalcontroller构造方法>2.3.2 核心 CanalController#构造方法</h3><blockquote><p>把 CanalLauncher 里面的 properties 加载到了这里</p></blockquote><h4 id=2321-整体代码>2.3.2.1 整体代码</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=nf>CanalController</span><span class=o>(</span><span class=kd>final</span> <span class=n>Properties</span> <span class=n>properties</span><span class=o>){</span>
+  			<span class=c1>// ...
+</span><span class=c1></span>  
+        <span class=c1>// 初始化全局参数设置 -- 全局配置代码部分详解
+</span><span class=c1></span>        <span class=n>globalInstanceConfig</span> <span class=o>=</span> <span class=n>initGlobalConfig</span><span class=o>(</span><span class=n>properties</span><span class=o>);</span>
+        <span class=n>instanceConfigs</span> <span class=o>=</span> <span class=k>new</span> <span class=n>MapMaker</span><span class=o>().</span><span class=na>makeMap</span><span class=o>();</span>
+        <span class=c1>// 初始化instance config
+</span><span class=c1></span>        <span class=n>initInstanceConfig</span><span class=o>(</span><span class=n>properties</span><span class=o>);</span>
+  
+  			<span class=c1>// ...
+</span><span class=c1></span>  			<span class=c1>// 准备canal server -- 准备Server
+</span><span class=c1></span>  			<span class=c1>// ...
+</span><span class=c1></span>        <span class=n>String</span> <span class=n>canalWithoutNetty</span> <span class=o>=</span> <span class=n>getProperty</span><span class=o>(</span><span class=n>properties</span><span class=o>,</span> <span class=n>CanalConstants</span><span class=o>.</span><span class=na>CANAL_WITHOUT_NETTY</span><span class=o>);</span>
+        <span class=k>if</span> <span class=o>(</span><span class=n>canalWithoutNetty</span> <span class=o>==</span> <span class=kc>null</span> <span class=o>||</span> <span class=s>&#34;false&#34;</span><span class=o>.</span><span class=na>equals</span><span class=o>(</span><span class=n>canalWithoutNetty</span><span class=o>))</span> <span class=o>{</span>
+            <span class=n>canalServer</span> <span class=o>=</span> <span class=n>CanalServerWithNetty</span><span class=o>.</span><span class=na>instance</span><span class=o>();</span>
+            <span class=n>canalServer</span><span class=o>.</span><span class=na>setIp</span><span class=o>(</span><span class=n>ip</span><span class=o>);</span>
+            <span class=n>canalServer</span><span class=o>.</span><span class=na>setPort</span><span class=o>(</span><span class=n>port</span><span class=o>);</span>
+        <span class=o>}</span>  
+  
+ 				<span class=c1>// ... -- 借助Zookeeper
+</span><span class=c1></span>        <span class=kd>final</span> <span class=n>String</span> <span class=n>zkServers</span> <span class=o>=</span> <span class=n>getProperty</span><span class=o>(</span><span class=n>properties</span><span class=o>,</span> <span class=n>CanalConstants</span><span class=o>.</span><span class=na>CANAL_ZKSERVERS</span><span class=o>);</span>
+        <span class=k>if</span> <span class=o>(</span><span class=n>StringUtils</span><span class=o>.</span><span class=na>isNotEmpty</span><span class=o>(</span><span class=n>zkServers</span><span class=o>))</span> <span class=o>{</span>
+            <span class=n>zkclientx</span> <span class=o>=</span> <span class=n>ZkClientx</span><span class=o>.</span><span class=na>getZkClient</span><span class=o>(</span><span class=n>zkServers</span><span class=o>);</span>
+            <span class=c1>// 初始化系统目录
+</span><span class=c1></span>            <span class=n>zkclientx</span><span class=o>.</span><span class=na>createPersistent</span><span class=o>(</span><span class=n>ZookeeperPathUtils</span><span class=o>.</span><span class=na>DESTINATION_ROOT_NODE</span><span class=o>,</span> <span class=kc>true</span><span class=o>);</span>
+            <span class=n>zkclientx</span><span class=o>.</span><span class=na>createPersistent</span><span class=o>(</span><span class=n>ZookeeperPathUtils</span><span class=o>.</span><span class=na>CANAL_CLUSTER_ROOT_NODE</span><span class=o>,</span> <span class=kc>true</span><span class=o>);</span>
+        <span class=o>}</span>  
+  			
+  			<span class=c1>// -- 监听机制
+</span><span class=c1></span>        <span class=kd>final</span> <span class=n>ServerRunningData</span> <span class=n>serverData</span> <span class=o>=</span> <span class=k>new</span> <span class=n>ServerRunningData</span><span class=o>(</span><span class=n>registerIp</span> <span class=o>+</span> <span class=s>&#34;:&#34;</span> <span class=o>+</span> <span class=n>port</span><span class=o>);</span>
+        <span class=n>ServerRunningMonitors</span><span class=o>.</span><span class=na>setServerData</span><span class=o>(</span><span class=n>serverData</span><span class=o>);</span>
+        <span class=n>ServerRunningMonitors</span><span class=o>.</span><span class=na>setRunningMonitors</span><span class=o>(</span><span class=n>MigrateMap</span><span class=o>.</span><span class=na>makeComputingMap</span><span class=o>((</span><span class=n>Function</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>ServerRunningMonitor</span><span class=o>&gt;)</span> <span class=n>destination</span> <span class=o>-&gt;</span> <span class=o>{</span>
+          	<span class=c1>// ...
+</span><span class=c1></span>        <span class=o>}</span>
+                                                                             
+        <span class=c1>// 初始化monitor机制 -- 自动扫描机制
+</span><span class=c1></span>        <span class=n>autoScan</span> <span class=o>=</span> <span class=n>BooleanUtils</span><span class=o>.</span><span class=na>toBoolean</span><span class=o>(</span><span class=n>getProperty</span><span class=o>(</span><span class=n>properties</span><span class=o>,</span> <span class=n>CanalConstants</span><span class=o>.</span><span class=na>CANAL_AUTO_SCAN</span><span class=o>));</span>
+        <span class=k>if</span> <span class=o>(</span><span class=n>autoScan</span><span class=o>)</span> <span class=o>{</span>
+            <span class=c1>// ...
+</span><span class=c1></span>        <span class=o>}</span>                                                                             
+<span class=o>}</span>
+</code></pre></td></tr></table></div></div><h4 id=2322-全局配置代码>2.3.2.2 全局配置代码</h4><h5 id=23211-代码>2.3.2.1.1 代码</h5><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java>    <span class=kd>private</span> <span class=n>InstanceConfig</span> <span class=nf>initGlobalConfig</span><span class=o>(</span><span class=n>Properties</span> <span class=n>properties</span><span class=o>)</span> <span class=o>{</span>
+        <span class=n>String</span> <span class=n>adminManagerAddress</span> <span class=o>=</span> <span class=n>getProperty</span><span class=o>(</span><span class=n>properties</span><span class=o>,</span> <span class=n>CanalConstants</span><span class=o>.</span><span class=na>CANAL_ADMIN_MANAGER</span><span class=o>);</span>
+        <span class=n>InstanceConfig</span> <span class=n>globalConfig</span> <span class=o>=</span> <span class=k>new</span> <span class=n>InstanceConfig</span><span class=o>();</span>
+        <span class=n>String</span> <span class=n>modeStr</span> <span class=o>=</span> <span class=n>getProperty</span><span class=o>(</span><span class=n>properties</span><span class=o>,</span> <span class=n>CanalConstants</span><span class=o>.</span><span class=na>getInstanceModeKey</span><span class=o>(</span><span class=n>CanalConstants</span><span class=o>.</span><span class=na>GLOBAL_NAME</span><span class=o>));</span>
+        <span class=k>if</span> <span class=o>(</span><span class=n>StringUtils</span><span class=o>.</span><span class=na>isNotEmpty</span><span class=o>(</span><span class=n>adminManagerAddress</span><span class=o>))</span> <span class=o>{</span>
+            <span class=c1>// 如果指定了manager地址,则强制适用manager
+</span><span class=c1></span>            <span class=n>globalConfig</span><span class=o>.</span><span class=na>setMode</span><span class=o>(</span><span class=n>InstanceMode</span><span class=o>.</span><span class=na>MANAGER</span><span class=o>);</span>
+        <span class=o>}</span> <span class=k>else</span> <span class=k>if</span> <span class=o>(</span><span class=n>StringUtils</span><span class=o>.</span><span class=na>isNotEmpty</span><span class=o>(</span><span class=n>modeStr</span><span class=o>))</span> <span class=o>{</span>
+            <span class=n>globalConfig</span><span class=o>.</span><span class=na>setMode</span><span class=o>(</span><span class=n>InstanceMode</span><span class=o>.</span><span class=na>valueOf</span><span class=o>(</span><span class=n>StringUtils</span><span class=o>.</span><span class=na>upperCase</span><span class=o>(</span><span class=n>modeStr</span><span class=o>)));</span>
+        <span class=o>}</span>
+
+        <span class=n>String</span> <span class=n>lazyStr</span> <span class=o>=</span> <span class=n>getProperty</span><span class=o>(</span><span class=n>properties</span><span class=o>,</span> <span class=n>CanalConstants</span><span class=o>.</span><span class=na>getInstancLazyKey</span><span class=o>(</span><span class=n>CanalConstants</span><span class=o>.</span><span class=na>GLOBAL_NAME</span><span class=o>));</span>
+        <span class=k>if</span> <span class=o>(</span><span class=n>StringUtils</span><span class=o>.</span><span class=na>isNotEmpty</span><span class=o>(</span><span class=n>lazyStr</span><span class=o>))</span> <span class=o>{</span>
+            <span class=n>globalConfig</span><span class=o>.</span><span class=na>setLazy</span><span class=o>(</span><span class=n>Boolean</span><span class=o>.</span><span class=na>valueOf</span><span class=o>(</span><span class=n>lazyStr</span><span class=o>));</span>
+        <span class=o>}</span>
+
+        <span class=n>String</span> <span class=n>managerAddress</span> <span class=o>=</span> <span class=n>getProperty</span><span class=o>(</span><span class=n>properties</span><span class=o>,</span>
+            <span class=n>CanalConstants</span><span class=o>.</span><span class=na>getInstanceManagerAddressKey</span><span class=o>(</span><span class=n>CanalConstants</span><span class=o>.</span><span class=na>GLOBAL_NAME</span><span class=o>));</span>
+        <span class=k>if</span> <span class=o>(</span><span class=n>StringUtils</span><span class=o>.</span><span class=na>isNotEmpty</span><span class=o>(</span><span class=n>managerAddress</span><span class=o>))</span> <span class=o>{</span>
+            <span class=k>if</span> <span class=o>(</span><span class=n>StringUtils</span><span class=o>.</span><span class=na>equals</span><span class=o>(</span><span class=n>managerAddress</span><span class=o>,</span> <span class=s>&#34;${canal.admin.manager}&#34;</span><span class=o>))</span> <span class=o>{</span>
+                <span class=n>managerAddress</span> <span class=o>=</span> <span class=n>adminManagerAddress</span><span class=o>;</span>
+            <span class=o>}</span>
+
+            <span class=n>globalConfig</span><span class=o>.</span><span class=na>setManagerAddress</span><span class=o>(</span><span class=n>managerAddress</span><span class=o>);</span>
+        <span class=o>}</span>
+
+        <span class=n>String</span> <span class=n>springXml</span> <span class=o>=</span> <span class=n>getProperty</span><span class=o>(</span><span class=n>properties</span><span class=o>,</span> <span class=n>CanalConstants</span><span class=o>.</span><span class=na>getInstancSpringXmlKey</span><span class=o>(</span><span class=n>CanalConstants</span><span class=o>.</span><span class=na>GLOBAL_NAME</span><span class=o>));</span>
+        <span class=k>if</span> <span class=o>(</span><span class=n>StringUtils</span><span class=o>.</span><span class=na>isNotEmpty</span><span class=o>(</span><span class=n>springXml</span><span class=o>))</span> <span class=o>{</span>
+            <span class=n>globalConfig</span><span class=o>.</span><span class=na>setSpringXml</span><span class=o>(</span><span class=n>springXml</span><span class=o>);</span>
+        <span class=o>}</span>
+      
+        <span class=n>instanceGenerator</span> <span class=o>=</span> <span class=n>destination</span> <span class=o>-&gt;</span> <span class=o>{</span>
+          	<span class=c1>// ...
+</span><span class=c1></span>        <span class=o>};</span>
+      	
+        <span class=k>return</span> <span class=n>globalConfig</span><span class=o>;</span>      
+    <span class=o>}</span>
+</code></pre></td></tr></table></div></div><h5 id=23212-globalinstanceconfig-字段>2.3.2.1.2 globalInstanceConfig 字段</h5><blockquote><p>全局配置，实际上也是一个 <code>InstanceConfig</code> 对象。并且每一个 destination 对应的 InstanceConfig 配置里面都有全局引用的 InstanceConfig。</p></blockquote><p>涉及的配置内容：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>#canal.admin.manager = 127.0.0.1:8089
+canal.instance.global.mode = spring
+canal.instance.global.lazy = false
+canal.instance.global.manager.address = ${canal.admin.manager}
+#canal.instance.global.spring.xml = classpath:spring/memory-instance.xml
+canal.instance.global.spring.xml = classpath:spring/file-instance.xml
+#canal.instance.global.spring.xml = classpath:spring/default-instance.xml
+</code></pre></td></tr></table></div></div><ul><li>canal.instance.global.mode</li></ul><p>每个 instance 都有各自的配置。instance 的配置也可以放在本地，也可以放在远程配置中心里。如果每个 instance 配置都是一样的，就直接配置这个全局的模式。特别是启用了 admin 的话，强制是 <code>MANAGER</code>；默认的配置启动 server，是 <code>SPRING</code> 模式。目前枚举类 <code>InstanceMode</code> 就这两种选择。你在配置文件的模式如 <code>spring</code> 会自动给你转大写。</p><ul><li>canal.instance.global.lazy</li></ul><p>是否需要延时加载。</p><ul><li>canal.instance.global.manager.address</li></ul><p>配置中心地址，默认会使用 canal.admin.manager 的值，如果有远端的配置必须要有值。</p><ul><li>canal.instance.global.spring.xml</li></ul><p>spring配置文件路径。如果 <code>canal.instance.global.mode=spring</code>，需要提供此配置项。</p><p>补充知识 &ndash; instance 使用 Spring 配置方式：</p><blockquote><p>canal/deployer/src/main/resources/spring/base-instance.xml</p></blockquote><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-xml data-lang=xml><span class=c>&lt;!-- properties --&gt;</span>
+<span class=nt>&lt;bean</span> <span class=na>class=</span><span class=s>&#34;com.alibaba.otter.canal.instance.spring.support.PropertyPlaceholderConfigurer&#34;</span> <span class=na>lazy-init=</span><span class=s>&#34;false&#34;</span><span class=nt>&gt;</span>
+   <span class=nt>&lt;property</span> <span class=na>name=</span><span class=s>&#34;ignoreResourceNotFound&#34;</span> <span class=na>value=</span><span class=s>&#34;true&#34;</span> <span class=nt>/&gt;</span>
+   <span class=nt>&lt;property</span> <span class=na>name=</span><span class=s>&#34;systemPropertiesModeName&#34;</span> <span class=na>value=</span><span class=s>&#34;SYSTEM_PROPERTIES_MODE_OVERRIDE&#34;</span><span class=nt>/&gt;</span><span class=c>&lt;!-- 允许system覆盖 --&gt;</span>
+   <span class=nt>&lt;property</span> <span class=na>name=</span><span class=s>&#34;locationNames&#34;</span><span class=nt>&gt;</span>
+      <span class=nt>&lt;list&gt;</span>
+         <span class=nt>&lt;value&gt;</span>classpath:canal.properties<span class=nt>&lt;/value&gt;</span>
+         <span class=nt>&lt;value&gt;</span>classpath:${canal.instance.destination:}/instance.properties<span class=nt>&lt;/value&gt;</span>
+      <span class=nt>&lt;/list&gt;</span>
+   <span class=nt>&lt;/property&gt;</span>
+<span class=nt>&lt;/bean&gt;</span>
+</code></pre></td></tr></table></div></div><ul><li>这里 instance.properties 的文件完整路径是 <code>${canal.instance.destination:}/instance.properties</code>，所以配置文件需要根据文件夹去区分。配置项例子： <code>canal.destinations = example,example2</code>，那么在 conf 下创建 example/instance.properties 和 example2/instance.properties</li></ul><h5 id=23213-instancegenerator-字段>2.3.2.1.3 instanceGenerator 字段</h5><blockquote><p>类型为 <code>CanalInstanceGenerator</code>。在 <code>initGlobalConfig</code> 方法中，除了创建了上面的 <code>globalInstanceConfig</code> 实例，同时还为字段 <code>instanceGenerator</code> 字段进行了赋值。</p></blockquote><p>接口定义：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kd>interface</span> <span class=nc>CanalInstanceGenerator</span> <span class=o>{</span>
+
+    <span class=cm>/**
+</span><span class=cm>     * 通过 destination 产生特定的 {@link CanalInstance}
+</span><span class=cm>     * 
+</span><span class=cm>     * @param destination
+</span><span class=cm>     * @return
+</span><span class=cm>     */</span>
+    <span class=n>CanalInstance</span> <span class=nf>generate</span><span class=o>(</span><span class=n>String</span> <span class=n>destination</span><span class=o>);</span>
+<span class=o>}</span>
+</code></pre></td></tr></table></div></div><p>非常明显，这个字段用于创建 <code>CanalInstance</code> 实例。这是 instance 模块中的类，其作用就是为 canal.properties 文件中 <code>canal.destinations</code> 配置项列出的每个 destination ，创建一个 <code>CanalInstance</code> 实例。</p><p><img class=lazyload src=/svg/loading.min.svg data-src=cd.03.png data-srcset="/zh-cn/2021/01/07/canal-deployer/cd.03.png, cd.03.png 1.5x, /zh-cn/2021/01/07/canal-deployer/cd.03.png 2x"data-sizes=auto alt=/zh-cn/2021/01/07/canal-deployer/cd.03.png title=接口UML></p><ul><li>PlainCanalInstanceGenerator 在旧版本是不存在的，替代了 ManagerCanalInstanceGenerator，你会发现 ManagerCanalInstanceGenerator 已经没有引用在使用了。</li></ul><p>分析 instanceGenerator 逻辑：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java>        <span class=n>instanceGenerator</span> <span class=o>=</span> <span class=n>destination</span> <span class=o>-&gt;</span> <span class=o>{</span>
+            <span class=n>InstanceConfig</span> <span class=n>config</span> <span class=o>=</span> <span class=n>instanceConfigs</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>destination</span><span class=o>);</span>
+            <span class=k>if</span> <span class=o>(</span><span class=n>config</span> <span class=o>==</span> <span class=kc>null</span><span class=o>)</span> <span class=o>{</span>
+                <span class=k>throw</span> <span class=k>new</span> <span class=n>CanalServerException</span><span class=o>(</span><span class=s>&#34;can&#39;t find destination:&#34;</span> <span class=o>+</span> <span class=n>destination</span><span class=o>);</span>
+            <span class=o>}</span>
+
+            <span class=k>if</span> <span class=o>(</span><span class=n>config</span><span class=o>.</span><span class=na>getMode</span><span class=o>().</span><span class=na>isManager</span><span class=o>())</span> <span class=o>{</span>
+                <span class=n>PlainCanalInstanceGenerator</span> <span class=n>instanceGenerator</span> <span class=o>=</span> <span class=k>new</span> <span class=n>PlainCanalInstanceGenerator</span><span class=o>(</span><span class=n>properties</span><span class=o>);</span>
+                <span class=n>instanceGenerator</span><span class=o>.</span><span class=na>setCanalConfigClient</span><span class=o>(</span><span class=n>managerClients</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>config</span><span class=o>.</span><span class=na>getManagerAddress</span><span class=o>()));</span>
+                <span class=n>instanceGenerator</span><span class=o>.</span><span class=na>setSpringXml</span><span class=o>(</span><span class=n>config</span><span class=o>.</span><span class=na>getSpringXml</span><span class=o>());</span>
+                <span class=k>return</span> <span class=n>instanceGenerator</span><span class=o>.</span><span class=na>generate</span><span class=o>(</span><span class=n>destination</span><span class=o>);</span>
+            <span class=o>}</span> <span class=k>else</span> <span class=k>if</span> <span class=o>(</span><span class=n>config</span><span class=o>.</span><span class=na>getMode</span><span class=o>().</span><span class=na>isSpring</span><span class=o>())</span> <span class=o>{</span>
+                <span class=n>SpringCanalInstanceGenerator</span> <span class=n>instanceGenerator</span> <span class=o>=</span> <span class=k>new</span> <span class=n>SpringCanalInstanceGenerator</span><span class=o>();</span>
+                <span class=n>instanceGenerator</span><span class=o>.</span><span class=na>setSpringXml</span><span class=o>(</span><span class=n>config</span><span class=o>.</span><span class=na>getSpringXml</span><span class=o>());</span>
+                <span class=k>return</span> <span class=n>instanceGenerator</span><span class=o>.</span><span class=na>generate</span><span class=o>(</span><span class=n>destination</span><span class=o>);</span>
+            <span class=o>}</span> <span class=k>else</span> <span class=o>{</span>
+                <span class=k>throw</span> <span class=k>new</span> <span class=n>UnsupportedOperationException</span><span class=o>(</span><span class=s>&#34;unknow mode :&#34;</span> <span class=o>+</span> <span class=n>config</span><span class=o>.</span><span class=na>getMode</span><span class=o>());</span>
+            <span class=o>}</span>
+
+        <span class=o>};</span>
+</code></pre></td></tr></table></div></div><ul><li>找 instance 的配置</li></ul><p>instanceConfigs 是一个 Map，Key 是 destination 的名称，Value 是 destination 对应的配置，它是在其它阶段设置进去，后面会提到，这里就是去获取。</p><ul><li>创建 instanceGenerator （正常都会设置 spring 模式下的 XML 配置）<ul><li>如果是 <code>MANAGER</code>，则会创建 <code>PlainCanalInstanceGenerator</code>，并设置和管理端的连接客户端</li><li>如果是 <code>SPRING</code>，则会创建 <code>SpringCanalInstanceGenerator</code></li><li>如果都不是，直接报错。</li></ul></li></ul><p><strong>SpringCanalInstanceGenerator：</strong></p><p>代码：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kd>class</span> <span class=nc>SpringCanalInstanceGenerator</span> <span class=kd>implements</span> <span class=n>CanalInstanceGenerator</span> <span class=o>{</span>
+  
+  	<span class=c1>// ...	
+</span><span class=c1></span>  
+		<span class=kd>public</span> <span class=n>CanalInstance</span> <span class=nf>generate</span><span class=o>(</span><span class=n>String</span> <span class=n>destination</span><span class=o>)</span> <span class=o>{</span>
+        <span class=kd>synchronized</span> <span class=o>(</span><span class=n>CanalInstanceGenerator</span><span class=o>.</span><span class=na>class</span><span class=o>)</span> <span class=o>{</span>
+            <span class=k>try</span> <span class=o>{</span>
+                <span class=c1>// 设置当前正在加载的通道，加载spring查找文件时会用到该变量
+</span><span class=c1></span>                <span class=n>System</span><span class=o>.</span><span class=na>setProperty</span><span class=o>(</span><span class=s>&#34;canal.instance.destination&#34;</span><span class=o>,</span> <span class=n>destination</span><span class=o>);</span>
+                <span class=k>this</span><span class=o>.</span><span class=na>beanFactory</span> <span class=o>=</span> <span class=n>getBeanFactory</span><span class=o>(</span><span class=n>springXml</span><span class=o>);</span>
+                <span class=n>String</span> <span class=n>beanName</span> <span class=o>=</span> <span class=n>destination</span><span class=o>;</span>
+                <span class=k>if</span> <span class=o>(!</span><span class=n>beanFactory</span><span class=o>.</span><span class=na>containsBean</span><span class=o>(</span><span class=n>beanName</span><span class=o>))</span> <span class=o>{</span>
+                    <span class=n>beanName</span> <span class=o>=</span> <span class=n>defaultName</span><span class=o>;</span>
+                <span class=o>}</span>
+
+                <span class=k>return</span> <span class=o>(</span><span class=n>CanalInstance</span><span class=o>)</span> <span class=n>beanFactory</span><span class=o>.</span><span class=na>getBean</span><span class=o>(</span><span class=n>beanName</span><span class=o>);</span>
+            <span class=o>}</span> <span class=k>catch</span> <span class=o>(</span><span class=n>Throwable</span> <span class=n>e</span><span class=o>)</span> <span class=o>{</span>
+                <span class=n>logger</span><span class=o>.</span><span class=na>error</span><span class=o>(</span><span class=s>&#34;generator instance failed.&#34;</span><span class=o>,</span> <span class=n>e</span><span class=o>);</span>
+                <span class=k>throw</span> <span class=k>new</span> <span class=n>CanalException</span><span class=o>(</span><span class=n>e</span><span class=o>);</span>
+            <span class=o>}</span> <span class=k>finally</span> <span class=o>{</span>
+                <span class=n>System</span><span class=o>.</span><span class=na>setProperty</span><span class=o>(</span><span class=s>&#34;canal.instance.destination&#34;</span><span class=o>,</span> <span class=s>&#34;&#34;</span><span class=o>);</span>
+            <span class=o>}</span>
+        <span class=o>}</span>
+    <span class=o>}</span>
+
+    <span class=kd>private</span> <span class=n>BeanFactory</span> <span class=nf>getBeanFactory</span><span class=o>(</span><span class=n>String</span> <span class=n>springXml</span><span class=o>)</span> <span class=o>{</span>
+        <span class=n>ApplicationContext</span> <span class=n>applicationContext</span> <span class=o>=</span> <span class=k>new</span> <span class=n>ClassPathXmlApplicationContext</span><span class=o>(</span><span class=n>springXml</span><span class=o>);</span>
+        <span class=k>return</span> <span class=n>applicationContext</span><span class=o>;</span>
+    <span class=o>}</span>
+  
+  	<span class=c1>// ...
+</span><span class=c1></span>  
+<span class=o>}</span>
+</code></pre></td></tr></table></div></div><ul><li>加载 spring 容器</li></ul><p>直接用了 <code>ClassPathXmlApplicationContext</code> 创建</p><ul><li>获取 CanalIntance<ul><li>根据 destination 来查询是否存在这个 bean，比如 example，默认是名称叫 instance 这个 Bean，不过 canal 里面默认的配置都叫 instance。如下：</li></ul></li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-xml data-lang=xml><span class=nt>&lt;bean</span> <span class=na>id=</span><span class=s>&#34;instance&#34;</span> <span class=na>class=</span><span class=s>&#34;com.alibaba.otter.canal.instance.spring.CanalInstanceWithSpring&#34;</span><span class=nt>&gt;</span>
+   <span class=nt>&lt;property</span> <span class=na>name=</span><span class=s>&#34;destination&#34;</span> <span class=na>value=</span><span class=s>&#34;${canal.instance.destination}&#34;</span> <span class=nt>/&gt;</span>
+   <span class=nt>&lt;property</span> <span class=na>name=</span><span class=s>&#34;eventParser&#34;</span><span class=nt>&gt;</span>
+      <span class=nt>&lt;ref</span> <span class=na>bean=</span><span class=s>&#34;eventParser&#34;</span> <span class=nt>/&gt;</span>
+   <span class=nt>&lt;/property&gt;</span>
+   <span class=nt>&lt;property</span> <span class=na>name=</span><span class=s>&#34;eventSink&#34;</span><span class=nt>&gt;</span>
+      <span class=nt>&lt;ref</span> <span class=na>bean=</span><span class=s>&#34;eventSink&#34;</span> <span class=nt>/&gt;</span>
+   <span class=nt>&lt;/property&gt;</span>
+   <span class=nt>&lt;property</span> <span class=na>name=</span><span class=s>&#34;eventStore&#34;</span><span class=nt>&gt;</span>
+      <span class=nt>&lt;ref</span> <span class=na>bean=</span><span class=s>&#34;eventStore&#34;</span> <span class=nt>/&gt;</span>
+   <span class=nt>&lt;/property&gt;</span>
+   <span class=nt>&lt;property</span> <span class=na>name=</span><span class=s>&#34;metaManager&#34;</span><span class=nt>&gt;</span>
+      <span class=nt>&lt;ref</span> <span class=na>bean=</span><span class=s>&#34;metaManager&#34;</span> <span class=nt>/&gt;</span>
+   <span class=nt>&lt;/property&gt;</span>
+   <span class=nt>&lt;property</span> <span class=na>name=</span><span class=s>&#34;alarmHandler&#34;</span><span class=nt>&gt;</span>
+      <span class=nt>&lt;ref</span> <span class=na>bean=</span><span class=s>&#34;alarmHandler&#34;</span> <span class=nt>/&gt;</span>
+   <span class=nt>&lt;/property&gt;</span>
+       <span class=nt>&lt;property</span> <span class=na>name=</span><span class=s>&#34;mqConfig&#34;</span><span class=nt>&gt;</span>
+           <span class=nt>&lt;ref</span> <span class=na>bean=</span><span class=s>&#34;mqConfig&#34;</span> <span class=nt>/&gt;</span>
+       <span class=nt>&lt;/property&gt;</span>
+<span class=nt>&lt;/bean&gt;</span>
+</code></pre></td></tr></table></div></div><p>这个就是 <code>CanalInstance</code> 的实现类，在 instance 篇幅展开。</p><p><strong>PlainCanalInstanceGenerator：</strong></p><p>代码：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kd>class</span> <span class=nc>PlainCanalInstanceGenerator</span> <span class=kd>implements</span> <span class=n>CanalInstanceGenerator</span> <span class=o>{</span>
+		
+  	<span class=c1>// ...
+</span><span class=c1></span>		
+    <span class=kd>private</span> <span class=n>Properties</span>             <span class=n>canalConfig</span><span class=o>;</span>
+
+    <span class=kd>public</span> <span class=nf>PlainCanalInstanceGenerator</span><span class=o>(</span><span class=n>Properties</span> <span class=n>canalConfig</span><span class=o>){</span>
+        <span class=k>this</span><span class=o>.</span><span class=na>canalConfig</span> <span class=o>=</span> <span class=n>canalConfig</span><span class=o>;</span>
+    <span class=o>}</span>
+
+    <span class=kd>public</span> <span class=n>CanalInstance</span> <span class=nf>generate</span><span class=o>(</span><span class=n>String</span> <span class=n>destination</span><span class=o>)</span> <span class=o>{</span>
+        <span class=kd>synchronized</span> <span class=o>(</span><span class=n>CanalInstanceGenerator</span><span class=o>.</span><span class=na>class</span><span class=o>)</span> <span class=o>{</span>
+            <span class=k>try</span> <span class=o>{</span>
+                <span class=n>PlainCanal</span> <span class=n>canal</span> <span class=o>=</span> <span class=n>canalConfigClient</span><span class=o>.</span><span class=na>findInstance</span><span class=o>(</span><span class=n>destination</span><span class=o>,</span> <span class=kc>null</span><span class=o>);</span>
+                <span class=k>if</span> <span class=o>(</span><span class=n>canal</span> <span class=o>==</span> <span class=kc>null</span><span class=o>)</span> <span class=o>{</span>
+                    <span class=k>throw</span> <span class=k>new</span> <span class=n>CanalException</span><span class=o>(</span><span class=s>&#34;instance : &#34;</span> <span class=o>+</span> <span class=n>destination</span> <span class=o>+</span> <span class=s>&#34; config is not found&#34;</span><span class=o>);</span>
+                <span class=o>}</span>
+                <span class=n>Properties</span> <span class=n>properties</span> <span class=o>=</span> <span class=n>canal</span><span class=o>.</span><span class=na>getProperties</span><span class=o>();</span>
+                <span class=c1>// merge local
+</span><span class=c1></span>                <span class=n>properties</span><span class=o>.</span><span class=na>putAll</span><span class=o>(</span><span class=n>canalConfig</span><span class=o>);</span>
+
+                <span class=c1>// 设置动态properties,替换掉本地properties
+</span><span class=c1></span>                <span class=n>com</span><span class=o>.</span><span class=na>alibaba</span><span class=o>.</span><span class=na>otter</span><span class=o>.</span><span class=na>canal</span><span class=o>.</span><span class=na>instance</span><span class=o>.</span><span class=na>spring</span><span class=o>.</span><span class=na>support</span><span class=o>.</span><span class=na>PropertyPlaceholderConfigurer</span><span class=o>.</span><span class=na>propertiesLocal</span><span class=o>.</span><span class=na>set</span><span class=o>(</span><span class=n>properties</span><span class=o>);</span>
+                <span class=c1>// 设置当前正在加载的通道，加载spring查找文件时会用到该变量
+</span><span class=c1></span>                <span class=n>System</span><span class=o>.</span><span class=na>setProperty</span><span class=o>(</span><span class=s>&#34;canal.instance.destination&#34;</span><span class=o>,</span> <span class=n>destination</span><span class=o>);</span>
+                <span class=k>this</span><span class=o>.</span><span class=na>beanFactory</span> <span class=o>=</span> <span class=n>getBeanFactory</span><span class=o>(</span><span class=n>springXml</span><span class=o>);</span>
+                <span class=n>String</span> <span class=n>beanName</span> <span class=o>=</span> <span class=n>destination</span><span class=o>;</span>
+                <span class=k>if</span> <span class=o>(!</span><span class=n>beanFactory</span><span class=o>.</span><span class=na>containsBean</span><span class=o>(</span><span class=n>beanName</span><span class=o>))</span> <span class=o>{</span>
+                    <span class=n>beanName</span> <span class=o>=</span> <span class=n>defaultName</span><span class=o>;</span>
+                <span class=o>}</span>
+
+                <span class=k>return</span> <span class=o>(</span><span class=n>CanalInstance</span><span class=o>)</span> <span class=n>beanFactory</span><span class=o>.</span><span class=na>getBean</span><span class=o>(</span><span class=n>beanName</span><span class=o>);</span>
+            <span class=o>}</span> <span class=k>catch</span> <span class=o>(</span><span class=n>Throwable</span> <span class=n>e</span><span class=o>)</span> <span class=o>{</span>
+                <span class=n>logger</span><span class=o>.</span><span class=na>error</span><span class=o>(</span><span class=s>&#34;generator instance failed.&#34;</span><span class=o>,</span> <span class=n>e</span><span class=o>);</span>
+                <span class=k>throw</span> <span class=k>new</span> <span class=n>CanalException</span><span class=o>(</span><span class=n>e</span><span class=o>);</span>
+            <span class=o>}</span> <span class=k>finally</span> <span class=o>{</span>
+                <span class=n>System</span><span class=o>.</span><span class=na>setProperty</span><span class=o>(</span><span class=s>&#34;canal.instance.destination&#34;</span><span class=o>,</span> <span class=s>&#34;&#34;</span><span class=o>);</span>
+            <span class=o>}</span>
+        <span class=o>}</span>
+    <span class=o>}</span>
+  
+    <span class=kd>private</span> <span class=n>BeanFactory</span> <span class=nf>getBeanFactory</span><span class=o>(</span><span class=n>String</span> <span class=n>springXml</span><span class=o>)</span> <span class=o>{</span>
+        <span class=n>ApplicationContext</span> <span class=n>applicationContext</span> <span class=o>=</span> <span class=k>new</span> <span class=n>ClassPathXmlApplicationContext</span><span class=o>(</span><span class=n>springXml</span><span class=o>);</span>
+        <span class=k>return</span> <span class=n>applicationContext</span><span class=o>;</span>
+    <span class=o>}</span>
+  
+<span class=o>}</span>
+</code></pre></td></tr></table></div></div><ul><li>和 <code>SpringCanalInstanceGenerator</code> 一样加载 spring 容器。</li><li><code>PlainCanal canal = canalConfigClient.findInstance(destination, null);</code> 来查询远端的配置，比如来自 admin 的配置。加载到配置处理后设置到 ThreadLocal 的线程专属的配置里面。</li></ul><h5 id=23214-instanceconfigs-字段>2.3.2.1.4 instanceConfigs 字段</h5><p>代码：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kd>private</span> <span class=kt>void</span> <span class=nf>initInstanceConfig</span><span class=o>(</span><span class=n>Properties</span> <span class=n>properties</span><span class=o>)</span> <span class=o>{</span>
+    <span class=n>String</span> <span class=n>destinationStr</span> <span class=o>=</span> <span class=n>getProperty</span><span class=o>(</span><span class=n>properties</span><span class=o>,</span> <span class=n>CanalConstants</span><span class=o>.</span><span class=na>CANAL_DESTINATIONS</span><span class=o>);</span>
+    <span class=n>String</span><span class=o>[]</span> <span class=n>destinations</span> <span class=o>=</span> <span class=n>StringUtils</span><span class=o>.</span><span class=na>split</span><span class=o>(</span><span class=n>destinationStr</span><span class=o>,</span> <span class=n>CanalConstants</span><span class=o>.</span><span class=na>CANAL_DESTINATION_SPLIT</span><span class=o>);</span>
+
+    <span class=k>for</span> <span class=o>(</span><span class=n>String</span> <span class=n>destination</span> <span class=o>:</span> <span class=n>destinations</span><span class=o>)</span> <span class=o>{</span>
+        <span class=n>InstanceConfig</span> <span class=n>config</span> <span class=o>=</span> <span class=n>parseInstanceConfig</span><span class=o>(</span><span class=n>properties</span><span class=o>,</span> <span class=n>destination</span><span class=o>);</span>
+        <span class=n>InstanceConfig</span> <span class=n>oldConfig</span> <span class=o>=</span> <span class=n>instanceConfigs</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=n>destination</span><span class=o>,</span> <span class=n>config</span><span class=o>);</span>
+
+        <span class=k>if</span> <span class=o>(</span><span class=n>oldConfig</span> <span class=o>!=</span> <span class=kc>null</span><span class=o>)</span> <span class=o>{</span>
+            <span class=n>logger</span><span class=o>.</span><span class=na>warn</span><span class=o>(</span><span class=s>&#34;destination:{} old config:{} has replace by new config:{}&#34;</span><span class=o>,</span> <span class=n>destination</span><span class=o>,</span> <span class=n>oldConfig</span><span class=o>,</span> <span class=n>config</span><span class=o>);</span>
+        <span class=o>}</span>
+    <span class=o>}</span>
+<span class=o>}</span>
+</code></pre></td></tr></table></div></div><ul><li>获取 <code>canal.destinations</code> 配置，用 <code>,</code> 分隔</li><li>针对每一个 destinations 解析成每一个 instance 的配置，然后设置到字段 <code>instanceConfigs</code></li></ul><p>涉及到的配置：</p><blockquote><p>e.g: canal.destinations = example</p></blockquote><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>canal.instance.example.mode = 
+canal.instance.example.lazy = 
+canal.instance.example.manager.address = 
+canal.instance.example.spring.xml = 
+</code></pre></td></tr></table></div></div><ul><li>这份配置是针对单个 instance 的，如果存在会覆盖全局的配置</li></ul><p><strong>parseInstanceConfig 方法</strong></p><p>代码：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java>    <span class=kd>private</span> <span class=n>InstanceConfig</span> <span class=nf>parseInstanceConfig</span><span class=o>(</span><span class=n>Properties</span> <span class=n>properties</span><span class=o>,</span> <span class=n>String</span> <span class=n>destination</span><span class=o>)</span> <span class=o>{</span>
+        <span class=n>String</span> <span class=n>adminManagerAddress</span> <span class=o>=</span> <span class=n>getProperty</span><span class=o>(</span><span class=n>properties</span><span class=o>,</span> <span class=n>CanalConstants</span><span class=o>.</span><span class=na>CANAL_ADMIN_MANAGER</span><span class=o>);</span>
+        <span class=n>InstanceConfig</span> <span class=n>config</span> <span class=o>=</span> <span class=k>new</span> <span class=n>InstanceConfig</span><span class=o>(</span><span class=n>globalInstanceConfig</span><span class=o>);</span>
+        <span class=n>String</span> <span class=n>modeStr</span> <span class=o>=</span> <span class=n>getProperty</span><span class=o>(</span><span class=n>properties</span><span class=o>,</span> <span class=n>CanalConstants</span><span class=o>.</span><span class=na>getInstanceModeKey</span><span class=o>(</span><span class=n>destination</span><span class=o>));</span>
+        <span class=k>if</span> <span class=o>(</span><span class=n>StringUtils</span><span class=o>.</span><span class=na>isNotEmpty</span><span class=o>(</span><span class=n>adminManagerAddress</span><span class=o>))</span> <span class=o>{</span>
+            <span class=c1>// 如果指定了manager地址,则强制适用manager
+</span><span class=c1></span>            <span class=n>config</span><span class=o>.</span><span class=na>setMode</span><span class=o>(</span><span class=n>InstanceMode</span><span class=o>.</span><span class=na>MANAGER</span><span class=o>);</span>
+        <span class=o>}</span> <span class=k>else</span> <span class=k>if</span> <span class=o>(</span><span class=n>StringUtils</span><span class=o>.</span><span class=na>isNotEmpty</span><span class=o>(</span><span class=n>modeStr</span><span class=o>))</span> <span class=o>{</span>
+            <span class=n>config</span><span class=o>.</span><span class=na>setMode</span><span class=o>(</span><span class=n>InstanceMode</span><span class=o>.</span><span class=na>valueOf</span><span class=o>(</span><span class=n>StringUtils</span><span class=o>.</span><span class=na>upperCase</span><span class=o>(</span><span class=n>modeStr</span><span class=o>)));</span>
+        <span class=o>}</span>
+
+        <span class=n>String</span> <span class=n>lazyStr</span> <span class=o>=</span> <span class=n>getProperty</span><span class=o>(</span><span class=n>properties</span><span class=o>,</span> <span class=n>CanalConstants</span><span class=o>.</span><span class=na>getInstancLazyKey</span><span class=o>(</span><span class=n>destination</span><span class=o>));</span>
+        <span class=k>if</span> <span class=o>(!</span><span class=n>StringUtils</span><span class=o>.</span><span class=na>isEmpty</span><span class=o>(</span><span class=n>lazyStr</span><span class=o>))</span> <span class=o>{</span>
+            <span class=n>config</span><span class=o>.</span><span class=na>setLazy</span><span class=o>(</span><span class=n>Boolean</span><span class=o>.</span><span class=na>valueOf</span><span class=o>(</span><span class=n>lazyStr</span><span class=o>));</span>
+        <span class=o>}</span>
+
+        <span class=k>if</span> <span class=o>(</span><span class=n>config</span><span class=o>.</span><span class=na>getMode</span><span class=o>().</span><span class=na>isManager</span><span class=o>())</span> <span class=o>{</span>
+            <span class=n>String</span> <span class=n>managerAddress</span> <span class=o>=</span> <span class=n>getProperty</span><span class=o>(</span><span class=n>properties</span><span class=o>,</span> <span class=n>CanalConstants</span><span class=o>.</span><span class=na>getInstanceManagerAddressKey</span><span class=o>(</span><span class=n>destination</span><span class=o>));</span>
+            <span class=k>if</span> <span class=o>(</span><span class=n>StringUtils</span><span class=o>.</span><span class=na>isNotEmpty</span><span class=o>(</span><span class=n>managerAddress</span><span class=o>))</span> <span class=o>{</span>
+                <span class=k>if</span> <span class=o>(</span><span class=n>StringUtils</span><span class=o>.</span><span class=na>equals</span><span class=o>(</span><span class=n>managerAddress</span><span class=o>,</span> <span class=s>&#34;${canal.admin.manager}&#34;</span><span class=o>))</span> <span class=o>{</span>
+                    <span class=n>managerAddress</span> <span class=o>=</span> <span class=n>adminManagerAddress</span><span class=o>;</span>
+                <span class=o>}</span>
+                <span class=n>config</span><span class=o>.</span><span class=na>setManagerAddress</span><span class=o>(</span><span class=n>managerAddress</span><span class=o>);</span>
+            <span class=o>}</span>
+        <span class=o>}</span>
+
+        <span class=n>String</span> <span class=n>springXml</span> <span class=o>=</span> <span class=n>getProperty</span><span class=o>(</span><span class=n>properties</span><span class=o>,</span> <span class=n>CanalConstants</span><span class=o>.</span><span class=na>getInstancSpringXmlKey</span><span class=o>(</span><span class=n>destination</span><span class=o>));</span>
+        <span class=k>if</span> <span class=o>(</span><span class=n>StringUtils</span><span class=o>.</span><span class=na>isNotEmpty</span><span class=o>(</span><span class=n>springXml</span><span class=o>))</span> <span class=o>{</span>
+            <span class=n>config</span><span class=o>.</span><span class=na>setSpringXml</span><span class=o>(</span><span class=n>springXml</span><span class=o>);</span>
+        <span class=o>}</span>
+
+        <span class=k>return</span> <span class=n>config</span><span class=o>;</span>
+    <span class=o>}</span>
+</code></pre></td></tr></table></div></div><ul><li>装配单个 instance 的配置，如果是 <code>MANAGER</code> 模式就设置连接的地址信息。</li></ul><p><strong>InstanceConfig 类</strong></p><p>代码：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=n>obalConfig</span><span class=o>.</span><span class=na>getMode</span><span class=o>();</span>
+        <span class=o>}</span> <span class=k>else</span> <span class=o>{</span>
+            <span class=k>return</span> <span class=n>mode</span><span class=o>;</span>
+        <span class=o>}</span>
+    <span class=o>}</span>
+
+    <span class=kd>public</span> <span class=kt>void</span> <span class=nf>setMode</span><span class=o>(</span><span class=n>InstanceMode</span> <span class=n>mode</span><span class=o>)</span> <span class=o>{</span>
+        <span class=k>this</span><span class=o>.</span><span class=na>mode</span> <span class=o>=</span> <span class=n>mode</span><span class=o>;</span>
+    <span class=o>}</span>
+
+    <span class=kd>public</span> <span class=n>String</span> <span class=nf>getManagerAddress</span><span class=o>()</span> <span class=o>{</span>
+        <span class=k>if</span> <span class=o>(</span><span class=n>managerAddress</span> <span class=o>==</span> <span class=kc>null</span> <span class=o>&amp;&amp;</span> <span class=n>globalConfig</span> <span class=o>!=</span> <span class=kc>null</span><span class=o>)</span> <span class=o>{</span>
+            <span class=k>return</span> <span class=n>globalConfig</span><span class=o>.</span><span class=na>getManagerAddress</span><span class=o>();</span>
+        <span class=o>}</span> <span class=k>else</span> <span class=o>{</span>
+            <span class=k>return</span> <span class=n>managerAddress</span><span class=o>;</span>
+        <span class=o>}</span>
+    <span class=o>}</span>
+
+    <span class=kd>public</span> <span class=kt>void</span> <span class=nf>setManagerAddress</span><span class=o>(</span><span class=n>String</span> <span class=n>managerAddress</span><span class=o>)</span> <span class=o>{</span>
+        <span class=k>this</span><span class=o>.</span><span class=na>managerAddress</span> <span class=o>=</span> <span class=n>managerAddress</span><span class=o>;</span>
+    <span class=o>}</span>
+
+    <span class=kd>public</span> <span class=n>String</span> <span class=nf>getSpringXml</span><span class=o>()</span> <span class=o>{</span>
+        <span class=k>if</span> <span class=o>(</span><span class=n>springXml</span> <span class=o>==</span> <span class=kc>null</span> <span class=o>&amp;&amp;</span> <span class=n>globalConfig</span> <span class=o>!=</span> <span class=kc>null</span><span class=o>)</span> <span class=o>{</span>
+            <span class=k>return</span> <span class=n>globalConfig</span><span class=o>.</span><span class=na>getSpringXml</span><span class=o>();</span>
+        <span class=o>}</span> <span class=k>else</span> <span class=o>{</span>
+            <span class=k>return</span> <span class=n>springXml</span><span class=o>;</span>
+        <span class=o>}</span>
+    <span class=o>}</span>
+
+    <span class=kd>public</span> <span class=kt>void</span> <span class=nf>setSpringXml</span><span class=o>(</span><span class=n>String</span> <span class=n>springXml</span><span class=o>)</span> <span class=o>{</span>
+        <span class=k>this</span><span class=o>.</span><span class=na>springXml</span> <span class=o>=</span> <span class=n>springXml</span><span class=o>;</span>
+    <span class=o>}</span>
+
+    <span class=kd>public</span> <span class=n>String</span> <span class=nf>toString</span><span class=o>()</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=n>ToStringBuilder</span><span class=o>.</span><span class=na>reflectionToString</span><span class=o>(</span><span class=k>this</span><span class=o>,</span> <span class=n>CanalToStringStyle</span><span class=o>.</span><span class=na>DEFAULT_STYLE</span><span class=o>);</span>
+    <span class=o>}</span>
+
+<span class=o>}</span>
+</code></pre></td></tr></table></div></div><ul><li>Get 方法都是会先拿 instance 的，如果没有会拿全局的配置</li></ul><h4 id=2323-准备-server>2.3.2.3 准备 Server</h4><h5 id=23231-代码>2.3.2.3.1 代码</h5><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java>        <span class=c1>// 准备canal server
+</span><span class=c1></span>        <span class=n>ip</span> <span class=o>=</span> <span class=n>getProperty</span><span class=o>(</span><span class=n>properties</span><span class=o>,</span> <span class=n>CanalConstants</span><span class=o>.</span><span class=na>CANAL_IP</span><span class=o>);</span>
+        <span class=n>registerIp</span> <span class=o>=</span> <span class=n>getProperty</span><span class=o>(</span><span class=n>properties</span><span class=o>,</span> <span class=n>CanalConstants</span><span class=o>.</span><span class=na>CANAL_REGISTER_IP</span><span class=o>);</span>
+        <span class=n>port</span> <span class=o>=</span> <span class=n>Integer</span><span class=o>.</span><span class=na>valueOf</span><span class=o>(</span><span class=n>getProperty</span><span class=o>(</span><span class=n>properties</span><span class=o>,</span> <span class=n>CanalConstants</span><span class=o>.</span><span class=na>CANAL_PORT</span><span class=o>,</span> <span class=s>&#34;11111&#34;</span><span class=o>));</span>
+        <span class=n>adminPort</span> <span class=o>=</span> <span class=n>Integer</span><span class=o>.</span><span class=na>valueOf</span><span class=o>(</span><span class=n>getProperty</span><span class=o>(</span><span class=n>properties</span><span class=o>,</span> <span class=n>CanalConstants</span><span class=o>.</span><span class=na>CANAL_ADMIN_PORT</span><span class=o>,</span> <span class=s>&#34;11110&#34;</span><span class=o>));</span>
+        <span class=n>embededCanalServer</span> <span class=o>=</span> <span class=n>CanalServerWithEmbedded</span><span class=o>.</span><span class=na>instance</span><span class=o>();</span>
+        <span class=n>embededCanalServer</span><span class=o>.</span><span class=na>setCanalInstanceGenerator</span><span class=o>(</span><span class=n>instanceGenerator</span><span class=o>);</span><span class=c1>// 设置自定义的instanceGenerator
+</span><span class=c1></span>        <span class=kt>int</span> <span class=n>metricsPort</span> <span class=o>=</span> <span class=n>Integer</span><span class=o>.</span><span class=na>valueOf</span><span class=o>(</span><span class=n>getProperty</span><span class=o>(</span><span class=n>properties</span><span class=o>,</span> <span class=n>CanalConstants</span><span class=o>.</span><span class=na>CANAL_METRICS_PULL_PORT</span><span class=o>,</span> <span class=s>&#34;11112&#34;</span><span class=o>));</span>
+        <span class=n>embededCanalServer</span><span class=o>.</span><span class=na>setMetricsPort</span><span class=o>(</span><span class=n>metricsPort</span><span class=o>);</span>
+
+        <span class=k>this</span><span class=o>.</span><span class=na>adminUser</span> <span class=o>=</span> <span class=n>getProperty</span><span class=o>(</span><span class=n>properties</span><span class=o>,</span> <span class=n>CanalConstants</span><span class=o>.</span><span class=na>CANAL_ADMIN_USER</span><span class=o>);</span>
+        <span class=k>this</span><span class=o>.</span><span class=na>adminPasswd</span> <span class=o>=</span> <span class=n>getProperty</span><span class=o>(</span><span class=n>properties</span><span class=o>,</span> <span class=n>CanalConstants</span><span class=o>.</span><span class=na>CANAL_ADMIN_PASSWD</span><span class=o>);</span>
+        <span class=n>embededCanalServer</span><span class=o>.</span><span class=na>setUser</span><span class=o>(</span><span class=n>getProperty</span><span class=o>(</span><span class=n>properties</span><span class=o>,</span> <span class=n>CanalConstants</span><span class=o>.</span><span class=na>CANAL_USER</span><span class=o>));</span>
+        <span class=n>embededCanalServer</span><span class=o>.</span><span class=na>setPasswd</span><span class=o>(</span><span class=n>getProperty</span><span class=o>(</span><span class=n>properties</span><span class=o>,</span> <span class=n>CanalConstants</span><span class=o>.</span><span class=na>CANAL_PASSWD</span><span class=o>));</span>
+
+        <span class=n>String</span> <span class=n>canalWithoutNetty</span> <span class=o>=</span> <span class=n>getProperty</span><span class=o>(</span><span class=n>properties</span><span class=o>,</span> <span class=n>CanalConstants</span><span class=o>.</span><span class=na>CANAL_WITHOUT_NETTY</span><span class=o>);</span>
+        <span class=k>if</span> <span class=o>(</span><span class=n>canalWithoutNetty</span> <span class=o>==</span> <span class=kc>null</span> <span class=o>||</span> <span class=s>&#34;false&#34;</span><span class=o>.</span><span class=na>equals</span><span class=o>(</span><span class=n>canalWithoutNetty</span><span class=o>))</span> <span class=o>{</span>
+            <span class=n>canalServer</span> <span class=o>=</span> <span class=n>CanalServerWithNetty</span><span class=o>.</span><span class=na>instance</span><span class=o>();</span>
+            <span class=n>canalServer</span><span class=o>.</span><span class=na>setIp</span><span class=o>(</span><span class=n>ip</span><span class=o>);</span>
+            <span class=n>canalServer</span><span class=o>.</span><span class=na>setPort</span><span class=o>(</span><span class=n>port</span><span class=o>);</span>
+        <span class=o>}</span>
+</code></pre></td></tr></table></div></div><ul><li>这里开始用到了 server，属于 server 模块。</li></ul><p>涉及的配置：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback># tcp bind ip
+canal.ip =
+# register ip to zookeeper
+canal.register.ip =
+canal.port = 11111
+canal.metrics.pull.port = 11112
+# canal instance user/passwd
+# canal.user = canal
+# canal.passwd = E3619321C1A937C46A0D8BD1DAC39F93B27D4458
+
+# canal admin config
+#canal.admin.manager = 127.0.0.1:8089
+canal.admin.port = 11110
+canal.admin.user = admin
+canal.admin.passwd = 4ACFE3202A5FF5CF467898FC58AAB1D615029441
+</code></pre></td></tr></table></div></div><ul><li>canal.ip（canal 监听的 IP） 和 canal.register.ip 都会自动识别</li><li>canal.admin.* 配置是用来和 manager 连接的时候身份认证的</li></ul><h5 id=23232-server-概览>2.3.2.3.2 server 概览</h5><p><img src=cd.04.jpeg alt=server style=zoom:200%></p><p>官方说法：</p><p>server代表了一个canal的运行实例，为了方便组件化使用，特意抽象了Embeded(嵌入式) / Netty(网络访问)的两种实现</p><ul><li>Embeded : 对latency和可用性都有比较高的要求，自己又能hold住分布式的相关技术(比如failover)</li><li>Netty : 基于netty封装了一层网络协议，由canal server保证其可用性，采用的pull模型，当然latency会稍微打点折扣，不过这个也视情况而定。(阿里系的notify和metaq，典型的push/pull模型，目前也逐步的在向pull模型靠拢，push在数据量大的时候会有一些问题)</li></ul><blockquote><p>此处引用来自<a href=http://www.tianshouzhi.com/ target=_blank rel="noopener noreffer">田守枝</a>： 说白了，就是我们可以不必独立部署canal server。在应用直接使用CanalServerWithEmbedded直连mysql数据库。如果觉得自己的技术hold不住相关代码，就独立部署一个canal server，使用canal提供的客户端，连接canal server获取binlog解析后数据。而CanalServerWithNetty是在CanalServerWithEmbedded的基础上做的一层封装，用于与客户端通信。</p><p>在独立部署canal server时，Canal客户端发送的所有请求都交给CanalServerWithNetty处理解析，解析完成之后委派给了交给CanalServerWithEmbedded进行处理。因此CanalServerWithNetty就是一个马甲而已。CanalServerWithEmbedded才是核心。</p></blockquote><p>CanalController 拥有下面两个字段：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kd>private</span> <span class=n>CanalServerWithEmbedded</span>                  <span class=n>embededCanalServer</span><span class=o>;</span>
+<span class=kd>private</span> <span class=n>CanalServerWithNetty</span>                     <span class=n>canalServer</span><span class=o>;</span>
+</code></pre></td></tr></table></div></div><p>只有 ip 和 port 被设置到了 canalServer，详细内容会在 server 章节展开。</p><h4 id=2324-借助-zookeeper>2.3.2.4 借助 Zookeeper</h4><h5 id=23241-代码>2.3.2.4.1 代码</h5><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kd>final</span> <span class=n>String</span> <span class=n>zkServers</span> <span class=o>=</span> <span class=n>getProperty</span><span class=o>(</span><span class=n>properties</span><span class=o>,</span> <span class=n>CanalConstants</span><span class=o>.</span><span class=na>CANAL_ZKSERVERS</span><span class=o>);</span>
+<span class=k>if</span> <span class=o>(</span><span class=n>StringUtils</span><span class=o>.</span><span class=na>isNotEmpty</span><span class=o>(</span><span class=n>zkServers</span><span class=o>))</span> <span class=o>{</span>
+    <span class=n>zkclientx</span> <span class=o>=</span> <span class=n>ZkClientx</span><span class=o>.</span><span class=na>getZkClient</span><span class=o>(</span><span class=n>zkServers</span><span class=o>);</span>
+    <span class=c1>// 初始化系统目录
+</span><span class=c1></span>    <span class=n>zkclientx</span><span class=o>.</span><span class=na>createPersistent</span><span class=o>(</span><span class=n>ZookeeperPathUtils</span><span class=o>.</span><span class=na>DESTINATION_ROOT_NODE</span><span class=o>,</span> <span class=kc>true</span><span class=o>);</span>
+    <span class=n>zkclientx</span><span class=o>.</span><span class=na>createPersistent</span><span class=o>(</span><span class=n>ZookeeperPathUtils</span><span class=o>.</span><span class=na>CANAL_CLUSTER_ROOT_NODE</span><span class=o>,</span> <span class=kc>true</span><span class=o>);</span>
+<span class=o>}</span>
+</code></pre></td></tr></table></div></div><ul><li><p>canal 利用 zookeeper 来做高可用和存储偏移量等信息，利用了 zookeeper 的分布式特性。canal 里面 <code>ZkClientx</code> 就是对 zookeeper 操作的封装，继承自 ZkClient，这个包现在用的也比较少了。</p></li><li><p>如果你配置了 zk 的地址，那么会创建如下的永久地址</p><ul><li>/otter/canal/destinations</li><li>/otter/canal/cluster</li></ul></li></ul><h4 id=2325-监听机制>2.3.2.5 监听机制</h4><h5 id=23251-代码>2.3.2.5.1 代码</h5><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java>        <span class=kd>final</span> <span class=n>ServerRunningData</span> <span class=n>serverData</span> <span class=o>=</span> <span class=k>new</span> <span class=n>ServerRunningData</span><span class=o>(</span><span class=n>registerIp</span> <span class=o>+</span> <span class=s>&#34;:&#34;</span> <span class=o>+</span> <span class=n>port</span><span class=o>);</span>
+        <span class=n>ServerRunningMonitors</span><span class=o>.</span><span class=na>setServerData</span><span class=o>(</span><span class=n>serverData</span><span class=o>);</span>
+        <span class=n>ServerRunningMonitors</span><span class=o>.</span><span class=na>setRunningMonitors</span><span class=o>(</span><span class=n>MigrateMap</span><span class=o>.</span><span class=na>makeComputingMap</span><span class=o>((</span><span class=n>Function</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>ServerRunningMonitor</span><span class=o>&gt;)</span> <span class=n>destination</span> <span class=o>-&gt;</span> <span class=o>{</span>
+            <span class=n>runningMonitor</span><span class=o>.</span><span class=na>setDestination</span><span class=o>(</span><span class=n>destination</span><span class=o>);</span>
+            <span class=n>runningMonitor</span><span class=o>.</span><span class=na>setListener</span><span class=o>(</span><span class=k>new</span> <span class=n>ServerRunningListener</span><span class=o>()</span> <span class=o>{</span>
+              	<span class=c1>// ...
+</span><span class=c1></span>            <span class=o>};</span>
+            <span class=k>if</span> <span class=o>(</span><span class=n>zkclientx</span> <span class=o>!=</span> <span class=kc>null</span><span class=o>)</span> <span class=o>{</span>
+                <span class=n>runningMonitor</span><span class=o>.</span><span class=na>setZkClient</span><span class=o>(</span><span class=n>zkclientx</span><span class=o>);</span>
+            <span class=o>}</span>
+            <span class=c1>// 触发创建一下cid节点
+</span><span class=c1></span>            <span class=n>runningMonitor</span><span class=o>.</span><span class=na>init</span><span class=o>();</span>
+            <span class=k>return</span> <span class=n>runningMonitor</span><span class=o>;</span>                                       
+        <span class=o>}));</span>
+</code></pre></td></tr></table></div></div><p>首先看清楚几个对象，<code>ServerRunningMonitors</code>，<code>ServerRunningMonitor</code>，<code>ServerRunningData</code>，其中 <code>ServerRunningMonitors</code> 是来管理一堆的 <code>ServerRunningMonitor</code> 的， 而 <code>ServerRunningMonitor</code> 是对 <code>CanalInstance</code> 监控的。<code>ServerRunningData</code> 对应服务端的数据，和 ZK 存储的一致 。</p><h5 id=23252-serverrunningmonitors>2.3.2.5.2 ServerRunningMonitors</h5><p>代码：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kd>class</span> <span class=nc>ServerRunningMonitors</span> <span class=o>{</span>
+
+    <span class=kd>private</span> <span class=kd>static</span> <span class=n>ServerRunningData</span> <span class=n>serverData</span><span class=o>;</span>
+    <span class=kd>private</span> <span class=kd>static</span> <span class=n>Map</span>               <span class=n>runningMonitors</span><span class=o>;</span> <span class=c1>// &lt;String,
+</span><span class=c1></span>                                                      <span class=c1>// ServerRunningMonitor&gt;
+</span><span class=c1></span>
+    <span class=kd>public</span> <span class=kd>static</span> <span class=n>ServerRunningData</span> <span class=nf>getServerData</span><span class=o>()</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=n>serverData</span><span class=o>;</span>
+    <span class=o>}</span>
+
+    <span class=kd>public</span> <span class=kd>static</span> <span class=n>Map</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>ServerRunningMonitor</span><span class=o>&gt;</span> <span class=nf>getRunningMonitors</span><span class=o>()</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=n>runningMonitors</span><span class=o>;</span>
+    <span class=o>}</span>
+
+    <span class=kd>public</span> <span class=kd>static</span> <span class=n>ServerRunningMonitor</span> <span class=nf>getRunningMonitor</span><span class=o>(</span><span class=n>String</span> <span class=n>destination</span><span class=o>)</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=o>(</span><span class=n>ServerRunningMonitor</span><span class=o>)</span> <span class=n>runningMonitors</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>destination</span><span class=o>);</span>
+    <span class=o>}</span>
+
+    <span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>setServerData</span><span class=o>(</span><span class=n>ServerRunningData</span> <span class=n>serverData</span><span class=o>)</span> <span class=o>{</span>
+        <span class=n>ServerRunningMonitors</span><span class=o>.</span><span class=na>serverData</span> <span class=o>=</span> <span class=n>serverData</span><span class=o>;</span>
+    <span class=o>}</span>
+
+    <span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>setRunningMonitors</span><span class=o>(</span><span class=n>Map</span> <span class=n>runningMonitors</span><span class=o>)</span> <span class=o>{</span>
+        <span class=n>ServerRunningMonitors</span><span class=o>.</span><span class=na>runningMonitors</span> <span class=o>=</span> <span class=n>runningMonitors</span><span class=o>;</span>
+    <span class=o>}</span>
+
+<span class=o>}</span>
+</code></pre></td></tr></table></div></div><p>setRunningMonitors 方法：</p><p>设置一个 Map，Key 是 destination，比如 example，Value 是 instance 对应的 <code>ServerRunningMonitor</code>。代码里面使用到了 <code>MigrateMap.makeComputingMap</code>，这个是依赖 <code>guava</code> 实现。</p><p>测试 <code>MigrateMap.makeComputingMap</code>：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java>    <span class=kd>class</span> <span class=nc>King</span> <span class=o>{</span>
+        <span class=kd>private</span> <span class=n>String</span> <span class=n>name</span><span class=o>;</span>
+
+        <span class=kd>public</span> <span class=nf>King</span><span class=o>(</span><span class=n>String</span> <span class=n>name</span><span class=o>)</span> <span class=o>{</span>
+            <span class=k>this</span><span class=o>.</span><span class=na>name</span> <span class=o>=</span> <span class=n>name</span><span class=o>;</span>
+        <span class=o>}</span>
+
+        <span class=kd>public</span> <span class=n>String</span> <span class=nf>getName</span><span class=o>()</span> <span class=o>{</span>
+            <span class=k>return</span> <span class=n>name</span><span class=o>;</span>
+        <span class=o>}</span>
+
+        <span class=kd>public</span> <span class=kt>void</span> <span class=nf>setName</span><span class=o>(</span><span class=n>String</span> <span class=n>name</span><span class=o>)</span> <span class=o>{</span>
+            <span class=k>this</span><span class=o>.</span><span class=na>name</span> <span class=o>=</span> <span class=n>name</span><span class=o>;</span>
+        <span class=o>}</span>
+    <span class=o>}</span>
+
+    <span class=nd>@Test</span>
+    <span class=kd>public</span> <span class=kt>void</span> <span class=nf>testBase</span><span class=o>()</span> <span class=o>{</span>
+        <span class=n>Map</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>King</span><span class=o>&gt;</span> <span class=n>map</span> <span class=o>=</span> <span class=n>MigrateMap</span><span class=o>.</span><span class=na>makeComputingMap</span><span class=o>(</span><span class=n>input</span> <span class=o>-&gt;</span> <span class=k>new</span> <span class=n>King</span><span class=o>(</span><span class=n>input</span><span class=o>));</span>
+        <span class=n>King</span> <span class=n>k</span> <span class=o>=</span> <span class=n>map</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=s>&#34;李白&#34;</span><span class=o>);</span>
+        <span class=n>Assert</span><span class=o>.</span><span class=na>assertNotNull</span><span class=o>(</span><span class=n>k</span><span class=o>);</span>
+        <span class=n>Assert</span><span class=o>.</span><span class=na>assertEquals</span><span class=o>(</span><span class=n>k</span><span class=o>,</span> <span class=n>map</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=s>&#34;李白&#34;</span><span class=o>));</span>
+    <span class=o>}</span>
+</code></pre></td></tr></table></div></div><p>如果第一次对象不存在，会创建对象，但是如果对象已经存在了，则直接获取。这个逻辑和 go 语言中的 <code>pool</code> 用法一样。</p><p>底下调用的核心类： <code>com.google.common.cache.LocalCache.Segment#lockedGetOrLoad</code>，看名字的意思就是获取或者加载，有兴趣的同学自行阅读。</p><p>回到代码，这里的意思就是如果 destination 对应的 ServerRunningMonitor 不存在，则创建一个 <code>ServerRunningMonitor</code>，创建逻辑就是那一堆未贴出来的代码。</p><h5 id=23253-canalcontroller-中创建-serverrunningmonitor>2.3.2.5.3 CanalController 中创建 ServerRunningMonitor</h5><p>代码：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java>            <span class=n>ServerRunningMonitor</span> <span class=n>runningMonitor</span> <span class=o>=</span> <span class=k>new</span> <span class=n>ServerRunningMonitor</span><span class=o>(</span><span class=n>serverData</span><span class=o>);</span>
+            <span class=n>runningMonitor</span><span class=o>.</span><span class=na>setDestination</span><span class=o>(</span><span class=n>destination</span><span class=o>);</span>
+            <span class=n>runningMonitor</span><span class=o>.</span><span class=na>setListener</span><span class=o>(</span><span class=k>new</span> <span class=n>ServerRunningListener</span><span class=o>()</span> <span class=o>{</span>
+								<span class=c1>// ...
+</span><span class=c1></span>            <span class=o>});</span>
+            <span class=k>if</span> <span class=o>(</span><span class=n>zkclientx</span> <span class=o>!=</span> <span class=kc>null</span><span class=o>)</span> <span class=o>{</span>
+                <span class=n>runningMonitor</span><span class=o>.</span><span class=na>setZkClient</span><span class=o>(</span><span class=n>zkclientx</span><span class=o>);</span>
+            <span class=o>}</span>
+            <span class=c1>// 触发创建一下cid节点
+</span><span class=c1></span>            <span class=n>runningMonitor</span><span class=o>.</span><span class=na>init</span><span class=o>();</span>
+            <span class=k>return</span> <span class=n>runningMonitor</span><span class=o>;</span>
+</code></pre></td></tr></table></div></div><ul><li>根据 serverData 创建 <code>ServerRunningMonitor</code></li><li>设置 destination</li><li>设置 listener</li><li>如果 ZK 配置不为空，就设置 zkClient</li><li>最后初始化</li></ul><p>ServerRunningListener分析：</p><ul><li>processActiveEnter 方法，触发现在轮到自己做为active，需要载入上一个active的上下文数据</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java>                <span class=kd>public</span> <span class=kt>void</span> <span class=nf>processActiveEnter</span><span class=o>()</span> <span class=o>{</span>
+                    <span class=k>try</span> <span class=o>{</span>
+                        <span class=n>MDC</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=n>CanalConstants</span><span class=o>.</span><span class=na>MDC_DESTINATION</span><span class=o>,</span> <span class=n>String</span><span class=o>.</span><span class=na>valueOf</span><span class=o>(</span><span class=n>destination</span><span class=o>));</span>
+                        <span class=n>embededCanalServer</span><span class=o>.</span><span class=na>start</span><span class=o>(</span><span class=n>destination</span><span class=o>);</span>
+                        <span class=k>if</span> <span class=o>(</span><span class=n>canalMQStarter</span> <span class=o>!=</span> <span class=kc>null</span><span class=o>)</span> <span class=o>{</span>
+                            <span class=n>canalMQStarter</span><span class=o>.</span><span class=na>startDestination</span><span class=o>(</span><span class=n>destination</span><span class=o>);</span>
+                        <span class=o>}</span>
+                    <span class=o>}</span> <span class=k>finally</span> <span class=o>{</span>
+                        <span class=n>MDC</span><span class=o>.</span><span class=na>remove</span><span class=o>(</span><span class=n>CanalConstants</span><span class=o>.</span><span class=na>MDC_DESTINATION</span><span class=o>);</span>
+                    <span class=o>}</span>
+                <span class=o>}</span>
+</code></pre></td></tr></table></div></div><p>每个 destination 对应的 CanalInstance 是通过 embededCanalServer 的 start 方法启动的</p><ul><li>processActiveExit 方法，触发一下当前active模式失败</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java>                <span class=kd>public</span> <span class=kt>void</span> <span class=nf>processActiveExit</span><span class=o>()</span> <span class=o>{</span>
+                    <span class=k>try</span> <span class=o>{</span>
+                        <span class=n>MDC</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=n>CanalConstants</span><span class=o>.</span><span class=na>MDC_DESTINATION</span><span class=o>,</span> <span class=n>String</span><span class=o>.</span><span class=na>valueOf</span><span class=o>(</span><span class=n>destination</span><span class=o>));</span>
+                        <span class=k>if</span> <span class=o>(</span><span class=n>canalMQStarter</span> <span class=o>!=</span> <span class=kc>null</span><span class=o>)</span> <span class=o>{</span>
+                            <span class=n>canalMQStarter</span><span class=o>.</span><span class=na>stopDestination</span><span class=o>(</span><span class=n>destination</span><span class=o>);</span>
+                        <span class=o>}</span>
+                        <span class=n>embededCanalServer</span><span class=o>.</span><span class=na>stop</span><span class=o>(</span><span class=n>destination</span><span class=o>);</span>
+                    <span class=o>}</span> <span class=k>finally</span> <span class=o>{</span>
+                        <span class=n>MDC</span><span class=o>.</span><span class=na>remove</span><span class=o>(</span><span class=n>CanalConstants</span><span class=o>.</span><span class=na>MDC_DESTINATION</span><span class=o>);</span>
+                    <span class=o>}</span>
+                <span class=o>}</span>
+</code></pre></td></tr></table></div></div><p>通过 embededCanalServer 的 stop 方法来暂停 instance</p><ul><li>processStart 方法，启动时回调做点事情</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java>                <span class=kd>public</span> <span class=kt>void</span> <span class=nf>processStart</span><span class=o>()</span> <span class=o>{</span>
+                    <span class=k>try</span> <span class=o>{</span>
+                        <span class=k>if</span> <span class=o>(</span><span class=n>zkclientx</span> <span class=o>!=</span> <span class=kc>null</span><span class=o>)</span> <span class=o>{</span>
+                            <span class=kd>final</span> <span class=n>String</span> <span class=n>path</span> <span class=o>=</span> <span class=n>ZookeeperPathUtils</span><span class=o>.</span><span class=na>getDestinationClusterNode</span><span class=o>(</span><span class=n>destination</span><span class=o>,</span>
+                                <span class=n>registerIp</span> <span class=o>+</span> <span class=s>&#34;:&#34;</span> <span class=o>+</span> <span class=n>port</span><span class=o>);</span>
+                            <span class=n>initCid</span><span class=o>(</span><span class=n>path</span><span class=o>);</span>
+                            <span class=n>zkclientx</span><span class=o>.</span><span class=na>subscribeStateChanges</span><span class=o>(</span><span class=k>new</span> <span class=n>IZkStateListener</span><span class=o>()</span> <span class=o>{</span>
+
+                                <span class=kd>public</span> <span class=kt>void</span> <span class=nf>handleStateChanged</span><span class=o>(</span><span class=n>KeeperState</span> <span class=n>state</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>Exception</span> <span class=o>{</span>
+
+                                <span class=o>}</span>
+
+                                <span class=kd>public</span> <span class=kt>void</span> <span class=nf>handleNewSession</span><span class=o>()</span> <span class=kd>throws</span> <span class=n>Exception</span> <span class=o>{</span>
+                                    <span class=n>initCid</span><span class=o>(</span><span class=n>path</span><span class=o>);</span>
+                                <span class=o>}</span>
+
+                                <span class=nd>@Override</span>
+                                <span class=kd>public</span> <span class=kt>void</span> <span class=nf>handleSessionEstablishmentError</span><span class=o>(</span><span class=n>Throwable</span> <span class=n>error</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>Exception</span> <span class=o>{</span>
+                                    <span class=n>logger</span><span class=o>.</span><span class=na>error</span><span class=o>(</span><span class=s>&#34;failed to connect to zookeeper&#34;</span><span class=o>,</span> <span class=n>error</span><span class=o>);</span>
+                                <span class=o>}</span>
+                            <span class=o>});</span>
+                        <span class=o>}</span>
+                    <span class=o>}</span> <span class=k>finally</span> <span class=o>{</span>
+                        <span class=n>MDC</span><span class=o>.</span><span class=na>remove</span><span class=o>(</span><span class=n>CanalConstants</span><span class=o>.</span><span class=na>MDC_DESTINATION</span><span class=o>);</span>
+                    <span class=o>}</span>
+                <span class=o>}</span>
+</code></pre></td></tr></table></div></div><p>如果有 zkclientx，那么会去创建 <code>/otter/canal/destinations/{0}/cluster/{1}</code>，其0会被destination替换，1会被ip:port替换。</p><p>比如：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>ls /otter/canal/destinations/localhost/cluster 
+<span class=o>[</span>30.11.176.130:11111<span class=o>]</span>
+</code></pre></td></tr></table></div></div><ul><li>processStop 方法，关闭时回调做点事情</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java>                <span class=kd>public</span> <span class=kt>void</span> <span class=nf>processStop</span><span class=o>()</span> <span class=o>{</span>
+                    <span class=k>try</span> <span class=o>{</span>
+                        <span class=n>MDC</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=n>CanalConstants</span><span class=o>.</span><span class=na>MDC_DESTINATION</span><span class=o>,</span> <span class=n>String</span><span class=o>.</span><span class=na>valueOf</span><span class=o>(</span><span class=n>destination</span><span class=o>));</span>
+                        <span class=k>if</span> <span class=o>(</span><span class=n>zkclientx</span> <span class=o>!=</span> <span class=kc>null</span><span class=o>)</span> <span class=o>{</span>
+                            <span class=kd>final</span> <span class=n>String</span> <span class=n>path</span> <span class=o>=</span> <span class=n>ZookeeperPathUtils</span><span class=o>.</span><span class=na>getDestinationClusterNode</span><span class=o>(</span><span class=n>destination</span><span class=o>,</span>
+                                <span class=n>registerIp</span> <span class=o>+</span> <span class=s>&#34;:&#34;</span> <span class=o>+</span> <span class=n>port</span><span class=o>);</span>
+                            <span class=n>releaseCid</span><span class=o>(</span><span class=n>path</span><span class=o>);</span>
+                        <span class=o>}</span>
+                    <span class=o>}</span> <span class=k>finally</span> <span class=o>{</span>
+                        <span class=n>MDC</span><span class=o>.</span><span class=na>remove</span><span class=o>(</span><span class=n>CanalConstants</span><span class=o>.</span><span class=na>MDC_DESTINATION</span><span class=o>);</span>
+                    <span class=o>}</span>
+                <span class=o>}</span>
+</code></pre></td></tr></table></div></div><p>路径和 processStart 中一致，只是这个是 server 停止的时候删除。</p><p>init 方法：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kt>void</span> <span class=nf>init</span><span class=o>()</span> <span class=o>{</span>
+    <span class=n>processStart</span><span class=o>();</span>
+<span class=o>}</span>
+</code></pre></td></tr></table></div></div><p>就是调用了 listener 的 processStart 方法。</p><h5 id=23254-serverrunningmonitorstart>2.3.2.5.4 ServerRunningMonitor#start</h5><p>上一节创建的时候 listener 有四个方法，那么它们是在哪里调用到的？</p><p>代码：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kd>class</span> <span class=nc>ServerRunningMonitor</span> <span class=kd>extends</span> <span class=n>AbstractCanalLifeCycle</span> <span class=o>{</span>
+
+		<span class=c1>// ...
+</span><span class=c1></span>
+    <span class=kd>public</span> <span class=kd>synchronized</span> <span class=kt>void</span> <span class=nf>start</span><span class=o>()</span> <span class=o>{</span>
+        <span class=kd>super</span><span class=o>.</span><span class=na>start</span><span class=o>();</span>
+        <span class=k>try</span> <span class=o>{</span>
+            <span class=n>processStart</span><span class=o>();</span>
+            <span class=k>if</span> <span class=o>(</span><span class=n>zkClient</span> <span class=o>!=</span> <span class=kc>null</span><span class=o>)</span> <span class=o>{</span>
+                <span class=c1>// 如果需要尽可能释放instance资源，不需要监听running节点，不然即使stop了这台机器，另一台机器立马会start
+</span><span class=c1></span>                <span class=n>String</span> <span class=n>path</span> <span class=o>=</span> <span class=n>ZookeeperPathUtils</span><span class=o>.</span><span class=na>getDestinationServerRunning</span><span class=o>(</span><span class=n>destination</span><span class=o>);</span>
+                <span class=n>zkClient</span><span class=o>.</span><span class=na>subscribeDataChanges</span><span class=o>(</span><span class=n>path</span><span class=o>,</span> <span class=n>dataListener</span><span class=o>);</span>
+
+                <span class=n>initRunning</span><span class=o>();</span>
+            <span class=o>}</span> <span class=k>else</span> <span class=o>{</span>
+                <span class=n>processActiveEnter</span><span class=o>();</span><span class=c1>// 没有zk，直接启动
+</span><span class=c1></span>            <span class=o>}</span>
+        <span class=o>}</span> <span class=k>catch</span> <span class=o>(</span><span class=n>Exception</span> <span class=n>e</span><span class=o>)</span> <span class=o>{</span>
+            <span class=n>logger</span><span class=o>.</span><span class=na>error</span><span class=o>(</span><span class=s>&#34;start failed&#34;</span><span class=o>,</span> <span class=n>e</span><span class=o>);</span>
+            <span class=c1>// 没有正常启动，重置一下状态，避免干扰下一次start
+</span><span class=c1></span>            <span class=n>stop</span><span class=o>();</span>
+        <span class=o>}</span>
+      
+    <span class=o>}</span>
+<span class=o>}</span>
+</code></pre></td></tr></table></div></div><ul><li><p>调用 listener 的 processStart，即前面提到的如果有 zk 配置会创建 zk 地址</p></li><li><p>zkClient 存在</p><ul><li><p>则找 zookeeper 路径 <code>/otter/canal/destinations/{0}/running</code>，其中 0 会被 destination 替换</p></li><li><p>watch 数据变化（在集群模式下，可能会有多个 canal server 共同处理同一个 destination，</p><p>在某一时刻，只能由一个 canal server 进行处理，处理这个 destination 的 canal server 进入 running 状态，其他 canal server 进入 standby 状态。）</p></li><li><p>HA模式初始化运行</p></li></ul></li></ul><p>运行起来的例子：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=o>[</span>zk: localhost:2181<span class=o>(</span>CONNECTED<span class=o>)</span> 19<span class=o>]</span> get /otter/canal/destinations/localhost/running
+<span class=o>{</span><span class=s2>&#34;active&#34;</span>:true,<span class=s2>&#34;address&#34;</span>:<span class=s2>&#34;30.11.176.130:11111&#34;</span><span class=o>}</span>
+<span class=nv>cZxid</span> <span class=o>=</span> 0x1a27
+<span class=nv>ctime</span> <span class=o>=</span> Mon Jan <span class=m>04</span> 15:44:01 CST <span class=m>2021</span>
+<span class=nv>mZxid</span> <span class=o>=</span> 0x1a27
+<span class=nv>mtime</span> <span class=o>=</span> Mon Jan <span class=m>04</span> 15:44:01 CST <span class=m>2021</span>
+<span class=nv>pZxid</span> <span class=o>=</span> 0x1a27
+<span class=nv>cversion</span> <span class=o>=</span> <span class=m>0</span>
+<span class=nv>dataVersion</span> <span class=o>=</span> <span class=m>0</span>
+<span class=nv>aclVersion</span> <span class=o>=</span> <span class=m>0</span>
+<span class=nv>ephemeralOwner</span> <span class=o>=</span> 0x100008084260006
+<span class=nv>dataLength</span> <span class=o>=</span> <span class=m>47</span>
+<span class=nv>numChildren</span> <span class=o>=</span> <span class=m>0</span>
+</code></pre></td></tr></table></div></div><ul><li>zkClient 不存在，则直接触发 listener 的 processActiveEnter，即去启动 CanalInstance。</li></ul><p>HA模式初始化运行：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kd>private</span> <span class=kt>void</span> <span class=nf>initRunning</span><span class=o>()</span> <span class=o>{</span>
+    <span class=k>if</span> <span class=o>(!</span><span class=n>isStart</span><span class=o>())</span> <span class=o>{</span>
+        <span class=k>return</span><span class=o>;</span>
+    <span class=o>}</span>
+
+    <span class=n>String</span> <span class=n>path</span> <span class=o>=</span> <span class=n>ZookeeperPathUtils</span><span class=o>.</span><span class=na>getDestinationServerRunning</span><span class=o>(</span><span class=n>destination</span><span class=o>);</span>
+    <span class=c1>// 序列化
+</span><span class=c1></span>    <span class=kt>byte</span><span class=o>[]</span> <span class=n>bytes</span> <span class=o>=</span> <span class=n>JsonUtils</span><span class=o>.</span><span class=na>marshalToByte</span><span class=o>(</span><span class=n>serverData</span><span class=o>);</span>
+    <span class=k>try</span> <span class=o>{</span>
+        <span class=n>mutex</span><span class=o>.</span><span class=na>set</span><span class=o>(</span><span class=kc>false</span><span class=o>);</span>
+        <span class=n>zkClient</span><span class=o>.</span><span class=na>create</span><span class=o>(</span><span class=n>path</span><span class=o>,</span> <span class=n>bytes</span><span class=o>,</span> <span class=n>CreateMode</span><span class=o>.</span><span class=na>EPHEMERAL</span><span class=o>);</span>
+        <span class=n>activeData</span> <span class=o>=</span> <span class=n>serverData</span><span class=o>;</span>
+        <span class=n>processActiveEnter</span><span class=o>();</span><span class=c1>// 触发一下事件
+</span><span class=c1></span>        <span class=n>mutex</span><span class=o>.</span><span class=na>set</span><span class=o>(</span><span class=kc>true</span><span class=o>);</span>
+        <span class=n>release</span> <span class=o>=</span> <span class=kc>false</span><span class=o>;</span>
+    <span class=o>}</span> <span class=k>catch</span> <span class=o>(</span><span class=n>ZkNodeExistsException</span> <span class=n>e</span><span class=o>)</span> <span class=o>{</span>
+        <span class=n>bytes</span> <span class=o>=</span> <span class=n>zkClient</span><span class=o>.</span><span class=na>readData</span><span class=o>(</span><span class=n>path</span><span class=o>,</span> <span class=kc>true</span><span class=o>);</span>
+        <span class=k>if</span> <span class=o>(</span><span class=n>bytes</span> <span class=o>==</span> <span class=kc>null</span><span class=o>)</span> <span class=o>{</span><span class=c1>// 如果不存在节点，立即尝试一次
+</span><span class=c1></span>            <span class=n>initRunning</span><span class=o>();</span>
+        <span class=o>}</span> <span class=k>else</span> <span class=o>{</span>
+            <span class=n>activeData</span> <span class=o>=</span> <span class=n>JsonUtils</span><span class=o>.</span><span class=na>unmarshalFromByte</span><span class=o>(</span><span class=n>bytes</span><span class=o>,</span> <span class=n>ServerRunningData</span><span class=o>.</span><span class=na>class</span><span class=o>);</span>
+        <span class=o>}</span>
+    <span class=o>}</span> <span class=k>catch</span> <span class=o>(</span><span class=n>ZkNoNodeException</span> <span class=n>e</span><span class=o>)</span> <span class=o>{</span>
+        <span class=n>zkClient</span><span class=o>.</span><span class=na>createPersistent</span><span class=o>(</span><span class=n>ZookeeperPathUtils</span><span class=o>.</span><span class=na>getDestinationPath</span><span class=o>(</span><span class=n>destination</span><span class=o>),</span> <span class=kc>true</span><span class=o>);</span> <span class=c1>// 尝试创建父节点
+</span><span class=c1></span>        <span class=n>initRunning</span><span class=o>();</span>
+    <span class=o>}</span>
+<span class=o>}</span>
+</code></pre></td></tr></table></div></div><ul><li>会把当前节点的数据序列化后直接向 /otter/canal/destinations/{0}/running（其中 0 会被 destination 替换）创建数据，抢占</li><li>抢占失败，捕获 ZkNodeExistsException<ul><li>根据 path 从 zk 中获取当前是哪一个 canal server 创建了当前 canal instance 的相关信息。第二个参数true，表示的是，如果这个path不存在，则返回null。</li><li>如果不存在，则立刻再尝试一次</li><li>如果存在，则把激活的 instance 存入 activeData</li></ul></li><li>如果是节点不存在，则创建父节点后继续抢占</li></ul><blockquote><p>initRunning 方法内部只有在尝试在 zk 中创建节点成功后，才会去调用 listener 的 processActiveEnter 方法来真正启动 destination 对应的 canal instance，这是 canal HA 方式启动的核心。</p></blockquote><p><a href=http://blog.funnycode.org.cn/zh-cn/2021/01/01/canal-prepare/#61-canal-的-ha rel>可以查看之前的准备篇-高可用</a></p><p>官方高可用的三个点里面其中前面两个点上面部分已经能够满足，另外一个点：如果另一个 server 挂了，当前 server 的 instance 是如何从 standBy 变到 running 的？会在下面的构造方法部分会讲到。</p><p>大家可能会有疑问，目前提到的 <code>ServerRunningMonitor#start</code> 方法它是哪里被调用到的呢？可以翻阅后面 <code>CanalController#start</code> 部分。</p><h5 id=23255-serverrunningmonitor-构造方法>2.3.2.5.5 ServerRunningMonitor 构造方法</h5><p>首先回顾下前面 start 方法里面有这么两行代码：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=n>String</span> <span class=n>path</span> <span class=o>=</span> <span class=n>ZookeeperPathUtils</span><span class=o>.</span><span class=na>getDestinationServerRunning</span><span class=o>(</span><span class=n>destination</span><span class=o>);</span>
+<span class=n>zkClient</span><span class=o>.</span><span class=na>subscribeDataChanges</span><span class=o>(</span><span class=n>path</span><span class=o>,</span> <span class=n>dataListener</span><span class=o>);</span>
+</code></pre></td></tr></table></div></div><p>其中 dataListener 类型是 <code>IZkDataListener</code>，这是 zkclient 客户端提供的接口，定义如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kd>interface</span> <span class=nc>IZkDataListener</span> <span class=o>{</span>
+
+    <span class=kd>public</span> <span class=kt>void</span> <span class=nf>handleDataChange</span><span class=o>(</span><span class=n>String</span> <span class=n>dataPath</span><span class=o>,</span> <span class=n>Object</span> <span class=n>data</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>Exception</span><span class=o>;</span>
+
+    <span class=kd>public</span> <span class=kt>void</span> <span class=nf>handleDataDeleted</span><span class=o>(</span><span class=n>String</span> <span class=n>dataPath</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>Exception</span><span class=o>;</span>
+<span class=o>}</span>
+</code></pre></td></tr></table></div></div><p>根据名称也能猜到，这两个方法用来监听 zookeeper 节点的变动，一个是数据变化，一个是数据删除。在 zkclient 包里面，有个 <code>ConcurrentHashMap</code> 给每一个 path 存储了 Set 集合的 <code>IZkDataListener</code> 。</p><p>而这个 dataListener 是在构造方法中创建的：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=nf>ServerRunningMonitor</span><span class=o>(){</span>
+    <span class=c1>// 创建父节点
+</span><span class=c1></span>    <span class=n>dataListener</span> <span class=o>=</span> <span class=k>new</span> <span class=n>IZkDataListener</span><span class=o>()</span> <span class=o>{</span>
+
+        <span class=kd>public</span> <span class=kt>void</span> <span class=nf>handleDataChange</span><span class=o>(</span><span class=n>String</span> <span class=n>dataPath</span><span class=o>,</span> <span class=n>Object</span> <span class=n>data</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>Exception</span> <span class=o>{</span>
+            <span class=n>MDC</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=s>&#34;destination&#34;</span><span class=o>,</span> <span class=n>destination</span><span class=o>);</span>
+            <span class=n>ServerRunningData</span> <span class=n>runningData</span> <span class=o>=</span> <span class=n>JsonUtils</span><span class=o>.</span><span class=na>unmarshalFromByte</span><span class=o>((</span><span class=kt>byte</span><span class=o>[])</span> <span class=n>data</span><span class=o>,</span> <span class=n>ServerRunningData</span><span class=o>.</span><span class=na>class</span><span class=o>);</span>
+            <span class=k>if</span> <span class=o>(!</span><span class=n>isMine</span><span class=o>(</span><span class=n>runningData</span><span class=o>.</span><span class=na>getAddress</span><span class=o>()))</span> <span class=o>{</span>
+                <span class=n>mutex</span><span class=o>.</span><span class=na>set</span><span class=o>(</span><span class=kc>false</span><span class=o>);</span>
+            <span class=o>}</span>
+
+            <span class=k>if</span> <span class=o>(!</span><span class=n>runningData</span><span class=o>.</span><span class=na>isActive</span><span class=o>()</span> <span class=o>&amp;&amp;</span> <span class=n>isMine</span><span class=o>(</span><span class=n>runningData</span><span class=o>.</span><span class=na>getAddress</span><span class=o>()))</span> <span class=o>{</span> <span class=c1>// 说明出现了主动释放的操作，并且本机之前是active
+</span><span class=c1></span>                <span class=n>releaseRunning</span><span class=o>();</span><span class=c1>// 彻底释放mainstem
+</span><span class=c1></span>            <span class=o>}</span>
+
+            <span class=n>activeData</span> <span class=o>=</span> <span class=o>(</span><span class=n>ServerRunningData</span><span class=o>)</span> <span class=n>runningData</span><span class=o>;</span>
+        <span class=o>}</span>
+
+        <span class=kd>public</span> <span class=kt>void</span> <span class=nf>handleDataDeleted</span><span class=o>(</span><span class=n>String</span> <span class=n>dataPath</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>Exception</span> <span class=o>{</span>
+            <span class=n>MDC</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=s>&#34;destination&#34;</span><span class=o>,</span> <span class=n>destination</span><span class=o>);</span>
+            <span class=n>mutex</span><span class=o>.</span><span class=na>set</span><span class=o>(</span><span class=kc>false</span><span class=o>);</span>
+            <span class=k>if</span> <span class=o>(!</span><span class=n>release</span> <span class=o>&amp;&amp;</span> <span class=n>activeData</span> <span class=o>!=</span> <span class=kc>null</span> <span class=o>&amp;&amp;</span> <span class=n>isMine</span><span class=o>(</span><span class=n>activeData</span><span class=o>.</span><span class=na>getAddress</span><span class=o>()))</span> <span class=o>{</span>
+                <span class=c1>// 如果上一次active的状态就是本机，则即时触发一下active抢占
+</span><span class=c1></span>                <span class=n>initRunning</span><span class=o>();</span>
+            <span class=o>}</span> <span class=k>else</span> <span class=o>{</span>
+                <span class=c1>// 否则就是等待delayTime，避免因网络瞬端或者zk异常，导致出现频繁的切换操作
+</span><span class=c1></span>                <span class=n>delayExector</span><span class=o>.</span><span class=na>schedule</span><span class=o>(()</span> <span class=o>-&gt;</span> <span class=n>initRunning</span><span class=o>(),</span> <span class=n>delayTime</span><span class=o>,</span> <span class=n>TimeUnit</span><span class=o>.</span><span class=na>SECONDS</span><span class=o>);</span>
+            <span class=o>}</span>
+        <span class=o>}</span>
+
+    <span class=o>};</span>
+
+<span class=o>}</span>
+</code></pre></td></tr></table></div></div><ul><li>数据变化，会把拿到的数据设置为激活数据<ul><li>如果之前本机是激活状态，则会释放 <code>releaseRunning</code></li><li>如果之前本机不是激活状态，设置 <code>mutex = false</code></li></ul></li><li>数据删除<ul><li>如果上一次是本机激活状态，删除了那么本机还是会去抢占的</li><li>如果上一次本机不是激活状态，那么会延时去抢占（默认5秒），这个设计是因为网络或zk异常的时候，防止切换过于频繁</li></ul></li></ul><h4 id=2326-自动扫描机制>2.3.2.6 自动扫描机制</h4><p>官方的说明：</p><table><thead><tr><th>参数名字</th><th>参数说明</th><th>默认值</th></tr></thead><tbody><tr><td>canal.auto.scan</td><td>开启instance自动扫描 如果配置为true，canal.conf.dir目录下的instance配置变化会自动触发： a. instance目录新增： 触发instance配置载入，lazy为true时则自动启动 b. instance目录删除：卸载对应instance配置，如已启动则进行关闭 c. instance.properties文件变化：reload instance配置，如已启动自动进行重启操作</td><td>true</td></tr><tr><td>canal.auto.scan.interval</td><td>instance自动扫描的间隔时间，单位秒</td><td>5</td></tr></tbody></table><p>回归到代码：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java>				<span class=c1>// 初始化monitor机制
+</span><span class=c1></span>        <span class=n>autoScan</span> <span class=o>=</span> <span class=n>BooleanUtils</span><span class=o>.</span><span class=na>toBoolean</span><span class=o>(</span><span class=n>getProperty</span><span class=o>(</span><span class=n>properties</span><span class=o>,</span> <span class=n>CanalConstants</span><span class=o>.</span><span class=na>CANAL_AUTO_SCAN</span><span class=o>));</span>
+        <span class=k>if</span> <span class=o>(</span><span class=n>autoScan</span><span class=o>)</span> <span class=o>{</span>
+            <span class=n>defaultAction</span> <span class=o>=</span> <span class=k>new</span> <span class=n>InstanceAction</span><span class=o>()</span> <span class=o>{</span>
+								<span class=c1>// ...
+</span><span class=c1></span>            <span class=o>};</span>
+
+            <span class=n>instanceConfigMonitors</span> <span class=o>=</span> <span class=n>MigrateMap</span><span class=o>.</span><span class=na>makeComputingMap</span><span class=o>(...)</span>          
+    		<span class=o>}</span>
+</code></pre></td></tr></table></div></div><p><code>canal.auto.scan = true</code> 才会开启，开启后会创建 defaultAction 和 instanceConfigMonitors。</p><h5 id=23261-defaultaction>2.3.2.6.1 defaultAction</h5><p>代码：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span><span class=lnt>71
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java>            <span class=n>defaultAction</span> <span class=o>=</span> <span class=k>new</span> <span class=n>InstanceAction</span><span class=o>()</span> <span class=o>{</span>
+
+                <span class=kd>public</span> <span class=kt>void</span> <span class=nf>start</span><span class=o>(</span><span class=n>String</span> <span class=n>destination</span><span class=o>)</span> <span class=o>{</span>
+                    <span class=n>InstanceConfig</span> <span class=n>config</span> <span class=o>=</span> <span class=n>instanceConfigs</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>destination</span><span class=o>);</span>
+                    <span class=k>if</span> <span class=o>(</span><span class=n>config</span> <span class=o>==</span> <span class=kc>null</span><span class=o>)</span> <span class=o>{</span>
+                        <span class=c1>// 重新读取一下instance config
+</span><span class=c1></span>                        <span class=n>config</span> <span class=o>=</span> <span class=n>parseInstanceConfig</span><span class=o>(</span><span class=n>properties</span><span class=o>,</span> <span class=n>destination</span><span class=o>);</span>
+                        <span class=n>instanceConfigs</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=n>destination</span><span class=o>,</span> <span class=n>config</span><span class=o>);</span>
+                    <span class=o>}</span>
+
+                    <span class=k>if</span> <span class=o>(!</span><span class=n>embededCanalServer</span><span class=o>.</span><span class=na>isStart</span><span class=o>(</span><span class=n>destination</span><span class=o>))</span> <span class=o>{</span>
+                        <span class=c1>// HA机制启动
+</span><span class=c1></span>                        <span class=n>ServerRunningMonitor</span> <span class=n>runningMonitor</span> <span class=o>=</span> <span class=n>ServerRunningMonitors</span><span class=o>.</span><span class=na>getRunningMonitor</span><span class=o>(</span><span class=n>destination</span><span class=o>);</span>
+                        <span class=k>if</span> <span class=o>(!</span><span class=n>config</span><span class=o>.</span><span class=na>getLazy</span><span class=o>()</span> <span class=o>&amp;&amp;</span> <span class=o>!</span><span class=n>runningMonitor</span><span class=o>.</span><span class=na>isStart</span><span class=o>())</span> <span class=o>{</span>
+                            <span class=n>runningMonitor</span><span class=o>.</span><span class=na>start</span><span class=o>();</span>
+                        <span class=o>}</span>
+                    <span class=o>}</span>
+
+                    <span class=n>logger</span><span class=o>.</span><span class=na>info</span><span class=o>(</span><span class=s>&#34;auto notify start {} successful.&#34;</span><span class=o>,</span> <span class=n>destination</span><span class=o>);</span>
+                <span class=o>}</span>
+
+                <span class=kd>public</span> <span class=kt>void</span> <span class=nf>stop</span><span class=o>(</span><span class=n>String</span> <span class=n>destination</span><span class=o>)</span> <span class=o>{</span>
+                    <span class=c1>// 此处的stop，代表强制退出，非HA机制，所以需要退出HA的monitor和配置信息
+</span><span class=c1></span>                    <span class=n>InstanceConfig</span> <span class=n>config</span> <span class=o>=</span> <span class=n>instanceConfigs</span><span class=o>.</span><span class=na>remove</span><span class=o>(</span><span class=n>destination</span><span class=o>);</span>
+                    <span class=k>if</span> <span class=o>(</span><span class=n>config</span> <span class=o>!=</span> <span class=kc>null</span><span class=o>)</span> <span class=o>{</span>
+                        <span class=n>embededCanalServer</span><span class=o>.</span><span class=na>stop</span><span class=o>(</span><span class=n>destination</span><span class=o>);</span>
+                        <span class=n>ServerRunningMonitor</span> <span class=n>runningMonitor</span> <span class=o>=</span> <span class=n>ServerRunningMonitors</span><span class=o>.</span><span class=na>getRunningMonitor</span><span class=o>(</span><span class=n>destination</span><span class=o>);</span>
+                        <span class=k>if</span> <span class=o>(</span><span class=n>runningMonitor</span><span class=o>.</span><span class=na>isStart</span><span class=o>())</span> <span class=o>{</span>
+                            <span class=n>runningMonitor</span><span class=o>.</span><span class=na>stop</span><span class=o>();</span>
+                        <span class=o>}</span>
+                    <span class=o>}</span>
+
+                    <span class=n>logger</span><span class=o>.</span><span class=na>info</span><span class=o>(</span><span class=s>&#34;auto notify stop {} successful.&#34;</span><span class=o>,</span> <span class=n>destination</span><span class=o>);</span>
+                <span class=o>}</span>
+
+                <span class=kd>public</span> <span class=kt>void</span> <span class=nf>reload</span><span class=o>(</span><span class=n>String</span> <span class=n>destination</span><span class=o>)</span> <span class=o>{</span>
+                    <span class=c1>// 目前任何配置变化，直接重启，简单处理
+</span><span class=c1></span>                    <span class=n>stop</span><span class=o>(</span><span class=n>destination</span><span class=o>);</span>
+                    <span class=n>start</span><span class=o>(</span><span class=n>destination</span><span class=o>);</span>
+
+                    <span class=n>logger</span><span class=o>.</span><span class=na>info</span><span class=o>(</span><span class=s>&#34;auto notify reload {} successful.&#34;</span><span class=o>,</span> <span class=n>destination</span><span class=o>);</span>
+                <span class=o>}</span>
+
+                <span class=nd>@Override</span>
+                <span class=kd>public</span> <span class=kt>void</span> <span class=nf>release</span><span class=o>(</span><span class=n>String</span> <span class=n>destination</span><span class=o>)</span> <span class=o>{</span>
+                    <span class=c1>// 此处的release，代表强制释放，主要针对HA机制释放运行，让给其他机器抢占
+</span><span class=c1></span>                    <span class=n>InstanceConfig</span> <span class=n>config</span> <span class=o>=</span> <span class=n>instanceConfigs</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>destination</span><span class=o>);</span>
+                    <span class=k>if</span> <span class=o>(</span><span class=n>config</span> <span class=o>!=</span> <span class=kc>null</span><span class=o>)</span> <span class=o>{</span>
+                        <span class=n>ServerRunningMonitor</span> <span class=n>runningMonitor</span> <span class=o>=</span> <span class=n>ServerRunningMonitors</span><span class=o>.</span><span class=na>getRunningMonitor</span><span class=o>(</span><span class=n>destination</span><span class=o>);</span>
+                        <span class=k>if</span> <span class=o>(</span><span class=n>runningMonitor</span><span class=o>.</span><span class=na>isStart</span><span class=o>())</span> <span class=o>{</span>
+                            <span class=kt>boolean</span> <span class=n>release</span> <span class=o>=</span> <span class=n>runningMonitor</span><span class=o>.</span><span class=na>release</span><span class=o>();</span>
+                            <span class=k>if</span> <span class=o>(!</span><span class=n>release</span><span class=o>)</span> <span class=o>{</span>
+                                <span class=c1>// 如果是单机模式,则直接清除配置
+</span><span class=c1></span>                                <span class=n>instanceConfigs</span><span class=o>.</span><span class=na>remove</span><span class=o>(</span><span class=n>destination</span><span class=o>);</span>
+                                <span class=c1>// 停掉服务
+</span><span class=c1></span>                                <span class=n>runningMonitor</span><span class=o>.</span><span class=na>stop</span><span class=o>();</span>
+                                <span class=k>if</span> <span class=o>(</span><span class=n>instanceConfigMonitors</span><span class=o>.</span><span class=na>containsKey</span><span class=o>(</span><span class=n>InstanceConfig</span><span class=o>.</span><span class=na>InstanceMode</span><span class=o>.</span><span class=na>MANAGER</span><span class=o>))</span> <span class=o>{</span>
+                                    <span class=n>ManagerInstanceConfigMonitor</span> <span class=n>monitor</span> <span class=o>=</span> <span class=o>(</span><span class=n>ManagerInstanceConfigMonitor</span><span class=o>)</span> <span class=n>instanceConfigMonitors</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>InstanceConfig</span><span class=o>.</span><span class=na>InstanceMode</span><span class=o>.</span><span class=na>MANAGER</span><span class=o>);</span>
+                                    <span class=n>Map</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>InstanceAction</span><span class=o>&gt;</span> <span class=n>instanceActions</span> <span class=o>=</span> <span class=n>monitor</span><span class=o>.</span><span class=na>getActions</span><span class=o>();</span>
+                                    <span class=k>if</span> <span class=o>(</span><span class=n>instanceActions</span><span class=o>.</span><span class=na>containsKey</span><span class=o>(</span><span class=n>destination</span><span class=o>))</span> <span class=o>{</span>
+                                        <span class=c1>// 清除内存中的autoScan cache
+</span><span class=c1></span>                                        <span class=n>monitor</span><span class=o>.</span><span class=na>release</span><span class=o>(</span><span class=n>destination</span><span class=o>);</span>
+                                    <span class=o>}</span>
+                                <span class=o>}</span>
+                            <span class=o>}</span>
+                        <span class=o>}</span>
+                    <span class=o>}</span>
+
+                    <span class=n>logger</span><span class=o>.</span><span class=na>info</span><span class=o>(</span><span class=s>&#34;auto notify release {} successful.&#34;</span><span class=o>,</span> <span class=n>destination</span><span class=o>);</span>
+                <span class=o>}</span>
+            <span class=o>};</span>
+</code></pre></td></tr></table></div></div><ul><li>start 方法：<ul><li>先从缓存加载下配置，如果不存在加载一次配置文件</li><li>判断 <code>embededCanalServer</code> 是否启动，未启动的话会进行 HA 机制的监听启动，这里就调用到了 <code>ServerRunningMonitor#start</code> 方法</li></ul></li><li>stop 方法：<ul><li>instanceConfigs 移除 instance 配置</li><li>如果存在的话，调用 <code>embededCanalServer#stop</code> 停止 CanalInstance。</li><li>停止运行中的 <code>ServerRunningMonitor</code>，实际也是停止服务。</li></ul></li><li>reload 方法：<ul><li>就是调用停止，启动方法</li></ul></li><li>release 方法：<ul><li>如果这个 instance 配置是在的并且监听运行中，那么尝试释放</li><li>如果发现没有 zkClient，释放结果是 false，会移除 instanceConfigs 中 instance 配置，暂停监听即停止服务。</li><li>清除 ManagerInstanceConfigMonitor 中的缓存。</li></ul></li></ul><h5 id=23262-instanceconfigmonitors>2.3.2.6.2 instanceConfigMonitors</h5><p>代码：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java>            <span class=n>instanceConfigMonitors</span> <span class=o>=</span> <span class=n>MigrateMap</span><span class=o>.</span><span class=na>makeComputingMap</span><span class=o>(</span><span class=n>mode</span> <span class=o>-&gt;</span> <span class=o>{</span>
+                <span class=kt>int</span> <span class=n>scanInterval</span> <span class=o>=</span> <span class=n>Integer</span><span class=o>.</span><span class=na>valueOf</span><span class=o>(</span><span class=n>getProperty</span><span class=o>(</span><span class=n>properties</span><span class=o>,</span>
+                    <span class=n>CanalConstants</span><span class=o>.</span><span class=na>CANAL_AUTO_SCAN_INTERVAL</span><span class=o>,</span>
+                    <span class=s>&#34;5&#34;</span><span class=o>));</span>
+
+                <span class=k>if</span> <span class=o>(</span><span class=n>mode</span><span class=o>.</span><span class=na>isSpring</span><span class=o>())</span> <span class=o>{</span>
+                    <span class=n>SpringInstanceConfigMonitor</span> <span class=n>monitor</span> <span class=o>=</span> <span class=k>new</span> <span class=n>SpringInstanceConfigMonitor</span><span class=o>();</span>
+                    <span class=n>monitor</span><span class=o>.</span><span class=na>setScanIntervalInSecond</span><span class=o>(</span><span class=n>scanInterval</span><span class=o>);</span>
+                    <span class=n>monitor</span><span class=o>.</span><span class=na>setDefaultAction</span><span class=o>(</span><span class=n>defaultAction</span><span class=o>);</span>
+                    <span class=c1>// 设置conf目录，默认是user.dir + conf目录组成
+</span><span class=c1></span>                    <span class=n>String</span> <span class=n>rootDir</span> <span class=o>=</span> <span class=n>getProperty</span><span class=o>(</span><span class=n>properties</span><span class=o>,</span> <span class=n>CanalConstants</span><span class=o>.</span><span class=na>CANAL_CONF_DIR</span><span class=o>);</span>
+                    <span class=k>if</span> <span class=o>(</span><span class=n>StringUtils</span><span class=o>.</span><span class=na>isEmpty</span><span class=o>(</span><span class=n>rootDir</span><span class=o>))</span> <span class=o>{</span>
+                        <span class=n>rootDir</span> <span class=o>=</span> <span class=s>&#34;../conf&#34;</span><span class=o>;</span>
+                    <span class=o>}</span>
+
+                    <span class=k>if</span> <span class=o>(</span><span class=n>StringUtils</span><span class=o>.</span><span class=na>equals</span><span class=o>(</span><span class=s>&#34;otter-canal&#34;</span><span class=o>,</span> <span class=n>System</span><span class=o>.</span><span class=na>getProperty</span><span class=o>(</span><span class=s>&#34;appName&#34;</span><span class=o>)))</span> <span class=o>{</span>
+                        <span class=n>monitor</span><span class=o>.</span><span class=na>setRootConf</span><span class=o>(</span><span class=n>rootDir</span><span class=o>);</span>
+                    <span class=o>}</span> <span class=k>else</span> <span class=o>{</span>
+                        <span class=c1>// eclipse debug模式
+</span><span class=c1></span>                        <span class=n>monitor</span><span class=o>.</span><span class=na>setRootConf</span><span class=o>(</span><span class=s>&#34;src/main/resources/&#34;</span><span class=o>);</span>
+                    <span class=o>}</span>
+                    <span class=k>return</span> <span class=n>monitor</span><span class=o>;</span>
+                <span class=o>}</span> <span class=k>else</span> <span class=k>if</span> <span class=o>(</span><span class=n>mode</span><span class=o>.</span><span class=na>isManager</span><span class=o>())</span> <span class=o>{</span>
+                    <span class=n>ManagerInstanceConfigMonitor</span> <span class=n>monitor</span> <span class=o>=</span> <span class=k>new</span> <span class=n>ManagerInstanceConfigMonitor</span><span class=o>();</span>
+                    <span class=n>monitor</span><span class=o>.</span><span class=na>setScanIntervalInSecond</span><span class=o>(</span><span class=n>scanInterval</span><span class=o>);</span>
+                    <span class=n>monitor</span><span class=o>.</span><span class=na>setDefaultAction</span><span class=o>(</span><span class=n>defaultAction</span><span class=o>);</span>
+                    <span class=n>String</span> <span class=n>managerAddress</span> <span class=o>=</span> <span class=n>getProperty</span><span class=o>(</span><span class=n>properties</span><span class=o>,</span> <span class=n>CanalConstants</span><span class=o>.</span><span class=na>CANAL_ADMIN_MANAGER</span><span class=o>);</span>
+                    <span class=n>monitor</span><span class=o>.</span><span class=na>setConfigClient</span><span class=o>(</span><span class=n>getManagerClient</span><span class=o>(</span><span class=n>managerAddress</span><span class=o>));</span>
+                    <span class=k>return</span> <span class=n>monitor</span><span class=o>;</span>
+                <span class=o>}</span> <span class=k>else</span> <span class=o>{</span>
+                    <span class=k>throw</span> <span class=k>new</span> <span class=n>UnsupportedOperationException</span><span class=o>(</span><span class=s>&#34;unknow mode :&#34;</span> <span class=o>+</span> <span class=n>mode</span> <span class=o>+</span> <span class=s>&#34; for monitor&#34;</span><span class=o>);</span>
+                <span class=o>}</span>
+            <span class=o>});</span>
+</code></pre></td></tr></table></div></div><p>配置内容：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>canal.auto.scan = true
+canal.auto.scan.interval = 5
+
+# 扫描的路径
+canal.conf.dir = ../conf
+</code></pre></td></tr></table></div></div><ul><li>默认是5秒扫描一次</li><li>根据之前提到过的模式有关<ul><li>SPRING 模式： <code>SpringInstanceConfigMonitor</code></li><li>MANAGER 模式：<code>ManagerInstanceConfigMonitor</code></li></ul></li></ul><p><img class=lazyload src=/svg/loading.min.svg data-src=cd.05.png data-srcset="/zh-cn/2021/01/07/canal-deployer/cd.05.png, cd.05.png 1.5x, /zh-cn/2021/01/07/canal-deployer/cd.05.png 2x"data-sizes=auto alt=/zh-cn/2021/01/07/canal-deployer/cd.05.png title=类UML></p><p>监听模式都是实现了接口 <code>InstanceConfigMonitor</code></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kd>interface</span> <span class=nc>InstanceConfigMonitor</span> <span class=kd>extends</span> <span class=n>CanalLifeCycle</span> <span class=o>{</span>
+
+    <span class=kt>void</span> <span class=nf>register</span><span class=o>(</span><span class=n>String</span> <span class=n>destination</span><span class=o>,</span> <span class=n>InstanceAction</span> <span class=n>action</span><span class=o>);</span>
+
+    <span class=kt>void</span> <span class=nf>unregister</span><span class=o>(</span><span class=n>String</span> <span class=n>destination</span><span class=o>);</span>
+<span class=o>}</span>
+</code></pre></td></tr></table></div></div><p>它有两个方法，一个注册，一个取消注册，不过我看了下 <code>unregister</code> 压根就没有调用的地方，所以是无法停止的，你只要删除掉不需要的目录即可。而 <code>register</code> 也就一处引用，就在下面的 <code>CanalController#start</code> 方法中，如果是自动扫描的话会用到。</p><p>两个实现类的逻辑相差不大，不再展开分析，它们都是缓存了配置，然后在 <code>start</code> 方法里面有监听的逻辑，<code>SPRING</code> 模式在一个扫描指定路径下的文件，<code>MANAGER</code> 模式通过HTTP请求和 admin 交互，请求是 <code>/api/v1/config/instances_polling?md5=&ip=&port=</code>，它也是在下面 <code>CanalController#start</code> 被触发。</p><h3 id=232-核心-canalcontrollerstart-方法>2.3.2 核心 CanalController#start 方法</h3><blockquote><p>等了好久终于到这个启动方法了，从 com.alibaba.otter.canal.deployer.CanalLauncher#main &ndash; com.alibaba.otter.canal.deployer.CanalStarter#start &ndash; com.alibaba.otter.canal.deployer.CanalController#start</p></blockquote><h4 id=2321-代码>2.3.2.1 代码</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java>    <span class=kd>public</span> <span class=kt>void</span> <span class=nf>start</span><span class=o>()</span> <span class=kd>throws</span> <span class=n>Throwable</span> <span class=o>{</span>
+        <span class=n>logger</span><span class=o>.</span><span class=na>info</span><span class=o>(</span><span class=s>&#34;## start the canal server[{}({}):{}]&#34;</span><span class=o>,</span> <span class=n>ip</span><span class=o>,</span> <span class=n>registerIp</span><span class=o>,</span> <span class=n>port</span><span class=o>);</span>
+        <span class=c1>// 创建整个canal的工作节点
+</span><span class=c1></span>        <span class=kd>final</span> <span class=n>String</span> <span class=n>path</span> <span class=o>=</span> <span class=n>ZookeeperPathUtils</span><span class=o>.</span><span class=na>getCanalClusterNode</span><span class=o>(</span><span class=n>registerIp</span> <span class=o>+</span> <span class=s>&#34;:&#34;</span> <span class=o>+</span> <span class=n>port</span><span class=o>);</span>
+        <span class=n>initCid</span><span class=o>(</span><span class=n>path</span><span class=o>);</span>
+        <span class=k>if</span> <span class=o>(</span><span class=n>zkclientx</span> <span class=o>!=</span> <span class=kc>null</span><span class=o>)</span> <span class=o>{</span>
+            <span class=k>this</span><span class=o>.</span><span class=na>zkclientx</span><span class=o>.</span><span class=na>subscribeStateChanges</span><span class=o>(</span><span class=k>new</span> <span class=n>IZkStateListener</span><span class=o>()</span> <span class=o>{</span>
+
+                <span class=kd>public</span> <span class=kt>void</span> <span class=nf>handleStateChanged</span><span class=o>(</span><span class=n>KeeperState</span> <span class=n>state</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>Exception</span> <span class=o>{</span>
+
+                <span class=o>}</span>
+
+                <span class=kd>public</span> <span class=kt>void</span> <span class=nf>handleNewSession</span><span class=o>()</span> <span class=kd>throws</span> <span class=n>Exception</span> <span class=o>{</span>
+                    <span class=n>initCid</span><span class=o>(</span><span class=n>path</span><span class=o>);</span>
+                <span class=o>}</span>
+
+                <span class=nd>@Override</span>
+                <span class=kd>public</span> <span class=kt>void</span> <span class=nf>handleSessionEstablishmentError</span><span class=o>(</span><span class=n>Throwable</span> <span class=n>error</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>Exception</span> <span class=o>{</span>
+                    <span class=n>logger</span><span class=o>.</span><span class=na>error</span><span class=o>(</span><span class=s>&#34;failed to connect to zookeeper&#34;</span><span class=o>,</span> <span class=n>error</span><span class=o>);</span>
+                <span class=o>}</span>
+            <span class=o>});</span>
+        <span class=o>}</span>
+        <span class=c1>// 优先启动embeded服务
+</span><span class=c1></span>        <span class=n>embededCanalServer</span><span class=o>.</span><span class=na>start</span><span class=o>();</span>
+        <span class=c1>// 尝试启动一下非lazy状态的通道
+</span><span class=c1></span>        <span class=k>for</span> <span class=o>(</span><span class=n>Map</span><span class=o>.</span><span class=na>Entry</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>InstanceConfig</span><span class=o>&gt;</span> <span class=n>entry</span> <span class=o>:</span> <span class=n>instanceConfigs</span><span class=o>.</span><span class=na>entrySet</span><span class=o>())</span> <span class=o>{</span>
+            <span class=kd>final</span> <span class=n>String</span> <span class=n>destination</span> <span class=o>=</span> <span class=n>entry</span><span class=o>.</span><span class=na>getKey</span><span class=o>();</span>
+            <span class=n>InstanceConfig</span> <span class=n>config</span> <span class=o>=</span> <span class=n>entry</span><span class=o>.</span><span class=na>getValue</span><span class=o>();</span>
+            <span class=c1>// 创建destination的工作节点
+</span><span class=c1></span>            <span class=k>if</span> <span class=o>(!</span><span class=n>embededCanalServer</span><span class=o>.</span><span class=na>isStart</span><span class=o>(</span><span class=n>destination</span><span class=o>))</span> <span class=o>{</span>
+                <span class=c1>// HA机制启动
+</span><span class=c1></span>                <span class=n>ServerRunningMonitor</span> <span class=n>runningMonitor</span> <span class=o>=</span> <span class=n>ServerRunningMonitors</span><span class=o>.</span><span class=na>getRunningMonitor</span><span class=o>(</span><span class=n>destination</span><span class=o>);</span>
+                <span class=k>if</span> <span class=o>(!</span><span class=n>config</span><span class=o>.</span><span class=na>getLazy</span><span class=o>()</span> <span class=o>&amp;&amp;</span> <span class=o>!</span><span class=n>runningMonitor</span><span class=o>.</span><span class=na>isStart</span><span class=o>())</span> <span class=o>{</span>
+                    <span class=n>runningMonitor</span><span class=o>.</span><span class=na>start</span><span class=o>();</span>
+                <span class=o>}</span>
+            <span class=o>}</span>
+
+            <span class=k>if</span> <span class=o>(</span><span class=n>autoScan</span><span class=o>)</span> <span class=o>{</span>
+                <span class=n>instanceConfigMonitors</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>config</span><span class=o>.</span><span class=na>getMode</span><span class=o>()).</span><span class=na>register</span><span class=o>(</span><span class=n>destination</span><span class=o>,</span> <span class=n>defaultAction</span><span class=o>);</span>
+            <span class=o>}</span>
+        <span class=o>}</span>
+
+        <span class=k>if</span> <span class=o>(</span><span class=n>autoScan</span><span class=o>)</span> <span class=o>{</span>
+            <span class=n>instanceConfigMonitors</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>globalInstanceConfig</span><span class=o>.</span><span class=na>getMode</span><span class=o>()).</span><span class=na>start</span><span class=o>();</span>
+            <span class=k>for</span> <span class=o>(</span><span class=n>InstanceConfigMonitor</span> <span class=n>monitor</span> <span class=o>:</span> <span class=n>instanceConfigMonitors</span><span class=o>.</span><span class=na>values</span><span class=o>())</span> <span class=o>{</span>
+                <span class=k>if</span> <span class=o>(!</span><span class=n>monitor</span><span class=o>.</span><span class=na>isStart</span><span class=o>())</span> <span class=o>{</span>
+                    <span class=n>monitor</span><span class=o>.</span><span class=na>start</span><span class=o>();</span>
+                <span class=o>}</span>
+            <span class=o>}</span>
+        <span class=o>}</span>
+
+        <span class=c1>// 启动网络接口
+</span><span class=c1></span>        <span class=k>if</span> <span class=o>(</span><span class=n>canalServer</span> <span class=o>!=</span> <span class=kc>null</span><span class=o>)</span> <span class=o>{</span>
+            <span class=n>canalServer</span><span class=o>.</span><span class=na>start</span><span class=o>();</span>
+        <span class=o>}</span>
+    <span class=o>}</span>
+</code></pre></td></tr></table></div></div><ul><li>跳过 canalMQProducer</li><li>zk 交互，路径是 /otter/canal/cluster/{0}，其中 {0} 是 IP ＋ 端口，会有多次的 <code>initCid</code> 去创建这个路径</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=o>[</span>zk: localhost:2181<span class=o>(</span>CONNECTED<span class=o>)</span> 92<span class=o>]</span> ls /otter/canal/cluster
+<span class=o>[</span>30.11.176.127:11111<span class=o>]</span>
+</code></pre></td></tr></table></div></div><ul><li><p>启动 embededCanalServer，里面会创建 <code>canalInstance</code>，在 server 篇幅展开。</p></li><li><p>如果没启动，HA 机制监听逻辑会再触发一遍（重复代码，可以提成一个方法）</p></li><li><p>如果自动扫描，就会注册变化监听，并且会启动整个配置的监听以及每一个 instance 的监听。</p></li><li><p><code>CanalServerWithNetty</code> 模式启动，监听客户端的请求，让客户端能获取到 binlog 的变化。</p></li></ul><h2 id=三总结>三、总结</h2><ul><li>deployer 做了配置的读取，instance 的配置读取方式</li><li>deployer 做了配置的变化监听，做了完整的启动|停止，新增|删除操作</li><li>deployer 确认 server 启动是单机还是集群，集群的话依赖 Zookeeper</li><li>deployer 把 server 拉起来，去监听客户端请求</li></ul><h2 id=四参考>四、参考</h2><p><a href=http://www.tianshouzhi.com/api/tutorials/canal/381 target=_blank rel="noopener noreffer">http://www.tianshouzhi.com/api/tutorials/canal/381</a></p><p><a href=https://github.com/alibaba/canal/wiki/AdminGuide target=_blank rel="noopener noreffer">https://github.com/alibaba/canal/wiki/AdminGuide</a></p><p><a href=https://github.com/alibaba/canal/wiki/canal%E4%BB%8B%E7%BB%8D target=_blank rel="noopener noreffer">https://github.com/alibaba/canal/wiki/canal%E4%BB%8B%E7%BB%8D</a></p></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>Updated on 2021-01-07</span></div><div class=post-info-license></div></div><div class=post-info-line><div class=post-info-md><span><a class=link-to-markdown href=/zh-cn/2021/01/07/canal-deployer/index.md target=_blank>Read Markdown</a></span></div><div class=post-info-share><span><a href=javascript:void(0); title="Share on Twitter"data-sharer=twitter data-url=http://blog.funnycode.org.cn/zh-cn/2021/01/07/canal-deployer/ data-title="闲聊 canal | deployer 模块"data-hashtags=canal><i class="fab fa-twitter fa-fw"></i></a><a href=javascript:void(0); title="Share on Facebook"data-sharer=facebook data-url=http://blog.funnycode.org.cn/zh-cn/2021/01/07/canal-deployer/ data-hashtag=canal><i class="fab fa-facebook-square fa-fw"></i></a><a href=javascript:void(0); title="Share on Hacker News"data-sharer=hackernews data-url=http://blog.funnycode.org.cn/zh-cn/2021/01/07/canal-deployer/ data-title="闲聊 canal | deployer 模块"><i class="fab fa-hacker-news fa-fw"></i></a><a href=javascript:void(0); title="Share on Line"data-sharer=line data-url=http://blog.funnycode.org.cn/zh-cn/2021/01/07/canal-deployer/ data-title="闲聊 canal | deployer 模块"><i data-svg-src=https://cdn.jsdelivr.net/npm/simple-icons@2.14.0/icons/line.svg></i></a><a href=javascript:void(0); title="Share on 微博"data-sharer=weibo data-url=http://blog.funnycode.org.cn/zh-cn/2021/01/07/canal-deployer/ data-title="闲聊 canal | deployer 模块"><i class="fab fa-weibo fa-fw"></i></a></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/zh-cn/tags/canal/>canal</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>Back</a></span>&nbsp;|&nbsp;<span><a href=/zh-cn/>Home</a></span></section></div><div class=post-nav><a href=/zh-cn/2021/01/04/mybatis-resulttype-map-error/ class=prev rel=prev title=Mybatis反序列化sql查询结果异常><i class="fas fa-angle-left fa-fw"></i>Mybatis反序列化sql查询结果异常</a></div></div><div id=comments><div id=gitalk class=comment></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://github.com/gitalk/gitalk></a>Gitalk</a>.</noscript></div></article></div></main><footer class=footer><div class=footer-container><div class=footer-line>Powered by <a href=https://gohugo.io/ target=_blank rel="noopener noreffer"title="Hugo 0.76.0">Hugo</a> | Theme - <a href=https://github.com/dillonzq/LoveIt target=_blank rel="noopener noreffer"title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i>LoveIt</a></div><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2019 - 2021</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=/zh-cn/ target=_blank>xxxx</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer"href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title="Back to Top"><i class="fas fa-arrow-up fa-fw"></i></a><a href=# id=view-comments class=fixed-button title="View Comments"><i class="fas fa-comment fa-fw"></i></a></div><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.min.css><script type=text/javascript src=https://cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/smooth-scroll@16.1.3/dist/smooth-scroll.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/autocomplete.js@0.37.1/dist/autocomplete.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/algoliasearch@4.2.0/dist/algoliasearch-lite.umd.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/lazysizes@5.2.2/lazysizes.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/sharer.js@0.4.0/sharer.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/typeit@7.0.4/dist/typeit.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:10},comment:{gitalk:{admin:["cityiron"],clientID:"7ebb4aff12c6b5dc4aac",clientSecret:"fdb607f0e7f810a9e2084a2cbed3800f5657dab7",id:"2021-01-07T10:14:23+08:00",owner:"funnycode-org",repo:"funnycode-org.github.io",title:"闲聊 canal | deployer 模块"}},data:{"id-1":"云原生玩码部落","id-2":"云原生玩码部落"},search:{algoliaAppID:"PASDMWALPK",algoliaIndex:"index.zh-cn",algoliaSearchKey:"b42948e51daaa93df92381c8e2ac0f93",highlightTag:"em",maxResultLength:10,noResultsFound:"No results found",snippetLength:50,type:"algolia"},typeit:{cursorChar:"|",cursorSpeed:1e3,data:{"id-1":["id-1"],"id-2":["id-2"]},duration:-1,speed:100}}</script><script type=text/javascript src=/js/theme.min.js></script></body></html>
