@@ -93,7 +93,7 @@ public class CanalLauncher {
 ##### 2.3.1.2.1 指定本地配置
 
 - 配置文件 `canal.properties`
-- 可以通过 `anal.conf` 去指定自己的名称，比如指定官方提供的 `canal_local.properties`
+- 可以通过 VM 参数 `-Dcanal.conf` 去指定自己的名称，比如指定官方提供的 `canal_local.properties`
 
 ##### 2.3.1.2.2 加载配置文件
 
