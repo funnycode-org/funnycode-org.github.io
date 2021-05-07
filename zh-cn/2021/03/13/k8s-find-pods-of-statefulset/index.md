@@ -46,7 +46,7 @@ spec:
         - containerPort: 80
 ```
 第二个`statefulest`描述文件-`nginx2`.yaml:
-```yaml:
+```yaml
 apiVersion: v1
 kind: Service
 metadata:
