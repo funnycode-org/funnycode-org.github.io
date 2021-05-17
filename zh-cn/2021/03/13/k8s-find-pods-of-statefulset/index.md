@@ -7,6 +7,24 @@
 <!--more-->
 
 ## 一、前言
+<<<<<<< HEAD
+今天在排查一个线上的中间件集群，该中间件集群是通过 `helm` 部署到`k8s`集群当中，有一个`statefulset`总是有一个`pod`还没有`ready`，故想去看看为啥一直不正常。在k8s当中关联对象之间的关系是用的标签，我想当然的使用`statefulset`的`label selector`去找，结果却找到了其他类似statefulset所调度的pod。百思不得其解，问了一些人，都是说使用selector都能找到，但是真正实践下来，效果又这么出入之大？此篇文章就和你一起探究下如何正确找到`statefulset`下面的pod。
+
+## 二、我的问题
+我的表:
+```sql
+create table unimall.industry_output_value
+(
+	id bigint auto_increment
+		primary key,
+	month_output_value decimal(20,10) null,
+	total_output_value decimal(20,10) null,
+	total_increase_percent decimal(20,10) null,
+	gmt_create datetime null,
+	gmt_update datetime null,
+	month datetime null
+);
+=======
 今天在排查一个线上的中间件集群，该中间件集群是通过 `helm` 部署到`k8s`集群当中，有一个`statefulset`总是有一个`pod`还没有`ready`，故想去看看为啥一直不正常。在k8s当中关联对象之间的关系，我想当然的使用`statefulset`的`label selector`去找，结果却找到了其他类似statefulset所调度的pod。问了一些人，有说使用selector都能找到，众所周知，在k8s的很多描述文件中都是使用label相互之间关联，但是为啥这次不行了呢？有说直接使用名称匹配即可，感觉不适合靠谱。具体怎么找呢？
 
 ## 二、问题复现
@@ -92,6 +110,7 @@ nginx2   1/1     2m19s
 NAME       READY   STATUS    RESTARTS   AGE
 nginx1-0   1/1     Running   0          6m24s
 nginx2-0   1/1     Running   0          3m27s
+>>>>>>> c4745e60b7ce060e6c93e55c0740c09dd861090e
 ```
 发现`statefulset`已经正常起来了。
 
