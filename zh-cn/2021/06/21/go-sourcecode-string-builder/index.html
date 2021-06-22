@@ -1,0 +1,389 @@
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><meta http-equiv=x-ua-compatible content="IE=edge, chrome=1"><title>了解一下Go中的"sb"代码？ - 云原生玩码部落</title><meta name=Description content="云原生玩码部落"><meta property="og:title"content="了解一下Go中的&#34;sb&#34;代码？"><meta property="og:description"content><meta property="og:type"content="article"><meta property="og:url"content="http://blog.funnycode.org.cn/zh-cn/2021/06/21/go-sourcecode-string-builder/"><meta property="og:image"content="http://blog.funnycode.org.cn/logo.png"><meta property="article:published_time"content="2021-06-21T11:00:56+08:00"><meta property="article:modified_time"content="2021-06-21T11:00:56+08:00"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="http://blog.funnycode.org.cn/logo.png"><meta name=twitter:title content="了解一下Go中的&#34;sb&#34;代码？"><meta name=twitter:description content><meta name=application-name content="云原生玩码部落"><meta name=apple-mobile-web-app-title content="云原生玩码部落"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon"type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=http://blog.funnycode.org.cn/zh-cn/2021/06/21/go-sourcecode-string-builder/><link rel=prev href=http://blog.funnycode.org.cn/zh-cn/2021/05/16/go-package-uitable/><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.0/css/all.min.css><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"了解一下Go中的\"sb\"代码？","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"http:\/\/blog.funnycode.org.cn\/zh-cn\/2021\/06\/21\/go-sourcecode-string-builder\/"},"image":["http:\/\/blog.funnycode.org.cn\/images\/Apple-Devices-Preview.png"],"genre":"posts","keywords":"golang, 源码, builder","wordcount":3955,"url":"http:\/\/blog.funnycode.org.cn\/zh-cn\/2021\/06\/21\/go-sourcecode-string-builder\/","datePublished":"2021-06-21T11:00:56+08:00","dateModified":"2021-06-21T11:00:56+08:00","license":"This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher":{"@type":"Organization","name":"xxxx","logo":"http:\/\/blog.funnycode.org.cn\/images\/me\/logo.png"},"author":{"@type":"Person","name":"云原生玩码部落"},"description":""}</script></head><body header-desktop=fixed header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem('theme')?localStorage.getItem('theme')==='dark':'auto'==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches:'auto'==='dark')&&document.body.setAttribute('theme','dark')</script><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/zh-cn/ title=云原生玩码部落><span class=header-title-pre><i class="far fa-kiss-wink-heart fa-fw"></i></span><span id=id-1 class=typeit></span></a></div><div class=menu><div class=menu-inner><a class=menu-item href=/zh-cn/posts/>所有文章 </a><a class=menu-item href=/zh-cn/tags/>标签 </a><a class=menu-item href=/zh-cn/categories/>分类 </a><a class=menu-item href=/zh-cn/notes/>笔记 </a><a class=menu-item href=/zh-cn/about/>关于 </a><a class=menu-item href=https://github.com/funnycode-org title=GitHub rel="noopener noreffer"target=_blank><i class="fab fa-github fa-fw"></i></a><span class="menu-item delimiter"></span><a href=javascript:void(0); class="menu-item language"title="Select Language">简体中文<i class="fas fa-chevron-right fa-fw"></i>
+<select class=language-select id=language-select-desktop onchange="location=this.value"><option value=/zh-cn/2021/06/21/go-sourcecode-string-builder/ selected>简体中文</option></select>
+</a><span class="menu-item search"id=search-desktop><input type=text placeholder="Search titles or contents..."id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle"id=search-toggle-desktop title=Search><i class="fas fa-search fa-fw"></i></a><a href=javascript:void(0); class="search-button search-clear"id=search-clear-desktop title=Clear><i class="fas fa-times-circle fa-fw"></i></a><span class="search-button search-loading"id=search-loading-desktop><i class="fas fa-spinner fa-fw fa-spin"></i></span></span><a href=javascript:void(0); class="menu-item theme-switch"title="Switch Theme"><i class="fas fa-adjust fa-fw"></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/zh-cn/ title=云原生玩码部落><span class=header-title-pre><i class="far fa-kiss-wink-heart fa-fw"></i></span><span id=id-2 class=typeit></span></a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><div class=search-wrapper><div class="search mobile"id=search-mobile><input type=text placeholder="Search titles or contents..."id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle"id=search-toggle-mobile title=Search><i class="fas fa-search fa-fw"></i></a><a href=javascript:void(0); class="search-button search-clear"id=search-clear-mobile title=Clear><i class="fas fa-times-circle fa-fw"></i></a><span class="search-button search-loading"id=search-loading-mobile><i class="fas fa-spinner fa-fw fa-spin"></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>Cancel</a></div><a class=menu-item href=/zh-cn/posts/ title>所有文章</a><a class=menu-item href=/zh-cn/tags/ title>标签</a><a class=menu-item href=/zh-cn/categories/ title>分类</a><a class=menu-item href=/zh-cn/notes/ title>笔记</a><a class=menu-item href=/zh-cn/about/ title>关于</a><a class=menu-item href=https://github.com/funnycode-org title=GitHub rel="noopener noreffer"target=_blank><i class="fab fa-github fa-fw"></i></a><a href=javascript:void(0); class="menu-item theme-switch"title="Switch Theme">
+<i class="fas fa-adjust fa-fw"></i></a><a href=javascript:void(0); class=menu-item title="Select Language">简体中文<i class="fas fa-chevron-right fa-fw"></i>
+<select class=language-select onchange="location=this.value"><option value=/zh-cn/2021/06/21/go-sourcecode-string-builder/ selected>简体中文</option></select></a></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=main><div class=container><div class=toc id=toc-auto><h2 class=toc-title>Contents</h2><div class=toc-content id=toc-content-auto></div></div><article class="page single"><h1 class="single-title animated flipInX">了解一下Go中的"sb"代码？</h1><div class=post-meta><div class=post-meta-line><span class=post-author><a href=/zh-cn/ title=Author rel=author class=author><i class="fas fa-user-circle fa-fw"></i>云原生玩码部落</a></span>&nbsp;<span class=post-category>included in <a href=/zh-cn/categories/go%E6%BA%90%E7%A0%81/><i class="far fa-folder fa-fw"></i>go源码</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-06-21>2021-06-21</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;3955 words&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;8 minutes&nbsp;</div></div><div class="details toc"id=toc-static kept><div class="details-summary toc-title"><span>Contents</span>
+<span><i class="details-icon fas fa-angle-right"></i></span></div><div class="details-content toc-content"id=toc-content-static><nav id=TableOfContents><ul><li><a href=#一前言>一、前言</a></li><li><a href=#二内容>二、内容</a><ul><li><a href=#1首先我放出我了解的几个方法并给出在我本地电脑跑benchmark的效果点击查看代码httpsplaystudygolangcompec8uzqaifsn>1.首先我放出我了解的几个方法，并给出在我本地电脑跑<code>benchmark</code>的效果，<a href=https://play.studygolang.com/p/EC8uZQAIFsN>点击查看代码</a>：</a><ul><li><a href=#传统的号连接>①.传统的<code>+</code>号连接</a></li><li><a href=#fmtsprintf连接>②.<code>fmt.Sprintf</code>连接</a></li><li><a href=#-stringsjoin连接>③. <code>strings.Join</code>连接</a></li><li><a href=#bytesbuffer连接>④.<code>bytes.Buffer</code>连接</a></li><li><a href=#最后就是stringsbuilder方法连接>⑤.最后就是<code>strings.Builder</code>方法连接</a></li></ul></li><li><a href=#2stringsbuilder的源码很简单加上注释也才100多行>2.<code>strings.Builder</code>的源码很简单，加上注释也才100多行</a></li></ul></li><li><a href=#三总结>三、总结</a></li></ul></nav></div></div><div class=content id=content><h2 id=一前言>一、前言</h2><p>最近工作需要查看<code>Helm</code>的源码的时候，注意到一个特别使用的字符串连接的方法<code>strings.Builder</code>，咋一看特别像<code>java</code>的<code>StringBuilder</code>，所以研究了下它，以及了解了下其他连接字符串的方法，结果发现确实<code>strings.Builder</code>的效果显著。</p><h2 id=二内容>二、内容</h2><h3 id=1首先我放出我了解的几个方法并给出在我本地电脑跑benchmark的效果点击查看代码httpsplaystudygolangcompec8uzqaifsn>1.首先我放出我了解的几个方法，并给出在我本地电脑跑<code>benchmark</code>的效果，<a href=https://play.studygolang.com/p/EC8uZQAIFsN target=_blank rel="noopener noreffer">点击查看代码</a>：</h3><h4 id=传统的号连接>①.传统的<code>+</code>号连接</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=kd>func</span> <span class=nf>BenchmarkTestStrPlus</span><span class=p>(</span><span class=nx>b</span> <span class=o>*</span><span class=nx>testing</span><span class=p>.</span><span class=nx>B</span><span class=p>)</span> <span class=p>{</span>
+	<span class=kd>var</span> <span class=nx>result</span> <span class=kt>string</span>
+	<span class=nx>b</span><span class=p>.</span><span class=nf>ResetTimer</span><span class=p>()</span>
+	<span class=k>for</span> <span class=nx>i</span> <span class=o>:=</span> <span class=mi>0</span><span class=p>;</span> <span class=nx>i</span> <span class=p>&lt;</span> <span class=nx>b</span><span class=p>.</span><span class=nx>N</span><span class=p>;</span> <span class=nx>i</span><span class=o>++</span> <span class=p>{</span>
+		<span class=nx>result</span> <span class=p>=</span> <span class=nx>strconv</span><span class=p>.</span><span class=nf>Itoa</span><span class=p>(</span><span class=nx>i</span><span class=p>)</span> <span class=o>+</span> <span class=nx>result</span>
+	<span class=p>}</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><h4 id=fmtsprintf连接>②.<code>fmt.Sprintf</code>连接</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=kd>func</span> <span class=nf>BenchmarkTestStrSprintf</span><span class=p>(</span><span class=nx>b</span> <span class=o>*</span><span class=nx>testing</span><span class=p>.</span><span class=nx>B</span><span class=p>)</span> <span class=p>{</span>
+	<span class=kd>var</span> <span class=nx>result</span> <span class=kt>string</span>
+	<span class=nx>b</span><span class=p>.</span><span class=nf>ResetTimer</span><span class=p>()</span>
+	<span class=k>for</span> <span class=nx>i</span> <span class=o>:=</span> <span class=mi>0</span><span class=p>;</span> <span class=nx>i</span> <span class=p>&lt;</span> <span class=nx>b</span><span class=p>.</span><span class=nx>N</span><span class=p>;</span> <span class=nx>i</span><span class=o>++</span> <span class=p>{</span>
+		<span class=nx>result</span> <span class=p>=</span> <span class=nx>fmt</span><span class=p>.</span><span class=nf>Sprintf</span><span class=p>(</span><span class=s>&#34;%s%s&#34;</span><span class=p>,</span> <span class=nx>result</span><span class=p>,</span> <span class=nx>strconv</span><span class=p>.</span><span class=nf>Itoa</span><span class=p>(</span><span class=nx>i</span><span class=p>))</span>
+	<span class=p>}</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><h4 id=-stringsjoin连接>③. <code>strings.Join</code>连接</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=kd>func</span> <span class=nf>BenchmarkTestJoin</span><span class=p>(</span><span class=nx>b</span> <span class=o>*</span><span class=nx>testing</span><span class=p>.</span><span class=nx>B</span><span class=p>)</span> <span class=p>{</span>
+	<span class=kd>var</span> <span class=nx>result</span> <span class=kt>string</span>
+	<span class=nx>b</span><span class=p>.</span><span class=nf>ResetTimer</span><span class=p>()</span>
+	<span class=k>for</span> <span class=nx>i</span> <span class=o>:=</span> <span class=mi>0</span><span class=p>;</span> <span class=nx>i</span> <span class=p>&lt;</span> <span class=nx>b</span><span class=p>.</span><span class=nx>N</span><span class=p>;</span> <span class=nx>i</span><span class=o>++</span> <span class=p>{</span>
+		<span class=nx>result</span> <span class=p>=</span> <span class=nx>strings</span><span class=p>.</span><span class=nf>Join</span><span class=p>([]</span><span class=kt>string</span><span class=p>{</span><span class=nx>result</span><span class=p>,</span> <span class=nx>strconv</span><span class=p>.</span><span class=nf>Itoa</span><span class=p>(</span><span class=nx>i</span><span class=p>)},</span> <span class=s>&#34;&#34;</span><span class=p>)</span>
+	<span class=p>}</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><h4 id=bytesbuffer连接>④.<code>bytes.Buffer</code>连接</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=kd>func</span> <span class=nf>BenchmarkTestBuffer</span><span class=p>(</span><span class=nx>b</span> <span class=o>*</span><span class=nx>testing</span><span class=p>.</span><span class=nx>B</span><span class=p>)</span> <span class=p>{</span>
+	<span class=kd>var</span> <span class=nx>result</span> <span class=nx>bytes</span><span class=p>.</span><span class=nx>Buffer</span>
+	<span class=nx>b</span><span class=p>.</span><span class=nf>ResetTimer</span><span class=p>()</span>
+	<span class=k>for</span> <span class=nx>i</span> <span class=o>:=</span> <span class=mi>0</span><span class=p>;</span> <span class=nx>i</span> <span class=p>&lt;</span> <span class=nx>b</span><span class=p>.</span><span class=nx>N</span><span class=p>;</span> <span class=nx>i</span><span class=o>++</span> <span class=p>{</span>
+		<span class=k>if</span> <span class=nx>_</span><span class=p>,</span> <span class=nx>err</span> <span class=o>:=</span> <span class=nx>result</span><span class=p>.</span><span class=nf>WriteString</span><span class=p>(</span><span class=nx>strconv</span><span class=p>.</span><span class=nf>Itoa</span><span class=p>(</span><span class=nx>i</span><span class=p>));</span> <span class=nx>err</span> <span class=o>!=</span> <span class=kc>nil</span> <span class=p>{</span>
+			<span class=nb>panic</span><span class=p>(</span><span class=nx>err</span><span class=p>)</span>
+		<span class=p>}</span>
+	<span class=p>}</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><h4 id=最后就是stringsbuilder方法连接>⑤.最后就是<code>strings.Builder</code>方法连接</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=kd>func</span> <span class=nf>BenchmarkTestBuilder</span><span class=p>(</span><span class=nx>b</span> <span class=o>*</span><span class=nx>testing</span><span class=p>.</span><span class=nx>B</span><span class=p>)</span> <span class=p>{</span>
+	<span class=kd>var</span> <span class=nx>result</span> <span class=nx>strings</span><span class=p>.</span><span class=nx>Builder</span>
+	<span class=nx>b</span><span class=p>.</span><span class=nf>ResetTimer</span><span class=p>()</span>
+	<span class=k>for</span> <span class=nx>i</span> <span class=o>:=</span> <span class=mi>0</span><span class=p>;</span> <span class=nx>i</span> <span class=p>&lt;</span> <span class=nx>b</span><span class=p>.</span><span class=nx>N</span><span class=p>;</span> <span class=nx>i</span><span class=o>++</span> <span class=p>{</span>
+		<span class=nx>result</span><span class=p>.</span><span class=nf>WriteString</span><span class=p>(</span><span class=nx>strconv</span><span class=p>.</span><span class=nf>Itoa</span><span class=p>(</span><span class=nx>i</span><span class=p>))</span>
+	<span class=p>}</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><p>以上就是我了解到的5种字符串拼接的方法，大家可以猜测下他们的效率顺序，大家如果谁对我这种测试方法质疑的，可以留言讨论。csdn链接:<a href=https://play.studygolang.com/p/ic4nx76yhog target=_blank rel="noopener noreffer">https://play.studygolang.com/p/ic4nx76yhog</a></p><p>我觉得第二种性能应该最差，毕竟它支持的各种类型太多，一般来说兼容性是以性能降低的代价。其次就是第一钟，最原始的拼接的字符串的方式，为什么呢？这个和<code>java</code>的<code>String</code>很像，都是<code>immutable</code>，换言之就是当更改这个<code>string</code>对象的时候，其实并没有更改该<code>string</code>，而是新增了一个<code>string</code>，但是给人的感觉好像把它修改了，为什么这么设计，大家可以自行百度，但是该设计会导致在拼接字符串的时候会产生大量的<code>string</code>，不仅耗时，还耗内存，更有甚者导致<code>STW</code>。然后我觉得会是第三种，点开看了下他的<code>Join</code>方法，竟然里面使用了<code>strings.Builder</code>，可惜他是直接返回了<code>string</code>，相当于每个<code>Join</code>操作也产生了新的<code>string</code>，所以我把她放到第三位。最后就是第4和第5的PK，还是我上面提到的判断思路：谁更专业肯定效率最好。所以我觉得第5种性能还是要比第4种好。</p><p>到此我的运行前的性能判断，从高到低如下:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-shell data-lang=shell><span class=m>5</span> &lt; <span class=m>4</span> &lt; <span class=m>3</span> &lt; <span class=m>1</span> &lt; <span class=m>2</span>
+</code></pre></td></tr></table></div></div><p>好的用我的渣渣电脑运行，结果如下（事实上我运行了很多次，性能指标大小顺序都是一致的）：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-shell data-lang=shell>cpu: Intel<span class=o>(</span>R<span class=o>)</span> Core<span class=o>(</span>TM<span class=o>)</span> i5-5257U CPU @ 2.70GHz
+BenchmarkTestStrPlus
+BenchmarkTestStrPlus-4      	  187838	    <span class=m>226381</span> ns/op
+BenchmarkTestStrSprintf
+BenchmarkTestStrSprintf-4   	  130268	    <span class=m>306116</span> ns/op
+BenchmarkTestJoin
+BenchmarkTestJoin-4         	  182164	    <span class=m>289074</span> ns/op
+BenchmarkTestBuffer
+BenchmarkTestBuffer-4       	20228474	       107.1 ns/op
+BenchmarkTestBuilder
+BenchmarkTestBuilder-4      	10084845	        99.34 ns/op
+</code></pre></td></tr></table></div></div><p>事实上的性能从高到低的结果如下:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-shell data-lang=shell><span class=m>5</span> &lt; <span class=m>4</span> &lt; <span class=m>1</span> &lt; <span class=m>3</span> &lt; <span class=m>2</span>
+</code></pre></td></tr></table></div></div><p>大型翻车现场，原来原始的方式竟然没想象中那么差，<code>string</code>的原始拼接在很多语言中都分别在编译期和运行时都有特地优化过，毕竟它的使用频率非常高，优化它就相当于优化了整个语言。这个估计能查资料才能找到具体原因，在这里我不关心到底为什么性能比3还强，我这里只聚焦于<code>strings.Builder</code>，因为从宏观上来说他肯定比除第4种方法外都强，在这里也不额外关心为什么<code>bytes.Buffer</code>以微弱的劣势输于<code>strings.Builder</code>，事实上我发现<code>strings.Builder</code>的实现和<code>bytes.Buffer</code>的原理很像，都是操作<code>byte</code>数组，但是<code>bytes.Buffer</code>的功能更强。我关心的是这个结论很重要。下面我们一起领略下<code>strings.Builder</code>的设计吧。</p><h3 id=2stringsbuilder的源码很简单加上注释也才100多行>2.<code>strings.Builder</code>的源码很简单，加上注释也才100多行</h3><p>我给大家列一下核心代码，那就更少了</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span><span class=lnt>71
+</span><span class=lnt>72
+</span><span class=lnt>73
+</span><span class=lnt>74
+</span><span class=lnt>75
+</span><span class=lnt>76
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=c1>// A Builder is used to efficiently build a string using Write methods.
+</span><span class=c1>// It minimizes memory copying. The zero value is ready to use.
+</span><span class=c1>// Do not copy a non-zero Builder.
+</span><span class=c1></span><span class=kd>type</span> <span class=nx>Builder</span> <span class=kd>struct</span> <span class=p>{</span>
+	<span class=nx>addr</span> <span class=o>*</span><span class=nx>Builder</span> <span class=c1>// of receiver, to detect copies by value
+</span><span class=c1></span>	<span class=nx>buf</span>  <span class=p>[]</span><span class=kt>byte</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>b</span> <span class=o>*</span><span class=nx>Builder</span><span class=p>)</span> <span class=nf>copyCheck</span><span class=p>()</span> <span class=p>{</span>
+	<span class=k>if</span> <span class=nx>b</span><span class=p>.</span><span class=nx>addr</span> <span class=o>==</span> <span class=kc>nil</span> <span class=p>{</span>
+		<span class=nx>b</span><span class=p>.</span><span class=nx>addr</span> <span class=p>=</span> <span class=p>(</span><span class=o>*</span><span class=nx>Builder</span><span class=p>)(</span><span class=nf>noescape</span><span class=p>(</span><span class=nx>unsafe</span><span class=p>.</span><span class=nf>Pointer</span><span class=p>(</span><span class=nx>b</span><span class=p>)))</span>
+	<span class=p>}</span> <span class=k>else</span> <span class=k>if</span> <span class=nx>b</span><span class=p>.</span><span class=nx>addr</span> <span class=o>!=</span> <span class=nx>b</span> <span class=p>{</span>
+		<span class=nb>panic</span><span class=p>(</span><span class=s>&#34;strings: illegal use of non-zero Builder copied by value&#34;</span><span class=p>)</span>
+	<span class=p>}</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>b</span> <span class=o>*</span><span class=nx>Builder</span><span class=p>)</span> <span class=nf>String</span><span class=p>()</span> <span class=kt>string</span> <span class=p>{</span>
+	<span class=k>return</span> <span class=o>*</span><span class=p>(</span><span class=o>*</span><span class=kt>string</span><span class=p>)(</span><span class=nx>unsafe</span><span class=p>.</span><span class=nf>Pointer</span><span class=p>(</span><span class=o>&amp;</span><span class=nx>b</span><span class=p>.</span><span class=nx>buf</span><span class=p>))</span>
+<span class=p>}</span>
+
+<span class=c1>// grow copies the buffer to a new, larger buffer so that there are at least n bytes of capacity beyond len(b.buf).
+</span><span class=c1></span><span class=kd>func</span> <span class=p>(</span><span class=nx>b</span> <span class=o>*</span><span class=nx>Builder</span><span class=p>)</span> <span class=nf>grow</span><span class=p>(</span><span class=nx>n</span> <span class=kt>int</span><span class=p>)</span> <span class=p>{</span>
+	<span class=nx>buf</span> <span class=o>:=</span> <span class=nb>make</span><span class=p>([]</span><span class=kt>byte</span><span class=p>,</span> <span class=nb>len</span><span class=p>(</span><span class=nx>b</span><span class=p>.</span><span class=nx>buf</span><span class=p>),</span> <span class=mi>2</span><span class=o>*</span><span class=nb>cap</span><span class=p>(</span><span class=nx>b</span><span class=p>.</span><span class=nx>buf</span><span class=p>)</span><span class=o>+</span><span class=nx>n</span><span class=p>)</span>
+	<span class=nb>copy</span><span class=p>(</span><span class=nx>buf</span><span class=p>,</span> <span class=nx>b</span><span class=p>.</span><span class=nx>buf</span><span class=p>)</span>
+	<span class=nx>b</span><span class=p>.</span><span class=nx>buf</span> <span class=p>=</span> <span class=nx>buf</span>
+<span class=p>}</span>
+
+<span class=c1>// Grow grows b&#39;s capacity, if necessary, to guarantee space for another n bytes. After Grow(n), at least n bytes can be written to b without another allocation. If n is negative, Grow panics.
+</span><span class=c1></span><span class=kd>func</span> <span class=p>(</span><span class=nx>b</span> <span class=o>*</span><span class=nx>Builder</span><span class=p>)</span> <span class=nf>Grow</span><span class=p>(</span><span class=nx>n</span> <span class=kt>int</span><span class=p>)</span> <span class=p>{</span>
+	<span class=nx>b</span><span class=p>.</span><span class=nf>copyCheck</span><span class=p>()</span>
+	<span class=k>if</span> <span class=nx>n</span> <span class=p>&lt;</span> <span class=mi>0</span> <span class=p>{</span>
+		<span class=nb>panic</span><span class=p>(</span><span class=s>&#34;strings.Builder.Grow: negative count&#34;</span><span class=p>)</span>
+	<span class=p>}</span>
+	<span class=k>if</span> <span class=nb>cap</span><span class=p>(</span><span class=nx>b</span><span class=p>.</span><span class=nx>buf</span><span class=p>)</span><span class=o>-</span><span class=nb>len</span><span class=p>(</span><span class=nx>b</span><span class=p>.</span><span class=nx>buf</span><span class=p>)</span> <span class=p>&lt;</span> <span class=nx>n</span> <span class=p>{</span>
+		<span class=nx>b</span><span class=p>.</span><span class=nf>grow</span><span class=p>(</span><span class=nx>n</span><span class=p>)</span>
+	<span class=p>}</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>b</span> <span class=o>*</span><span class=nx>Builder</span><span class=p>)</span> <span class=nf>Write</span><span class=p>(</span><span class=nx>p</span> <span class=p>[]</span><span class=kt>byte</span><span class=p>)</span> <span class=p>(</span><span class=kt>int</span><span class=p>,</span> <span class=kt>error</span><span class=p>)</span> <span class=p>{</span>
+	<span class=nx>b</span><span class=p>.</span><span class=nf>copyCheck</span><span class=p>()</span>
+	<span class=nx>b</span><span class=p>.</span><span class=nx>buf</span> <span class=p>=</span> <span class=nb>append</span><span class=p>(</span><span class=nx>b</span><span class=p>.</span><span class=nx>buf</span><span class=p>,</span> <span class=nx>p</span><span class=o>...</span><span class=p>)</span>
+	<span class=k>return</span> <span class=nb>len</span><span class=p>(</span><span class=nx>p</span><span class=p>),</span> <span class=kc>nil</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>b</span> <span class=o>*</span><span class=nx>Builder</span><span class=p>)</span> <span class=nf>WriteByte</span><span class=p>(</span><span class=nx>c</span> <span class=kt>byte</span><span class=p>)</span> <span class=kt>error</span> <span class=p>{</span>
+	<span class=nx>b</span><span class=p>.</span><span class=nf>copyCheck</span><span class=p>()</span>
+	<span class=nx>b</span><span class=p>.</span><span class=nx>buf</span> <span class=p>=</span> <span class=nb>append</span><span class=p>(</span><span class=nx>b</span><span class=p>.</span><span class=nx>buf</span><span class=p>,</span> <span class=nx>c</span><span class=p>)</span>
+	<span class=k>return</span> <span class=kc>nil</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>b</span> <span class=o>*</span><span class=nx>Builder</span><span class=p>)</span> <span class=nf>WriteRune</span><span class=p>(</span><span class=nx>r</span> <span class=kt>rune</span><span class=p>)</span> <span class=p>(</span><span class=kt>int</span><span class=p>,</span> <span class=kt>error</span><span class=p>)</span> <span class=p>{</span>
+	<span class=nx>b</span><span class=p>.</span><span class=nf>copyCheck</span><span class=p>()</span>
+	<span class=k>if</span> <span class=nx>r</span> <span class=p>&lt;</span> <span class=nx>utf8</span><span class=p>.</span><span class=nx>RuneSelf</span> <span class=p>{</span>
+		<span class=nx>b</span><span class=p>.</span><span class=nx>buf</span> <span class=p>=</span> <span class=nb>append</span><span class=p>(</span><span class=nx>b</span><span class=p>.</span><span class=nx>buf</span><span class=p>,</span> <span class=nb>byte</span><span class=p>(</span><span class=nx>r</span><span class=p>))</span>
+		<span class=k>return</span> <span class=mi>1</span><span class=p>,</span> <span class=kc>nil</span>
+	<span class=p>}</span>
+	<span class=nx>l</span> <span class=o>:=</span> <span class=nb>len</span><span class=p>(</span><span class=nx>b</span><span class=p>.</span><span class=nx>buf</span><span class=p>)</span>
+	<span class=k>if</span> <span class=nb>cap</span><span class=p>(</span><span class=nx>b</span><span class=p>.</span><span class=nx>buf</span><span class=p>)</span><span class=o>-</span><span class=nx>l</span> <span class=p>&lt;</span> <span class=nx>utf8</span><span class=p>.</span><span class=nx>UTFMax</span> <span class=p>{</span>
+		<span class=nx>b</span><span class=p>.</span><span class=nf>grow</span><span class=p>(</span><span class=nx>utf8</span><span class=p>.</span><span class=nx>UTFMax</span><span class=p>)</span>
+	<span class=p>}</span>
+	<span class=nx>n</span> <span class=o>:=</span> <span class=nx>utf8</span><span class=p>.</span><span class=nf>EncodeRune</span><span class=p>(</span><span class=nx>b</span><span class=p>.</span><span class=nx>buf</span><span class=p>[</span><span class=nx>l</span><span class=p>:</span><span class=nx>l</span><span class=o>+</span><span class=nx>utf8</span><span class=p>.</span><span class=nx>UTFMax</span><span class=p>],</span> <span class=nx>r</span><span class=p>)</span>
+	<span class=nx>b</span><span class=p>.</span><span class=nx>buf</span> <span class=p>=</span> <span class=nx>b</span><span class=p>.</span><span class=nx>buf</span><span class=p>[:</span><span class=nx>l</span><span class=o>+</span><span class=nx>n</span><span class=p>]</span>
+	<span class=k>return</span> <span class=nx>n</span><span class=p>,</span> <span class=kc>nil</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>b</span> <span class=o>*</span><span class=nx>Builder</span><span class=p>)</span> <span class=nf>WriteString</span><span class=p>(</span><span class=nx>s</span> <span class=kt>string</span><span class=p>)</span> <span class=p>(</span><span class=kt>int</span><span class=p>,</span> <span class=kt>error</span><span class=p>)</span> <span class=p>{</span>
+	<span class=nx>b</span><span class=p>.</span><span class=nf>copyCheck</span><span class=p>()</span>
+	<span class=nx>b</span><span class=p>.</span><span class=nx>buf</span> <span class=p>=</span> <span class=nb>append</span><span class=p>(</span><span class=nx>b</span><span class=p>.</span><span class=nx>buf</span><span class=p>,</span> <span class=nx>s</span><span class=o>...</span><span class=p>)</span>
+	<span class=k>return</span> <span class=nb>len</span><span class=p>(</span><span class=nx>s</span><span class=p>),</span> <span class=kc>nil</span>
+<span class=p>}</span>
+
+<span class=c1>// Reset resets the Builder to be empty.
+</span><span class=c1></span><span class=kd>func</span> <span class=p>(</span><span class=nx>b</span> <span class=o>*</span><span class=nx>Builder</span><span class=p>)</span> <span class=nf>Reset</span><span class=p>()</span> <span class=p>{</span>
+	<span class=nx>b</span><span class=p>.</span><span class=nx>addr</span> <span class=p>=</span> <span class=kc>nil</span>
+	<span class=nx>b</span><span class=p>.</span><span class=nx>buf</span> <span class=p>=</span> <span class=kc>nil</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><p>首先实现了<code>io</code>包中的<code>Writer``StringWriter``ByteWriter</code>接口，也就是说在其他地方接受这3个接口的地方都能用<code>strings.Builder</code>替代写入。</p><p>开头<code>1~4</code>行的注释就申明了<code>Builder</code>的设计宗旨：<code>尽可能避免内存拷贝</code>，而且还特地提醒了：<code>Builder不能被拷贝</code>。为什么不能被拷贝呢？<code>Builder</code>的设计宗旨就是避免内存拷贝，但是如果说再拷贝Builder的话就违背了。</p><p>为了做到上面2点，<code>Builder</code>的结构体就体现了:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=kd>type</span> <span class=nx>Builder</span> <span class=kd>struct</span> <span class=p>{</span>
+	<span class=nx>addr</span> <span class=o>*</span><span class=nx>Builder</span> <span class=c1>// of receiver, to detect copies by value
+</span><span class=c1></span>	<span class=nx>buf</span>  <span class=p>[]</span><span class=kt>byte</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><p>里面包括一个字节数组，在go中<code>string</code>底层其实就是字节数组，为什么这里也用了数组呢？底层字节数组方便往数组里面塞东西，自己可以控制扩容，扩多少。这样不会像<code>string</code>的原始拼接方式那样产生大量的<code>string</code>对象。还有1个指向自己的<code>Builder</code>指针，正如注释所说：检测是否有拷贝了整个<code>Builder</code>对象。如果拷贝了会怎样呢？见<code>copyCheck</code>代码：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=kd>func</span> <span class=p>(</span><span class=nx>b</span> <span class=o>*</span><span class=nx>Builder</span><span class=p>)</span> <span class=nf>copyCheck</span><span class=p>()</span> <span class=p>{</span>
+	<span class=k>if</span> <span class=nx>b</span><span class=p>.</span><span class=nx>addr</span> <span class=o>==</span> <span class=kc>nil</span> <span class=p>{</span>
+		<span class=c1>// This hack works around a failing of Go&#39;s escape analysis
+</span><span class=c1></span>		<span class=c1>// that was causing b to escape and be heap allocated.
+</span><span class=c1></span>		<span class=c1>// See issue 23382.
+</span><span class=c1></span>		<span class=c1>// TODO: once issue 7921 is fixed, this should be reverted to
+</span><span class=c1></span>		<span class=c1>// just &#34;b.addr = b&#34;.
+</span><span class=c1></span>		<span class=nx>b</span><span class=p>.</span><span class=nx>addr</span> <span class=p>=</span> <span class=p>(</span><span class=o>*</span><span class=nx>Builder</span><span class=p>)(</span><span class=nf>noescape</span><span class=p>(</span><span class=nx>unsafe</span><span class=p>.</span><span class=nf>Pointer</span><span class=p>(</span><span class=nx>b</span><span class=p>)))</span>
+	<span class=p>}</span> <span class=k>else</span> <span class=k>if</span> <span class=nx>b</span><span class=p>.</span><span class=nx>addr</span> <span class=o>!=</span> <span class=nx>b</span> <span class=p>{</span>
+		<span class=nb>panic</span><span class=p>(</span><span class=s>&#34;strings: illegal use of non-zero Builder copied by value&#34;</span><span class=p>)</span>
+	<span class=p>}</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><p>会直接发生<code>panic</code>，很霸道，直接被<code>Builder</code>拒绝了。
+接下来我写一个拷贝<code>Builder</code>的<a href=https://play.studygolang.com/p/bDt9lGImCiy target=_blank rel="noopener noreffer">代码</a>验证下，代码链接<a href=https://play.studygolang.com/p/bDt9lGImCiy target=_blank rel="noopener noreffer">https://play.studygolang.com/p/bDt9lGImCiy</a>：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=kd>var</span> <span class=nx>sb</span> <span class=nx>strings</span><span class=p>.</span><span class=nx>Builder</span>
+<span class=nx>sb</span><span class=p>.</span><span class=nf>WriteString</span><span class=p>(</span><span class=s>&#34;1&#34;</span><span class=p>)</span>
+<span class=kd>var</span> <span class=nx>sb_copy</span> <span class=p>=</span> <span class=o>*</span><span class=p>(</span><span class=o>*</span><span class=nx>strings</span><span class=p>.</span><span class=nx>Builder</span><span class=p>)(</span><span class=nx>unsafe</span><span class=p>.</span><span class=nf>Pointer</span><span class=p>(</span><span class=o>&amp;</span><span class=nx>sb</span><span class=p>))</span>
+<span class=nx>sb_copy</span><span class=p>.</span><span class=nf>WriteString</span><span class=p>(</span><span class=s>&#34;2&#34;</span><span class=p>)</span>
+</code></pre></td></tr></table></div></div><p>如下为<code>panic</code>的输出:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-shell data-lang=shell>panic: strings: illegal use of non-zero Builder copied by value
+
+goroutine <span class=m>1</span> <span class=o>[</span>running<span class=o>]</span>:
+strings.<span class=o>(</span>*Builder<span class=o>)</span>.copyCheck<span class=o>(</span>...<span class=o>)</span>
+	/usr/local/go-faketime/src/strings/builder.go:42
+strings.<span class=o>(</span>*Builder<span class=o>)</span>.WriteString<span class=o>(</span>...<span class=o>)</span>
+	/usr/local/go-faketime/src/strings/builder.go:122
+main.main<span class=o>()</span>
+	/tmp/sandbox194128443/prog.go:12 +0x1ad
+</code></pre></td></tr></table></div></div><p>所有<code>Write*</code>操作都有<code>copyCheck</code>的拷贝检测，如果有发生类似的拷贝，都会<code>panic</code>。但是它强调了<code>Builder</code>的重用功能，需要<code>Reset</code>之后才能构造下一个<code>String</code>。</p><p>接下来要说明的是<code>Grow</code>方法，该方法是提供的一个<code>public</code>的方法用来给<code>Builder</code>扩容<code>buf</code>的数组。为什么要提供这个呢？可以看到除了<code>WriteRune</code>必要的时候主动扩容了，其他<code>Write*</code>方法并没有去事先判断扩容的-依赖切片的自动判断扩容。其实<code>Builder</code>提供这个<code>Grow</code>方法是给使用者使用，提前能判断好长度，然后扩容，这样后期调用<code>Write*</code>方法就没有内存拷贝的操作，因为一旦发生扩容的话就会有2个问题：分配内存和拷贝。</p><p>代码34行判断如果<code>buf</code>数组的剩余容量小于需要扩容的长度，那么才去调用私有的<code>grow</code>去扩容:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=c1>// grow copies the buffer to a new, larger buffer so that there are at least n
+</span><span class=c1>// bytes of capacity beyond len(b.buf).
+</span><span class=c1></span><span class=kd>func</span> <span class=p>(</span><span class=nx>b</span> <span class=o>*</span><span class=nx>Builder</span><span class=p>)</span> <span class=nf>grow</span><span class=p>(</span><span class=nx>n</span> <span class=kt>int</span><span class=p>)</span> <span class=p>{</span>
+	<span class=nx>buf</span> <span class=o>:=</span> <span class=nb>make</span><span class=p>([]</span><span class=kt>byte</span><span class=p>,</span> <span class=nb>len</span><span class=p>(</span><span class=nx>b</span><span class=p>.</span><span class=nx>buf</span><span class=p>),</span> <span class=mi>2</span><span class=o>*</span><span class=nb>cap</span><span class=p>(</span><span class=nx>b</span><span class=p>.</span><span class=nx>buf</span><span class=p>)</span><span class=o>+</span><span class=nx>n</span><span class=p>)</span>
+	<span class=nb>copy</span><span class=p>(</span><span class=nx>buf</span><span class=p>,</span> <span class=nx>b</span><span class=p>.</span><span class=nx>buf</span><span class=p>)</span>
+	<span class=nx>b</span><span class=p>.</span><span class=nx>buf</span> <span class=p>=</span> <span class=nx>buf</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><p>这几行代码很清晰，就是分配内存，容量是以前的容量再加上需要扩容的数量，这样就确保长度<code>n</code>的字节能存到<code>Builder</code>去。</p><p>接下来看看<code>WriteRune</code>方法，因为其他的<code>Write*</code>方法太简单，就略过了。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=kd>func</span> <span class=p>(</span><span class=nx>b</span> <span class=o>*</span><span class=nx>Builder</span><span class=p>)</span> <span class=nf>WriteRune</span><span class=p>(</span><span class=nx>r</span> <span class=kt>rune</span><span class=p>)</span> <span class=p>(</span><span class=kt>int</span><span class=p>,</span> <span class=kt>error</span><span class=p>)</span> <span class=p>{</span>
+	<span class=nx>b</span><span class=p>.</span><span class=nf>copyCheck</span><span class=p>()</span>
+	<span class=k>if</span> <span class=nx>r</span> <span class=p>&lt;</span> <span class=nx>utf8</span><span class=p>.</span><span class=nx>RuneSelf</span> <span class=p>{</span>
+		<span class=nx>b</span><span class=p>.</span><span class=nx>buf</span> <span class=p>=</span> <span class=nb>append</span><span class=p>(</span><span class=nx>b</span><span class=p>.</span><span class=nx>buf</span><span class=p>,</span> <span class=nb>byte</span><span class=p>(</span><span class=nx>r</span><span class=p>))</span>
+		<span class=k>return</span> <span class=mi>1</span><span class=p>,</span> <span class=kc>nil</span>
+	<span class=p>}</span>
+	<span class=nx>l</span> <span class=o>:=</span> <span class=nb>len</span><span class=p>(</span><span class=nx>b</span><span class=p>.</span><span class=nx>buf</span><span class=p>)</span>
+	<span class=k>if</span> <span class=nb>cap</span><span class=p>(</span><span class=nx>b</span><span class=p>.</span><span class=nx>buf</span><span class=p>)</span><span class=o>-</span><span class=nx>l</span> <span class=p>&lt;</span> <span class=nx>utf8</span><span class=p>.</span><span class=nx>UTFMax</span> <span class=p>{</span>
+		<span class=nx>b</span><span class=p>.</span><span class=nf>grow</span><span class=p>(</span><span class=nx>utf8</span><span class=p>.</span><span class=nx>UTFMax</span><span class=p>)</span>
+	<span class=p>}</span>
+	<span class=nx>n</span> <span class=o>:=</span> <span class=nx>utf8</span><span class=p>.</span><span class=nf>EncodeRune</span><span class=p>(</span><span class=nx>b</span><span class=p>.</span><span class=nx>buf</span><span class=p>[</span><span class=nx>l</span><span class=p>:</span><span class=nx>l</span><span class=o>+</span><span class=nx>utf8</span><span class=p>.</span><span class=nx>UTFMax</span><span class=p>],</span> <span class=nx>r</span><span class=p>)</span>
+	<span class=nx>b</span><span class=p>.</span><span class=nx>buf</span> <span class=p>=</span> <span class=nx>b</span><span class=p>.</span><span class=nx>buf</span><span class=p>[:</span><span class=nx>l</span><span class=o>+</span><span class=nx>n</span><span class=p>]</span>
+	<span class=k>return</span> <span class=nx>n</span><span class=p>,</span> <span class=kc>nil</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><p><code>rune</code>在<code>go</code>中是一个特殊类型，用来表示一个<code>utf-8</code>的一个字符，<code>utf-8</code>是一个动态字节，最长有4个字节，细究发现<code>rune</code>其实是<code>int32</code>的别名，<code>int32</code>正好是4个字节，所以刚刚好。也就是<code>WriteRune</code>方法是用来写入<code>utf-8</code>的字符。第3行表示这个字符是否是1个字节，如果可以就直接追加到切片。<code>RuneSelf</code>表示就是一个<code>utf-8</code>字符最大的单字节大小。</p><p>第8行判断剩余的容量是否大于<code>utf-8</code>的最大字节<code>UTFMax</code>，也就是4，如果小于则能提前扩容4个字节长度。然后11行开始把<code>rune</code>字符的字节依次复制到<code>buf</code>切片里面去。返回的结果n表示复制了多少个字节到切片里面去，因为<code>rune</code>是1-4个字节。</p><p>注意第12行的操作，如果debug下会发现，在执行11行代码之后，<code>buf</code>并没有变化，这是因为11行的入参<code>b.buf[l:l+utf8.UTFMax]</code>其实是产生了一个新的切片，切片的结构如下:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=kd>type</span> <span class=nx>slice</span> <span class=kd>struct</span> <span class=p>{</span>
+	<span class=nx>array</span> <span class=nx>unsafe</span><span class=p>.</span><span class=nx>Pointer</span>
+	<span class=nx>len</span>   <span class=kt>int</span>
+	<span class=nx>cap</span>   <span class=kt>int</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><p><code>array</code>是存储切片的真正的值，虽然说2个切片都维护同一个<code>array</code>，但是<code>len</code>和<code>cap</code>其实是切片自己维护的，所以不执行12行的操作的时候，结果就是执行<code>len</code>和<code>cap</code>的结果没有变化。执行之后<code>len</code>和<code>cap</code>就发生变化，且能打印出来整个<code>array</code>的值。</p><p>当写完了所有的字符串的字符之后，要得到拼接后的字符串需要调用<code>String</code>方法:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=c1>// String returns the accumulated string.
+</span><span class=c1></span><span class=kd>func</span> <span class=p>(</span><span class=nx>b</span> <span class=o>*</span><span class=nx>Builder</span><span class=p>)</span> <span class=nf>String</span><span class=p>()</span> <span class=kt>string</span> <span class=p>{</span>
+	<span class=k>return</span> <span class=o>*</span><span class=p>(</span><span class=o>*</span><span class=kt>string</span><span class=p>)(</span><span class=nx>unsafe</span><span class=p>.</span><span class=nf>Pointer</span><span class=p>(</span><span class=o>&amp;</span><span class=nx>b</span><span class=p>.</span><span class=nx>buf</span><span class=p>))</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><p><code>b.buf</code>是个切片，而上面分析了切片的底层其实就是<code>array</code>数组，<code>string</code>的结构体如下:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=kd>type</span> <span class=nx>stringStruct</span> <span class=kd>struct</span> <span class=p>{</span>
+	<span class=nx>str</span> <span class=nx>unsafe</span><span class=p>.</span><span class=nx>Pointer</span>
+	<span class=nx>len</span> <span class=kt>int</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><p>和上面的slice的结构体相似，故能直接把切片<code>b.buf</code>转为<code>*string</code>。</p><h2 id=三总结>三、总结</h2><p>上面分析了<code>strings.Builder</code>的源码，知道了拼接字符串的底层逻辑，所以如果有大量的<code>string</code>对象需要拼接，那么<code>strings.Builder</code>非常合适，而且最好知道所有要拼接的<code>string</code>的长度总和，事先分配好内存，还能进一步提高效率。</p><p>而且我发现其实<code>Reset</code>方法还可以优化的角度，不用把<code>b.buf</code>设为<code>nil</code>，这样的话以前申请的<code>buf</code>的数组就会被回收掉，我觉得可以利用起来，不用下次拼接字符串的时候再申请内存。不知道你怎么看这个问题呢？</p><ul><li>我的微信公众号:
+<img class=lazyload src=/svg/loading.min.svg data-src="https://img-blog.csdnimg.cn/20201213215616541.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTA5MjczNDA=,size_16,color_FFFFFF,t_70"data-srcset="https://img-blog.csdnimg.cn/20201213215616541.png?x-oss-process=image/watermark%2ctype_ZmFuZ3poZW5naGVpdGk%2cshadow_10%2ctext_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTA5MjczNDA=%2csize_16%2ccolor_FFFFFF%2ct_70, https://img-blog.csdnimg.cn/20201213215616541.png?x-oss-process=image/watermark%2ctype_ZmFuZ3poZW5naGVpdGk%2cshadow_10%2ctext_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTA5MjczNDA=%2csize_16%2ccolor_FFFFFF%2ct_70 1.5x, https://img-blog.csdnimg.cn/20201213215616541.png?x-oss-process=image/watermark%2ctype_ZmFuZ3poZW5naGVpdGk%2cshadow_10%2ctext_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTA5MjczNDA=%2csize_16%2ccolor_FFFFFF%2ct_70 2x"data-sizes=auto alt="https://img-blog.csdnimg.cn/20201213215616541.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTA5MjczNDA=,size_16,color_FFFFFF,t_70"title=云原生玩码部落></li></ul></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>Updated on 2021-06-21</span></div><div class=post-info-license></div></div><div class=post-info-line><div class=post-info-md><span><a class=link-to-markdown href=/zh-cn/2021/06/21/go-sourcecode-string-builder/index.md target=_blank>Read Markdown</a></span></div><div class=post-info-share><span><a href=javascript:void(0); title="Share on Twitter"data-sharer=twitter data-url=http://blog.funnycode.org.cn/zh-cn/2021/06/21/go-sourcecode-string-builder/ data-title='了解一下Go中的"sb"代码？'data-hashtags=golang,源码,builder><i class="fab fa-twitter fa-fw"></i></a><a href=javascript:void(0); title="Share on Facebook"data-sharer=facebook data-url=http://blog.funnycode.org.cn/zh-cn/2021/06/21/go-sourcecode-string-builder/ data-hashtag=golang><i class="fab fa-facebook-square fa-fw"></i></a><a href=javascript:void(0); title="Share on Hacker News"data-sharer=hackernews data-url=http://blog.funnycode.org.cn/zh-cn/2021/06/21/go-sourcecode-string-builder/ data-title='了解一下Go中的"sb"代码？'><i class="fab fa-hacker-news fa-fw"></i></a><a href=javascript:void(0); title="Share on Line"data-sharer=line data-url=http://blog.funnycode.org.cn/zh-cn/2021/06/21/go-sourcecode-string-builder/ data-title='了解一下Go中的"sb"代码？'><i data-svg-src=https://cdn.jsdelivr.net/npm/simple-icons@2.14.0/icons/line.svg></i></a><a href=javascript:void(0); title="Share on 微博"data-sharer=weibo data-url=http://blog.funnycode.org.cn/zh-cn/2021/06/21/go-sourcecode-string-builder/ data-title='了解一下Go中的"sb"代码？'><i class="fab fa-weibo fa-fw"></i></a></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/zh-cn/tags/golang/>golang</a>,&nbsp;<a href=/zh-cn/tags/%E6%BA%90%E7%A0%81/>源码</a>,&nbsp;<a href=/zh-cn/tags/builder/>builder</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>Back</a></span>&nbsp;|&nbsp;<span><a href=/zh-cn/>Home</a></span></section></div><div class=post-nav><a href=/zh-cn/2021/05/16/go-package-uitable/ class=prev rel=prev title=Go名库欣赏-uitable：终端数据表格展示工具><i class="fas fa-angle-left fa-fw"></i>Go名库欣赏-uitable：终端数据表格展示工具</a></div></div><div id=comments><div id=gitalk class=comment></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://github.com/gitalk/gitalk></a>Gitalk</a>.</noscript></div></article></div></main><footer class=footer><div class=footer-container><div class=footer-line>Powered by <a href=https://gohugo.io/ target=_blank rel="noopener noreffer"title="Hugo 0.76.0">Hugo</a> | Theme - <a href=https://github.com/dillonzq/LoveIt target=_blank rel="noopener noreffer"title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i>LoveIt</a></div><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2019 - 2021</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=/zh-cn/ target=_blank>xxxx</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer"href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title="Back to Top"><i class="fas fa-arrow-up fa-fw"></i></a><a href=# id=view-comments class=fixed-button title="View Comments"><i class="fas fa-comment fa-fw"></i></a></div><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.min.css><script type=text/javascript src=https://cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/smooth-scroll@16.1.3/dist/smooth-scroll.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/autocomplete.js@0.37.1/dist/autocomplete.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/algoliasearch@4.2.0/dist/algoliasearch-lite.umd.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/lazysizes@5.2.2/lazysizes.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/sharer.js@0.4.0/sharer.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/typeit@7.0.4/dist/typeit.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:10},comment:{gitalk:{admin:["cityiron"],clientID:"7ebb4aff12c6b5dc4aac",clientSecret:"fdb607f0e7f810a9e2084a2cbed3800f5657dab7",id:"2021-06-21T11:00:56+08:00",owner:"funnycode-org",repo:"funnycode-org.github.io",title:'了解一下Go中的"sb"代码？'}},data:{"id-1":"云原生玩码部落","id-2":"云原生玩码部落"},search:{algoliaAppID:"PASDMWALPK",algoliaIndex:"index.zh-cn",algoliaSearchKey:"b42948e51daaa93df92381c8e2ac0f93",highlightTag:"em",maxResultLength:10,noResultsFound:"No results found",snippetLength:50,type:"algolia"},typeit:{cursorChar:"|",cursorSpeed:1e3,data:{"id-1":["id-1"],"id-2":["id-2"]},duration:-1,speed:100}}</script><script type=text/javascript src=/js/theme.min.js></script></body></html>
