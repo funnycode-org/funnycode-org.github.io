@@ -4,6 +4,7 @@
 <!--more-->
 
 ## 一、前言
+相信很多`java`程序员都背过或者用过`StringBuilder`或者`StringBuffer`这种`sb`代码。
 最近工作需要查看`Helm`的源码的时候，注意到一个特别使用的字符串连接的方法`strings.Builder`，咋一看特别像`java`的`StringBuilder`，所以研究了下它，以及了解了下其他连接字符串的方法，结果发现确实`strings.Builder`的效果显著。
 ## 二、内容
 ### 1.首先我放出我了解的几个方法，并给出在我本地电脑跑`benchmark`的效果，[点击查看代码](https://play.studygolang.com/p/EC8uZQAIFsN)：
@@ -59,7 +60,7 @@ func BenchmarkTestBuilder(b *testing.B) {
 	}
 }
 ```
-以上就是我了解到的5种字符串拼接的方法，大家可以猜测下他们的效率顺序，大家如果谁对我这种测试方法质疑的，可以留言讨论。csdn链接:[https://play.studygolang.com/p/ic4nx76yhog](https://play.studygolang.com/p/ic4nx76yhog)
+以上就是我了解到的5种字符串拼接的方法，大家可以猜测下他们的效率顺序，大家如果谁对我这种测试方法质疑的，可以留言讨论。csdn链接:[https://blog.csdn.net/u010927340/article/details/118120669](https://blog.csdn.net/u010927340/article/details/118120669)
 
 我觉得第二种性能应该最差，毕竟它支持的各种类型太多，一般来说兼容性是以性能降低的代价。其次就是第一钟，最原始的拼接的字符串的方式，为什么呢？这个和`java`的`String`很像，都是`immutable`，换言之就是当更改这个`string`对象的时候，其实并没有更改该`string`，而是新增了一个`string`，但是给人的感觉好像把它修改了，为什么这么设计，大家可以自行百度，但是该设计会导致在拼接字符串的时候会产生大量的`string`，不仅耗时，还耗内存，更有甚者导致`STW`。然后我觉得会是第三种，点开看了下他的`Join`方法，竟然里面使用了`strings.Builder`，可惜他是直接返回了`string`，相当于每个`Join`操作也产生了新的`string`，所以我把她放到第三位。最后就是第4和第5的PK，还是我上面提到的判断思路：谁更专业肯定效率最好。所以我觉得第5种性能还是要比第4种好。
 
